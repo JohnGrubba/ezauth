@@ -1,0 +1,26 @@
+services:
+  api:
+    container_name: ezauth-api
+    build: "./src"
+    ports:
+      - "3000:80"
+    environment:
+      - DATABASE_URL=mysql://ezauth:ezauth@db/ezauth
+    env_file:
+      - .env
+  db:
+    container_name: ezauth-db
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: ezauth
+      MYSQL_PASS: ezauth
+      MYSQL_DATABASE: ezauth
+    expose:
+      - 5432
+    volumes:
+      - ezauth-data:/var/lib/mysql
+
+volumes:
+  ezauth-data:
