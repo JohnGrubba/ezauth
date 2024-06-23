@@ -5,22 +5,19 @@ services:
     ports:
       - "3000:80"
     environment:
-      - DATABASE_URL=mysql://ezauth:ezauth@db/ezauth
-    env_file:
-      - .env
-  db:
-    container_name: ezauth-db
-    image: mysql:latest
+      - DATABASE_URL=mongodb://admin:admin@db/ezauth?authSource=admin&retryWrites=true&w=majority
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: ezauth
-      MYSQL_PASS: ezauth
-      MYSQL_DATABASE: ezauth
-    expose:
-      - 5432
-    volumes:
-      - ezauth-data:/var/lib/mysql
+  db:
+      image: mongo
+      ports:
+        - '27017:27017'
+      restart: always
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD=admin
+        - MONGO_INITDB_DATABASE=ezauth
+      volumes:
+        - ezauth-data:/data/db
 
 volumes:
   ezauth-data:

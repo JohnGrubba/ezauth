@@ -1,6 +1,7 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+from api.signup import router as signupRouter
 
 app = FastAPI()
 
@@ -22,3 +23,4 @@ async def root():
 
 
 app.include_router(router)
+app.include_router(signupRouter)
