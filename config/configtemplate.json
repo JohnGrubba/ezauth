@@ -1,12 +1,12 @@
 {
     "signup": {
-        "enable_confirmation_email": true,
-        "confirmation_code_expires_minutes": 5,
+        "enable_conf_email": false,
+        "conf_code_expiry": 5,
         "enable_welcome_email": true
     },
     "email": {
         "login_usr": "",
-        "login_pswd": "",
+        "login_pwd": "",
         "sender_email": "",
         "smtp_host": "",
         "smtp_port": 465

@@ -6,7 +6,7 @@ from . import config
 smtp_host = config["email"]["smtp_host"]
 smtp_port = config["email"]["smtp_port"]
 username = config["email"]["login_usr"]
-password = config["email"]["login_pswd"]
+password = config["email"]["login_pwd"]
 sender_email = config["email"]["sender_email"]
 
 

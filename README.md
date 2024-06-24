@@ -9,4 +9,4 @@
 - ⚠️ Make sure to always have a backup of your user data.
 
 > [!NOTE]
-> You can find the Documentation [here](https://johngrubba.github.io/ezauth/)
+> You can find the Documentation <a href="https://johngrubba.github.io/ezauth/" target="_blank">here</a>
