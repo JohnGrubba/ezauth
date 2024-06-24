@@ -3,26 +3,13 @@ site_description: EZAuth is a high performance self-hosted and fully customizabl
 use_directory_urls: True
 repo_url: https://github.com/JohnGrubba/ezauth
 nav:
-    - Home: index.md
-    - Quickstart with Docker: docker_quickstart.md
-    - Installation:
-        - Linux/MacOS/Raspberry: installation.md
-        - Windows: windows_installation.md
-    - Freqtrade Basics: bot-basics.md
-    - Configuration: configuration.md
-    - Strategy Customization: strategy-customization.md
-    - Strategy Callbacks: strategy-callbacks.md
-    - Stoploss: stoploss.md
-    - Plugins: plugins.md
-    - Start the bot: bot-usage.md
-    - Control the bot:
-        - Telegram: telegram-usage.md
-        - freqUI: freq-ui.md
-        - REST API: rest-api.md
-        - Web Hook: webhook-config.md
+  - Home: index.md
+  - Getting Started:
+    - Installation / Setup: getting-started/setup.md
+    - Configuration: getting-started/configuration.md
 theme:
   name: material
-  logo: "ezauth_banner.png"
+  logo: "ezauth_logo.png"
   features:
     - content.code.annotate
     - search.share
@@ -31,15 +18,16 @@ theme:
     - navigation.footer
   language: en
   palette:
-    - scheme: default
-      primary: "blue grey"
-      accent: "tear"
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      primary: blue
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/weather-night
         name: Switch to dark mode
-    - scheme: slate
-      primary: "blue grey"
-      accent: "tear"
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
       toggle:
-        icon: material/toggle-switch
-        name: Switch to light mode
+        icon: material/weather-sunny
+        name: Switch to system preference

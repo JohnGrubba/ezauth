@@ -1,4 +1,4 @@
-<img src="assets/ezauth_banner.png" />
+<img src="docs/ezauth_banner.png" />
 
 <h3 align="center">High performance self-hosted and fully customizable authentication service</h3>
 
@@ -9,4 +9,4 @@
 - ⚠️ Make sure to always have a backup of your user data.
 
 > [!NOTE]
-> The Documentation is still in progress.
+> You can find the Documentation [here](https://johngrubba.github.io/ezauth/)
