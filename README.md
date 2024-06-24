@@ -1,15 +1,12 @@
-# EZAuth
+<img src="assets/ezauth_banner.png" />
 
-- Fully Customizable Authentication Service
-- Built on top of FastAPI and MongoDB
+<h3 align="center">High performance self-hosted and fully customizable authentication service</h3>
 
-## Inbuilt E-Mail Templates
+## Disclaimer
 
-### 1. Email Verification
-- Can be enabled in the `config.json` file.
-- Check <a href="./email/ConfirmEmail.md">here</a> for predefined placeholders.
+- ⚠️ The project is under **very active** development.
+- ⚠️ Expect bugs and breaking changes.
+- ⚠️ Make sure to always have a backup of your user data.
 
-### 2. Welcome Email
-- Can be enabled in the `config.json` file.
-- Will be sent out after the user has successfully verified their email address.
-- Check <a href="./email/WelcomeMail.md">here</a> for predefined placeholders.
+> [!NOTE]
+> The Documentation is still in progress.

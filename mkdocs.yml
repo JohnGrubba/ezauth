@@ -1,0 +1,45 @@
+site_name: EZAuth
+site_description: EZAuth is a high performance self-hosted and fully customizable authentication service
+use_directory_urls: True
+repo_url: https://github.com/JohnGrubba/ezauth
+nav:
+    - Home: index.md
+    - Quickstart with Docker: docker_quickstart.md
+    - Installation:
+        - Linux/MacOS/Raspberry: installation.md
+        - Windows: windows_installation.md
+    - Freqtrade Basics: bot-basics.md
+    - Configuration: configuration.md
+    - Strategy Customization: strategy-customization.md
+    - Strategy Callbacks: strategy-callbacks.md
+    - Stoploss: stoploss.md
+    - Plugins: plugins.md
+    - Start the bot: bot-usage.md
+    - Control the bot:
+        - Telegram: telegram-usage.md
+        - freqUI: freq-ui.md
+        - REST API: rest-api.md
+        - Web Hook: webhook-config.md
+theme:
+  name: material
+  logo: "ezauth_banner.png"
+  features:
+    - content.code.annotate
+    - search.share
+    - content.code.copy
+    - navigation.top
+    - navigation.footer
+  language: en
+  palette:
+    - scheme: default
+      primary: "blue grey"
+      accent: "tear"
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: "blue grey"
+      accent: "tear"
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
