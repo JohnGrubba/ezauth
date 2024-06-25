@@ -15,3 +15,11 @@
 - **Self-hosted**: You have full control over your user data.
 - **Secure**: The service is designed with security in mind.
 - **Easy to use**: The service is easy to set up and use.
+
+## Customizability
+
+- **Email Templates**: You can customize all emails sent by the service.
+- **User Data**: You can add custom fields to the user object which can be accessed in the email templates.
+This is possible by using `MongoDB` as the database.
+- **Database Configuration**: You can configure the database connection to your needs.
+- **And much more..**

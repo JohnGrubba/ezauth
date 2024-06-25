@@ -1,11 +1,17 @@
 from fastapi import APIRouter
 from api.model import UserSignupRequest
-from tools import db_collection
+from tools import users_collection
 from tools.mail import send_email
 from tools import SignupConfig
 from expiring_dict import ExpiringDict
+import random
 
-temp_accounts = ExpiringDict(ttl=SignupConfig.conf_code_expiry, interval=10)
+# Create an ExpiringDict object to store temporary accounts (not email verified yet)
+temp_accounts = ExpiringDict(ttl=SignupConfig.conf_code_expiry * 60, interval=10)
+
+# Generate and shuffle 10000 unique IDs for confirmation email
+all_ids = [f"{i:04d}" for i in range(10000)]
+random.shuffle(all_ids)
 
 router = APIRouter(
     prefix="/signup",
@@ -17,4 +23,25 @@ router = APIRouter(
 
 @router.post("/", status_code=204)
 async def signup(signup_form: UserSignupRequest):
-    pass
+    if SignupConfig.enable_conf_email:
+        # If all numbers have been used, raise an exception
+        if not all_ids:
+            raise Exception(
+                "All unique IDs have been used. More than 10000 signups in a short time."
+            )
+        # Get a unique ID for confirmation email
+        unique_id = all_ids.pop()
+        # Save the Account into the expiring dict (delete if user refuses to confirm email in time)
+        temp_accounts[unique_id] = signup_form
+
+        # Generate and send confirmation email
+        send_email(
+            "ConfirmEmail",
+            signup_form.email,
+            code=unique_id,
+            time=SignupConfig.conf_code_expiry,
+            username=signup_form.username,
+        )
+    else:
+        # Save the Account into the database
+        users_collection.insert_one(signup_form.model_dump())
