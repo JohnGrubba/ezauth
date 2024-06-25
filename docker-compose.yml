@@ -3,7 +3,7 @@ services:
     container_name: ezauth-api
     build: "./src"
     ports:
-      - "3000:80"
+      - "3250:80"
     environment:
       - DATABASE_URL=mongodb://admin:admin@db/ezauth?authSource=admin&retryWrites=true&w=majority
     restart: always
