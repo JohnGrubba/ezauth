@@ -1,2 +1,2 @@
 from .db import col as db_collection
-from .conf import config
+from .conf import SignupConfig, EmailConfig
