@@ -17,6 +17,7 @@ EZAuth uses a set of default E-mail templates to send out e-mails to users. Thes
 #### Additional Placeholders
 - `{{code}}`: The confirmation code to confirm the email address.
 - `{{time}}`: Time remaining before the confirmation code expires in minutes. (e.g. 5)
+- `{{username}}`: The username of the user wanting to verify their email address.
 
 !!! Info "Default Placeholders"
     Every E-Mail template which is directed at a registered user will be able to use any of the properties of the user in the database. This includes the `username`, `email`, `id`, and any other property you might have added to the user object.
