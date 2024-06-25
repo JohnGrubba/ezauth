@@ -1,13 +1,8 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from . import config
-
-smtp_host = config["email"]["smtp_host"]
-smtp_port = config["email"]["smtp_port"]
-username = config["email"]["login_usr"]
-password = config["email"]["login_pwd"]
-sender_email = config["email"]["sender_email"]
+from . import EmailConfig
+import logging
 
 
 def load_template(template_name: str, **kwargs) -> str:
@@ -21,7 +16,7 @@ def send_email(template_name: str, to: str, **kwargs):
     html_content, subject = load_template(template_name, **kwargs)
 
     msg = MIMEMultipart()
-    msg["From"] = sender_email
+    msg["From"] = EmailConfig.sender_email
     msg["To"] = to
     msg["Subject"] = subject
 
@@ -29,8 +24,8 @@ def send_email(template_name: str, to: str, **kwargs):
     msg.attach(MIMEText(html_content, "html"))
 
     # Send email
-    with smtplib.SMTP_SSL(smtp_host, smtp_port) as server:
-        server.login(username, password)
+    with smtplib.SMTP_SSL(EmailConfig.smtp_host, EmailConfig.smtp_port) as server:
+        server.login(EmailConfig.login_usr, EmailConfig.login_pwd)
         server.send_message(msg)
 
-    print("Email sent successfully!")
+    logging.info(f"Email sent to {to} with subject: {subject}")

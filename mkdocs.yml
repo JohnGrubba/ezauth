@@ -6,7 +6,8 @@ nav:
   - Home: index.md
   - Getting Started:
     - Installation / Setup: getting-started/setup.md
-    - Configuration: getting-started/configuration.md
+    - Basic Configuration: getting-started/configuration.md
+  - E-Mail Templates: getting-started/email_config.md
 theme:
   name: material
   logo: "ezauth_logo.png"

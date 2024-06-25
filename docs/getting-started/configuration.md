@@ -11,7 +11,7 @@ Make sure that all parameters are set correctly before starting the service.
 |  Parameter | Description |
 |------------|-------------|
 | `signup.enable_conf_email` | **Datatype:** Boolean <br> **Default:** `false` <br> Enable or disable the confirmation E-Mail for new users. |
-| `signup.conf_code_expiry` | **Datatype:** Integer <br> **Default:** `3600` <br> The time in seconds until the confirmation code expires. |
+| `signup.conf_code_expiry` | **Datatype:** Integer <br> **Default:** `5` <br> The time in minutes until the confirmation code expires. |
 | `signup.enable_welcome_email` | **Datatype:** Boolean <br> **Default:** `false` <br> Enable or disable the welcome E-Mail for new users. |
 
 ### Email Configuration

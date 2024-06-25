@@ -2,8 +2,14 @@ from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from api.signup import router as signupRouter
+import logging
 
-app = FastAPI()
+logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
+
+app = FastAPI(
+    title="EZAuth API",
+    description="EZAuth is a high performance self-hosted and fully customizable authentication service",
+)
 
 origins = ["*"]
 app.add_middleware(
