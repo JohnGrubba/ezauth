@@ -2,6 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from . import EmailConfig
+import logging
 
 
 def load_template(template_name: str, **kwargs) -> str:
@@ -27,4 +28,4 @@ def send_email(template_name: str, to: str, **kwargs):
         server.login(EmailConfig.login_usr, EmailConfig.login_pwd)
         server.send_message(msg)
 
-    print("Email sent successfully!")
+    logging.info(f"Email sent to {to} with subject: {subject}")
