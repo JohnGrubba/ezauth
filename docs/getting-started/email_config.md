@@ -5,6 +5,9 @@ EZAuth uses a set of default E-mail templates to send out e-mails to users. Thes
 !!! Info "E-Mail Subject"
     EZAuth will automatically use the HTML `<title></title>` tag to specify the subject of the e-mail.
 
+!!! Info "Default Placeholders"
+    Every E-Mail template which is directed at a registered user will be able to use any of the properties of the user in the database. This includes the `username`, `email`, `id`, and any other property you might have added to the user object.
+
 ## Required E-Mail Templates
 
 ??? Warning "Required Templates"
@@ -18,9 +21,6 @@ EZAuth uses a set of default E-mail templates to send out e-mails to users. Thes
 - `{{code}}`: The confirmation code to confirm the email address.
 - `{{time}}`: Time remaining before the confirmation code expires in minutes. (e.g. 5)
 - `{{username}}`: The username of the user wanting to verify their email address.
-
-!!! Info "Default Placeholders"
-    Every E-Mail template which is directed at a registered user will be able to use any of the properties of the user in the database. This includes the `username`, `email`, `id`, and any other property you might have added to the user object.
 
 ### 2. **Welcome Email**
 - Can be enabled in the `config.json` file.
