@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Response, BackgroundTasks
 from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
 from tools import send_email
 from tools import SignupConfig
@@ -55,7 +55,7 @@ router = APIRouter(
         200: {"description": "Account was created successfully."},
     },
 )
-async def signup(signup_form: UserSignupRequest):
+async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTasks):
     # Handle signup
     if SignupConfig.enable_conf_email:
         # Those checks are only needed when confirmation emails are enabled (otherwise, create the user directly and raise duplicate from mongodb)
@@ -81,7 +81,8 @@ async def signup(signup_form: UserSignupRequest):
         temp_accounts[signup_form.email] = {"form": signup_form, "code": unique_id}
 
         # Generate and send confirmation email
-        send_email(
+        background_tasks.add_task(
+            send_email,
             "ConfirmEmail",
             signup_form.email,
             code=unique_id,
@@ -90,7 +91,7 @@ async def signup(signup_form: UserSignupRequest):
         )
         return Response(status_code=204)
     else:
-        return create_user(signup_form)
+        return create_user(signup_form, background_tasks)
 
 
 @router.post(
@@ -101,7 +102,9 @@ async def signup(signup_form: UserSignupRequest):
         200: {"description": "Account was created successfully."},
     },
 )
-async def confirm_email(payload: ConfirmEmailCodeRequest):
+async def confirm_email(
+    payload: ConfirmEmailCodeRequest, background_tasks: BackgroundTasks
+):
     try:
         acc = temp_accounts[payload.email]
         if acc["code"] != payload.code:
@@ -110,4 +113,4 @@ async def confirm_email(payload: ConfirmEmailCodeRequest):
         return Response(status_code=404)
     del temp_accounts[payload.email]
     # Account is confirmed, create the user
-    return create_user(acc["form"])
+    return create_user(acc["form"], background_tasks)

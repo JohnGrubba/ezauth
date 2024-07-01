@@ -1,6 +1,6 @@
 from crud import sessions
 from tools import users_collection, SignupConfig, send_email
-from fastapi import Response
+from fastapi import Response, BackgroundTasks
 from api.model import UserSignupRequest, LoginResponse
 import pymongo
 
@@ -20,7 +20,9 @@ def check_unique_usr(email: str, username: str) -> bool:
     )
 
 
-def create_user(signup_model: UserSignupRequest) -> Response:
+def create_user(
+    signup_model: UserSignupRequest, background_tasks: BackgroundTasks
+) -> Response:
     """Creates a User in the Database
 
     Args:
@@ -37,7 +39,8 @@ def create_user(signup_model: UserSignupRequest) -> Response:
     # User Created (Create Session Token and send Welcome Email)
     session_token = sessions.create_login_session(user_db.inserted_id)
     if SignupConfig.enable_welcome_email:
-        send_email(
+        background_tasks.add_task(
+            send_email,
             "WelcomeEmail",
             signup_model.email,
             **signup_model.model_dump(exclude={"password"})
