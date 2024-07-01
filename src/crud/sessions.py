@@ -23,7 +23,9 @@ def create_login_session(user_id: str) -> str:
         sessions_collection.find_one_and_delete(
             {"user_id": user_id}, sort=[("createdAt", 1)]
         )
+    # Generate a new session token
     session_token = str(uuid.uuid4())
+    # Persist the session
     sessions_collection.insert_one(
         {
             "session_token": session_token,

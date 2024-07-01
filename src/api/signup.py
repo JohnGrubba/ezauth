@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, BackgroundTasks
+from fastapi import APIRouter, Response, BackgroundTasks, HTTPException
 from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
 from tools import send_email
 from tools import SignupConfig
@@ -64,10 +64,12 @@ async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTas
         except KeyError:
             pass
         else:
-            return Response("E-Mail already sent.", status_code=409)
+            raise HTTPException(detail="E-Mail already sent", status_code=409)
         # Check if user already exists in database
         if check_unique_usr(signup_form.email, signup_form.username):
-            return Response("Email or Username already exists.", status_code=409)
+            raise HTTPException(
+                detail="Email or Username already exists", status_code=409
+            )
         # If all numbers have been used, raise an exception
         if not all_ids:
             raise Exception(
@@ -99,6 +101,7 @@ async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTas
     responses={
         404: {"description": "No Account Found with this code. Or Code expired."},
         200: {"description": "Account was created successfully."},
+        409: {"description": "Duplicate Entry"},
     },
 )
 async def confirm_email(
@@ -107,9 +110,9 @@ async def confirm_email(
     try:
         acc = temp_accounts[payload.email]
         if acc["code"] != payload.code:
-            return Response(status_code=404)
+            raise HTTPException(detail="Invalid Code", status_code=404)
     except KeyError:
-        return Response(status_code=404)
+        raise HTTPException(detail="Code Expired", status_code=404)
     del temp_accounts[payload.email]
     # Account is confirmed, create the user
     return create_user(acc["form"], background_tasks)

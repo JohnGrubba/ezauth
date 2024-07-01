@@ -38,3 +38,12 @@ Make sure that all parameters are set correctly before starting the service.
 |------------|-------------|
 | `session.session_expiry_seconds` | **Datatype:** Integer <br> **Default:** `86400` <br> The time in seconds until a login session expires. |
 | `session.max_session_count` | **Datatype:** Integer <br> **Default:** `5` <br> Maximum amount of sessions for one User. |
+
+### Internal API Configuration
+
+!!! danger "Internal API Key"
+    Change this **immediately** after cloning the repository. Keeping the default value is a **severe security risk**.
+
+|  Parameter | Description |
+|------------|-------------|
+| `internal.internal_api_key` | **Datatype:** String <br> **Default:** `CHANGE_ME_NOW` <br> This is **sensitive** information and must **never** be exposed anywhere. |

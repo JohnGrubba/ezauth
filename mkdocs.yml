@@ -9,6 +9,7 @@ nav:
     - Configuration: getting-started/configuration.md
   - E-Mail Templates: getting-started/email_config.md
   - Information: information.md
+  - Internal API: internal.md
 theme:
   name: material
   logo: "ezauth_logo.png"

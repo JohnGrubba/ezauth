@@ -15,5 +15,8 @@
     "session": {
         "session_expiry_seconds": 86400,
         "max_session_count": 5
+    },
+    "internal": {
+        "internal_api_key": "CHANGE_ME_NOW"
     }
 }

@@ -1,6 +1,6 @@
 from crud import sessions
 from tools import users_collection, SignupConfig, send_email
-from fastapi import Response, BackgroundTasks
+from fastapi import HTTPException, BackgroundTasks, Response
 from api.model import UserSignupRequest, LoginResponse
 import pymongo
 
@@ -37,7 +37,7 @@ def check_unique_usr(email: str, username: str) -> bool:
 
 def create_user(
     signup_model: UserSignupRequest, background_tasks: BackgroundTasks
-) -> Response:
+) -> Response | HTTPException:
     """Creates a User in the Database
 
     Args:
@@ -50,7 +50,7 @@ def create_user(
     try:
         user_db = users_collection.insert_one(signup_model.model_dump())
     except pymongo.errors.DuplicateKeyError:
-        return Response("Email or Username already exists.", status_code=409)
+        raise HTTPException(detail="Email or Username already exists.", status_code=409)
     # User Created (Create Session Token and send Welcome Email)
     session_token = sessions.create_login_session(user_db.inserted_id)
     if SignupConfig.enable_welcome_email:
