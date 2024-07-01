@@ -2,6 +2,8 @@ from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from api.signup import router as signupRouter
+from api.login import router as loginRouter
+from api.internal import router as internalRouter
 import logging
 
 logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
@@ -33,3 +35,5 @@ async def root():
 
 app.include_router(router)
 app.include_router(signupRouter)
+app.include_router(loginRouter)
+app.include_router(internalRouter)

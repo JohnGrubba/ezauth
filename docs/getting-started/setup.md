@@ -8,7 +8,7 @@ To install and use EZAuth you need to have Docker and Docker Compose installed o
     EZAuth documentation assumes the use of Docker desktop (or the docker compose plugin).  
     While the docker-compose standalone installation still works, it will require changing all `docker compose` commands from `docker compose` to `docker-compose` to work (e.g. `docker compose up -d` will become `docker-compose up -d`).
 
-??? Warning "Docker on windows"
+!!! Warning "Docker on windows"
     If you just installed docker on a windows system, make sure to reboot your system, otherwise you might encounter unexplainable Problems related to network connectivity to docker containers.
 
 ## EZAuth Docker Setup

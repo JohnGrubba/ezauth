@@ -1,10 +1,15 @@
-from fastapi import APIRouter, Response, BackgroundTasks
+from fastapi import APIRouter, Response, BackgroundTasks, HTTPException
 from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
 from tools import send_email
-from tools import SignupConfig
+from tools import SignupConfig, SessionConfig
 from expiring_dict import ExpiringDict
 import random
 from crud.user import create_user, check_unique_usr
+
+router = APIRouter(
+    prefix="/signup",
+    tags=["Sign Up"],
+)
 
 # Create an ExpiringDict object to store temporary accounts (not email verified yet)
 """
@@ -39,12 +44,6 @@ match (SignupConfig.conf_code_complexity):
         all_ids = [str(i) for i in range(10000)]
         random.shuffle(all_ids)
 
-router = APIRouter(
-    prefix="/signup",
-    tags=["Sign Up"],
-    dependencies=[],
-)
-
 
 @router.post(
     "/",
@@ -54,8 +53,19 @@ router = APIRouter(
         204: {"description": "Confirmation Email Sent"},
         200: {"description": "Account was created successfully."},
     },
+    response_model=LoginResponse,
 )
-async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTasks):
+async def signup(
+    signup_form: UserSignupRequest,
+    background_tasks: BackgroundTasks,
+    response: Response,
+):
+    """
+    # Sign Up
+
+    ## Description
+    This endpoint is used to sign up a user. Depending on the configuration, a confirmation email is sent to the user.
+    """
     # Handle signup
     if SignupConfig.enable_conf_email:
         # Those checks are only needed when confirmation emails are enabled (otherwise, create the user directly and raise duplicate from mongodb)
@@ -65,10 +75,12 @@ async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTas
         except KeyError:
             pass
         else:
-            return Response("E-Mail already sent.", status_code=409)
+            raise HTTPException(detail="E-Mail already sent", status_code=409)
         # Check if user already exists in database
         if check_unique_usr(signup_form.email, signup_form.username):
-            return Response("Email or Username already exists.", status_code=409)
+            raise HTTPException(
+                detail="Email or Username already exists", status_code=409
+            )
         # If all numbers have been used, raise an exception
         if not all_ids:
             raise Exception(
@@ -91,7 +103,14 @@ async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTas
         )
         return Response(status_code=204)
     else:
-        return create_user(signup_form, background_tasks)
+        session_token = create_user(signup_form, background_tasks)
+        if SessionConfig.auto_cookie:
+            response.set_cookie(
+                SessionConfig.auto_cookie_name,
+                session_token,
+                expires=SessionConfig.session_expiry_seconds,
+            )
+        return LoginResponse(session_token=session_token)
 
 
 @router.post(
@@ -100,17 +119,33 @@ async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTas
     responses={
         404: {"description": "No Account Found with this code. Or Code expired."},
         200: {"description": "Account was created successfully."},
+        409: {"description": "Duplicate Entry"},
     },
 )
 async def confirm_email(
-    payload: ConfirmEmailCodeRequest, background_tasks: BackgroundTasks
+    payload: ConfirmEmailCodeRequest,
+    background_tasks: BackgroundTasks,
+    response: Response,
 ):
+    """
+    # Confirm E-Mail
+
+    ## Description
+    This endpoint is used to confirm the E-Mail of a user. This is only needed if confirmation E-Mails are enabled.
+    """
     try:
         acc = temp_accounts[payload.email]
         if acc["code"] != payload.code:
-            return Response(status_code=404)
+            raise HTTPException(detail="Invalid Code", status_code=404)
     except KeyError:
-        return Response(status_code=404)
+        raise HTTPException(detail="Code Expired", status_code=404)
     del temp_accounts[payload.email]
     # Account is confirmed, create the user
-    return create_user(acc["form"], background_tasks)
+    session_token = create_user(acc["form"], background_tasks)
+    if SessionConfig.auto_cookie:
+        response.set_cookie(
+            SessionConfig.auto_cookie_name,
+            session_token,
+            expires=SessionConfig.session_expiry_seconds,
+        )
+    return LoginResponse(session_token=session_token)

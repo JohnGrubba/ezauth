@@ -17,6 +17,11 @@ class ConfirmEmailCodeRequest(BaseModel):
     email: str
 
 
+class BroadCastEmailRequest(BaseModel):
+    template_name: str
+    mongodb_search_condition: dict
+
+
 class UserSignupRequest(BaseModel):
     email: EmailStr
     username: str
@@ -25,6 +30,15 @@ class UserSignupRequest(BaseModel):
     model_config = ConfigDict(
         extra="allow",
     )
+
+    @field_validator("username")
+    @classmethod
+    def username_check(cls, username: str) -> str:
+        if len(username) < 4:
+            raise ValueError("Username must be at least 4 characters long")
+        elif re.search("[^a-zA-Z0-9]", username) is not None:
+            raise ValueError("Username must only contain letters and numbers")
+        return username
 
     @field_validator("password")
     @classmethod
