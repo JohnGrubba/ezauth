@@ -3,6 +3,7 @@ from tools import users_collection, SignupConfig, send_email
 from fastapi import HTTPException, BackgroundTasks, Response
 from api.model import UserSignupRequest, LoginResponse
 import pymongo
+import datetime
 
 
 def get_user_email_or_username(credential: str) -> dict:
@@ -48,7 +49,9 @@ def create_user(
     """
     # Save the Account into the database
     try:
-        user_db = users_collection.insert_one(signup_model.model_dump())
+        user_db = users_collection.insert_one(
+            {**signup_model.model_dump(), "createdAt": datetime.datetime.now()}
+        )
     except pymongo.errors.DuplicateKeyError:
         raise HTTPException(detail="Email or Username already exists.", status_code=409)
     # User Created (Create Session Token and send Welcome Email)

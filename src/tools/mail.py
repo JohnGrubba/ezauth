@@ -3,13 +3,16 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from . import EmailConfig
 import logging
+from threading import Lock
+from tools import users_collection, insecure_cols
 
 
 def load_template(template_name: str, **kwargs) -> str:
     with open(f"/src/app/config/email/{template_name}.html", "r") as file:
         template = file.read()
     subject = template[template.find("<title>") + 7 : template.find("</title>")]
-    return template.format(**kwargs), subject
+    formatted_template = template.format(**kwargs)
+    return formatted_template, subject
 
 
 def send_email(template_name: str, to: str, **kwargs):
@@ -29,3 +32,22 @@ def send_email(template_name: str, to: str, **kwargs):
         server.send_message(msg)
 
     logging.info(f"Email sent to {to} with subject: {subject}")
+
+
+def broadcast_emails(
+    template_name: str, email_task_lock: Lock, mongodb_search_condition: dict = {}
+):
+    # Iter over all users and send them an email
+    try:
+        cursor = users_collection.find(mongodb_search_condition, insecure_cols)
+        for user in cursor:
+            try:
+                send_email(template_name, user["email"], **user)
+            except Exception as e:
+                logging.error(
+                    f"Failed to send email to {user['email']} with Template {template_name}: {e}"
+                )
+    except Exception as e:
+        raise e
+    finally:
+        email_task_lock.release_lock()

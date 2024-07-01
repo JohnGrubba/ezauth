@@ -24,3 +24,7 @@ print(response.json())
 ```
 
 Any request to an internal endpoint without the `internal_api_key` header will result in a `401 Unauthorized` response.
+
+
+!!! Info "E-Mail Information"
+    For more information on how to send E-Mails using the internal API, see the [E-Mail Configuration](./getting-started/email_config.md#custom-e-mail-templates) section.

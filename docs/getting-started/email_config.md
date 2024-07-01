@@ -28,7 +28,10 @@ EZAuth uses a set of default E-mail templates to send out e-mails to users. Thes
 - File Name: `WelcomeMail.html`
 
 # Custom E-Mail Templates
+You can add custom e-mail templates to the `config/email` folder.
+Whenever you are able to specifiy a E-Mail Template, you can specify the template you want to use by providing the file name without the `.html` extension.
+Example: `WelcomeMail` will use the `WelcomeMail.html` template.
 
-!!! Info "Work in Progress"
-    This feature is still in development and might not work as expected.
-You can also create custom E-mail templates and use them in the service. To use a custom E-mail template you need to specify the path to the template in the `config.json` file.
+!!! Info "Broadcast E-Mails"
+    By using the Internal API you can send out broadcast e-mails to all users. This can be useful for maintenance notifications or other important information.
+    You can also provide a custom [MongoDB Filter](https://www.mongodb.com/docs/compass/current/query/filter/) to only send the e-mail to a specific group of users. Example: `{"sexual_preference": "gay"}` -> This will only send the e-mail to users who have `gay` as their `sexual_preference`.

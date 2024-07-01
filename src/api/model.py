@@ -17,6 +17,11 @@ class ConfirmEmailCodeRequest(BaseModel):
     email: str
 
 
+class BroadCastEmailRequest(BaseModel):
+    template_name: str
+    mongodb_search_condition: dict
+
+
 class UserSignupRequest(BaseModel):
     email: EmailStr
     username: str

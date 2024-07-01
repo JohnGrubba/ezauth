@@ -18,3 +18,6 @@ sessions_collection.drop_index("createdAt_1")
 sessions_collection.create_index(
     "createdAt", expireAfterSeconds=SessionConfig.session_expiry_seconds
 )
+
+# Columns that should never leave EZAuth (maybe get more in the future)
+insecure_cols = {"password": 0}
