@@ -1,0 +1,28 @@
+services:
+  api:
+    container_name: ezauth-api
+    build: "./src"
+    ports:
+      - "3250:80"
+    environment:
+      - DATABASE_URL=mongodb://admin:admin@db/ezauth?authSource=admin&retryWrites=true&w=majority
+    restart: always
+    volumes:
+      - ./config:/src/app/config
+      - ./src:/src/app
+    command: |
+      bash -c 'uvicorn api.main:app --reload --host 0.0.0.0 --port 80 --log-level info'
+  db:
+      image: mongo
+      ports:
+        - '27017:27017'
+      restart: always
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD=admin
+        - MONGO_INITDB_DATABASE=ezauth
+      volumes:
+        - ezauth-data:/data/db
+
+volumes:
+  ezauth-data:

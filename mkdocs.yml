@@ -8,6 +8,7 @@ nav:
     - Installation / Setup: getting-started/setup.md
     - Basic Configuration: getting-started/configuration.md
   - E-Mail Templates: getting-started/email_config.md
+  - Information: information.md
 theme:
   name: material
   logo: "ezauth_logo.png"
@@ -40,19 +41,10 @@ markdown_extensions:
       guess_lang: false
   - toc:
       permalink: true
-  - pymdownx.arithmatex:
-      generic: true
-  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
-  - pymdownx.magiclink
-  - pymdownx.pathconverter
-  - pymdownx.smartsymbols
-  - pymdownx.snippets:
-      base_path: docs
-      check_paths: true
+  - pymdownx.snippets
   - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.tilde

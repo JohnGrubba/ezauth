@@ -8,7 +8,10 @@ logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
 
 app = FastAPI(
     title="EZAuth API",
-    description="EZAuth is a high performance self-hosted and fully customizable authentication service",
+    description="""
+<img src="https://johngrubba.github.io/ezauth/ezauth_banner.png" />
+<h2> EZAuth is a high performance self-hosted and fully customizable authentication service </h2>
+""",
 )
 
 origins = ["*"]
