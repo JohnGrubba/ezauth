@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Response
-from api.model import UserSignupRequest, LoginResponse
+from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
 from tools import send_email
 from tools import SignupConfig
 from expiring_dict import ExpiringDict
@@ -75,15 +75,21 @@ async def signup(signup_form: UserSignupRequest):
         return create_user(signup_form)
 
 
-@router.get(
-    "/confirm/{code}",
+@router.post(
+    "/confirm",
     response_model=LoginResponse,
     responses={
-        404: {"description": "No Account Found with this code."},
+        404: {"description": "No Account Found with this code. Or Code expired."},
         200: {"description": "Account was created successfully."},
     },
 )
-async def confirm_email(code: str):
-    if code in temp_accounts:
-        signup_form = temp_accounts.pop(code)
-        return create_user(signup_form)
+async def confirm_email(payload: ConfirmEmailCodeRequest):
+    try:
+        acc: UserSignupRequest = temp_accounts[payload.code]
+        if acc.email != payload.email:
+            return Response(status_code=404)
+    except KeyError:
+        return Response(status_code=404)
+    del temp_accounts[payload.code]
+    # Account is confirmed, create the user
+    return create_user(acc)

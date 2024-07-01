@@ -12,6 +12,11 @@ class LoginResponse(BaseModel):
     session_token: str
 
 
+class ConfirmEmailCodeRequest(BaseModel):
+    code: int | str
+    email: str
+
+
 class UserSignupRequest(BaseModel):
     email: EmailStr
     username: str

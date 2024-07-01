@@ -1,14 +1,19 @@
-from tools import users_collection, sessions, SignupConfig, send_email
+from crud import sessions
+from tools import users_collection, SignupConfig, send_email
 from fastapi import Response
 from api.model import UserSignupRequest, LoginResponse
 import pymongo
 
 
-def login_user():
-    pass
-
-
 def create_user(signup_model: UserSignupRequest) -> Response:
+    """Creates a User in the Database
+
+    Args:
+        signup_model (UserSignupRequest): User Data
+
+    Returns:
+        Response: Request Response
+    """
     # Save the Account into the database
     try:
         user_db = users_collection.insert_one(signup_model.model_dump())
