@@ -4,6 +4,7 @@ from tools import send_email
 from tools import SignupConfig
 from expiring_dict import ExpiringDict
 import random
+from typing import Union
 from crud.user import create_user, check_unique_usr
 
 router = APIRouter(
@@ -53,8 +54,15 @@ match (SignupConfig.conf_code_complexity):
         204: {"description": "Confirmation Email Sent"},
         200: {"description": "Account was created successfully."},
     },
+    response_model=LoginResponse,
 )
 async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTasks):
+    """
+    # Sign Up
+
+    ## Description
+    This endpoint is used to sign up a user. Depending on the configuration, a confirmation email is sent to the user.
+    """
     # Handle signup
     if SignupConfig.enable_conf_email:
         # Those checks are only needed when confirmation emails are enabled (otherwise, create the user directly and raise duplicate from mongodb)
@@ -92,7 +100,7 @@ async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTas
         )
         return Response(status_code=204)
     else:
-        return create_user(signup_form, background_tasks)
+        return LoginResponse(create_user(signup_form, background_tasks))
 
 
 @router.post(
@@ -107,6 +115,12 @@ async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTas
 async def confirm_email(
     payload: ConfirmEmailCodeRequest, background_tasks: BackgroundTasks
 ):
+    """
+    # Confirm E-Mail
+
+    ## Description
+    This endpoint is used to confirm the E-Mail of a user. This is only needed if confirmation E-Mails are enabled.
+    """
     try:
         acc = temp_accounts[payload.email]
         if acc["code"] != payload.code:
@@ -115,4 +129,4 @@ async def confirm_email(
         raise HTTPException(detail="Code Expired", status_code=404)
     del temp_accounts[payload.email]
     # Account is confirmed, create the user
-    return create_user(acc["form"], background_tasks)
+    return LoginResponse(session_token=create_user(acc["form"], background_tasks))

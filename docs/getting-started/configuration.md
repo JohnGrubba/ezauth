@@ -38,6 +38,8 @@ Make sure that all parameters are set correctly before starting the service.
 |------------|-------------|
 | `session.session_expiry_seconds` | **Datatype:** Integer <br> **Default:** `86400` <br> The time in seconds until a login session expires. |
 | `session.max_session_count` | **Datatype:** Integer <br> **Default:** `5` <br> Maximum amount of sessions for one User. |
+| `session.auto_cookie` | **Datatype:** Boolean <br> **Default:** `true` <br> Specifies if the API should automatically return a `Set-Cookie` header to potentially automatically set the Session Token for the client. May simplify upcoming requests to this API. |
+| `session.auto_cookie_name` | **Datatype:** String <br> **Default:** `session` <br> The name of the cookie which will be set by the API. |
 
 ### Internal API Configuration
 

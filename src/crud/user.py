@@ -37,14 +37,14 @@ def check_unique_usr(email: str, username: str) -> bool:
 
 def create_user(
     signup_model: UserSignupRequest, background_tasks: BackgroundTasks
-) -> Response | HTTPException:
+) -> str | HTTPException:
     """Creates a User in the Database
 
     Args:
         signup_model (UserSignupRequest): User Data
 
     Returns:
-        Response: Request Response
+        str: Session Token
     """
     # Save the Account into the database
     try:
@@ -60,4 +60,4 @@ def create_user(
             signup_model.email,
             **signup_model.model_dump(exclude={"password"})
         )
-    return LoginResponse(session_token=session_token)
+    return session_token

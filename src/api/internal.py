@@ -20,4 +20,22 @@ router = APIRouter(
 
 @router.get("/health")
 async def health():
+    """
+    # Check Health / API Key
+
+    ## Description
+    This endpoint is used to check the health of the API and the API Key.
+    Can also be used to check if `/internal` endpoints are blocked from public access.
+    """
+    return {"status": "ok"}
+
+
+@router.post("/broadcast-email")
+async def broadcast_email():
+    """
+    # Broadcast a E-Mail Template to all Users
+
+    ## Description
+    This endpoint is used to broadcast a E-Mail Template to all users.
+    """
     return {"status": "ok"}
