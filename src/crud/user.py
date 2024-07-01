@@ -5,6 +5,21 @@ from api.model import UserSignupRequest, LoginResponse
 import pymongo
 
 
+def check_unique_usr(email: str, username: str) -> bool:
+    """Check if the email or username is already in use
+
+    Args:
+        email (str): Email
+        username (str): Username
+
+    Returns:
+        bool: True if email or username is already in use
+    """
+    return users_collection.find_one(
+        {"$or": [{"email": email}, {"username": username}]}
+    )
+
+
 def create_user(signup_model: UserSignupRequest) -> Response:
     """Creates a User in the Database
 

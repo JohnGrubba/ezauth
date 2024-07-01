@@ -6,6 +6,12 @@ import datetime
 def create_login_session(user_id: str) -> str:
     """
     Create a login session for the user.
+
+    Args:
+        user_id (str): User ID
+
+    Returns:
+        str: Session Token
     """
     session_token = str(uuid.uuid4())
     sessions_collection.insert_one(

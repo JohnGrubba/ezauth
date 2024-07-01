@@ -4,10 +4,15 @@ from tools import send_email
 from tools import SignupConfig
 from expiring_dict import ExpiringDict
 import random
-from crud.user import create_user
+from crud.user import create_user, check_unique_usr
 
 # Create an ExpiringDict object to store temporary accounts (not email verified yet)
+"""
+temp_accounts["form"]: UserSignupRequest
+temp_accounts["code"]: str | int
+"""
 temp_accounts = ExpiringDict(ttl=SignupConfig.conf_code_expiry * 60, interval=10)
+
 
 # Generate and shuffle 10000 unique IDs for confirmation email (Depending on complexity)
 match (SignupConfig.conf_code_complexity):
@@ -51,7 +56,19 @@ router = APIRouter(
     },
 )
 async def signup(signup_form: UserSignupRequest):
+    # Handle signup
     if SignupConfig.enable_conf_email:
+        # Those checks are only needed when confirmation emails are enabled (otherwise, create the user directly and raise duplicate from mongodb)
+        # Check if email in confirmation email dict
+        try:
+            temp_accounts[signup_form.email]
+        except KeyError:
+            pass
+        else:
+            return Response("E-Mail already sent.", status_code=409)
+        # Check if user already exists in database
+        if check_unique_usr(signup_form.email, signup_form.username):
+            return Response("Email or Username already exists.", status_code=409)
         # If all numbers have been used, raise an exception
         if not all_ids:
             raise Exception(
@@ -60,7 +77,8 @@ async def signup(signup_form: UserSignupRequest):
         # Get a unique ID for confirmation email
         unique_id = all_ids.pop()
         # Save the Account into the expiring dict (delete if user refuses to confirm email in time)
-        temp_accounts[unique_id] = signup_form
+        # Indexed by E-Mail to quickly check if the user has already signed up (O(1))
+        temp_accounts[signup_form.email] = {"form": signup_form, "code": unique_id}
 
         # Generate and send confirmation email
         send_email(
@@ -85,11 +103,11 @@ async def signup(signup_form: UserSignupRequest):
 )
 async def confirm_email(payload: ConfirmEmailCodeRequest):
     try:
-        acc: UserSignupRequest = temp_accounts[payload.code]
-        if acc.email != payload.email:
+        acc = temp_accounts[payload.email]
+        if acc["code"] != payload.code:
             return Response(status_code=404)
     except KeyError:
         return Response(status_code=404)
-    del temp_accounts[payload.code]
+    del temp_accounts[payload.email]
     # Account is confirmed, create the user
-    return create_user(acc)
+    return create_user(acc["form"])
