@@ -10,7 +10,7 @@ EZAuth uses a set of default E-mail templates to send out e-mails to users. Thes
 
 ## Required E-Mail Templates
 
-??? Warning "Required Templates"
+!!! Warning "Required Templates"
     Only edit those templates and don't delete them. If you delete them, the service will not work as expected.
 
 ### 1. **Email Verification**

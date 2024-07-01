@@ -7,6 +7,9 @@ To configure EZAuth you can take a look at the `configtemplate.json` file in the
 All configuration parameters are listed in the tables below.
 Make sure that all parameters are set correctly before starting the service.
 
+!!! Warning "Apply Configuration"
+    If you change the configuration file, make sure to restart the service to apply the changes.
+
 ### Signup Configuration
 |  Parameter | Description |
 |------------|-------------|
@@ -18,7 +21,7 @@ Make sure that all parameters are set correctly before starting the service.
 
 ### E-Mail Configuration
 
-??? Warning "SMTP SSL required"
+!!! Warning "SMTP SSL required"
     EZAuth uses SMTP_SSL to send E-Mails. Make sure that your SMTP server supports SSL.
     Currently EZAuth does not support STARTTLS.
 
@@ -34,3 +37,4 @@ Make sure that all parameters are set correctly before starting the service.
 |  Parameter | Description |
 |------------|-------------|
 | `session.session_expiry_seconds` | **Datatype:** Integer <br> **Default:** `86400` <br> The time in seconds until a login session expires. |
+| `session.max_session_count` | **Datatype:** Integer <br> **Default:** `5` <br> Maximum amount of sessions for one User. |

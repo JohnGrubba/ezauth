@@ -6,6 +6,11 @@ from expiring_dict import ExpiringDict
 import random
 from crud.user import create_user, check_unique_usr
 
+router = APIRouter(
+    prefix="/signup",
+    tags=["Sign Up"],
+)
+
 # Create an ExpiringDict object to store temporary accounts (not email verified yet)
 """
 temp_accounts["form"]: UserSignupRequest
@@ -38,12 +43,6 @@ match (SignupConfig.conf_code_complexity):
         # Default Case (1)
         all_ids = [str(i) for i in range(10000)]
         random.shuffle(all_ids)
-
-router = APIRouter(
-    prefix="/signup",
-    tags=["Sign Up"],
-    dependencies=[],
-)
 
 
 @router.post(

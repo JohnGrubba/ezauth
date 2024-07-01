@@ -5,6 +5,20 @@ from api.model import UserSignupRequest, LoginResponse
 import pymongo
 
 
+def get_user_email_or_username(credential: str) -> dict:
+    """Get a user by email or username
+
+    Args:
+        credential (str): Email or Username
+
+    Returns:
+        dict: User Data
+    """
+    return users_collection.find_one(
+        {"$or": [{"email": credential}, {"username": credential}]}
+    )
+
+
 def check_unique_usr(email: str, username: str) -> bool:
     """Check if the email or username is already in use
 
@@ -15,8 +29,9 @@ def check_unique_usr(email: str, username: str) -> bool:
     Returns:
         bool: True if email or username is already in use
     """
-    return users_collection.find_one(
-        {"$or": [{"email": email}, {"username": username}]}
+    return (
+        users_collection.find_one({"$or": [{"email": email}, {"username": username}]})
+        is not None
     )
 
 

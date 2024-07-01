@@ -13,6 +13,7 @@
         "smtp_port": 465
     },
     "session": {
-        "session_expiry_seconds": 86400
+        "session_expiry_seconds": 86400,
+        "max_session_count": 5
     }
 }

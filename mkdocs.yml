@@ -6,7 +6,7 @@ nav:
   - Home: index.md
   - Getting Started:
     - Installation / Setup: getting-started/setup.md
-    - Basic Configuration: getting-started/configuration.md
+    - Configuration: getting-started/configuration.md
   - E-Mail Templates: getting-started/email_config.md
   - Information: information.md
 theme:

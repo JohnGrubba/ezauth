@@ -12,14 +12,14 @@ To guarantee the security of your user data, EZAuth uses the following security 
 - **2FA**: Two-factor authentication can be enabled for users.
 - **OAuth2**: OAuth2 can be enabled for users.
 
-## Usage
+## Code Examples
 
 !!! Info "Official Libraries"
     We are working on official Libraries for different languages. Until then, you can use the REST API to interact with the service.
     Every help is appreciated.
 
 
-You can use EZAuth in any Application.
+You can use EZAuth in any Application and or Language that supports HTTP.
 Here are some examples in different languages:
 
 ### Python
