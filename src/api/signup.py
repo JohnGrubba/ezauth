@@ -1,10 +1,9 @@
 from fastapi import APIRouter, Response, BackgroundTasks, HTTPException
 from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
 from tools import send_email
-from tools import SignupConfig
+from tools import SignupConfig, SessionConfig
 from expiring_dict import ExpiringDict
 import random
-from typing import Union
 from crud.user import create_user, check_unique_usr
 
 router = APIRouter(
@@ -56,7 +55,11 @@ match (SignupConfig.conf_code_complexity):
     },
     response_model=LoginResponse,
 )
-async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTasks):
+async def signup(
+    signup_form: UserSignupRequest,
+    background_tasks: BackgroundTasks,
+    response: Response,
+):
     """
     # Sign Up
 
@@ -100,7 +103,14 @@ async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTas
         )
         return Response(status_code=204)
     else:
-        return LoginResponse(create_user(signup_form, background_tasks))
+        session_token = create_user(signup_form, background_tasks)
+        if SessionConfig.auto_cookie:
+            response.set_cookie(
+                SessionConfig.auto_cookie_name,
+                session_token,
+                expires=SessionConfig.session_expiry_seconds,
+            )
+        return LoginResponse(session_token=session_token)
 
 
 @router.post(
@@ -113,7 +123,9 @@ async def signup(signup_form: UserSignupRequest, background_tasks: BackgroundTas
     },
 )
 async def confirm_email(
-    payload: ConfirmEmailCodeRequest, background_tasks: BackgroundTasks
+    payload: ConfirmEmailCodeRequest,
+    background_tasks: BackgroundTasks,
+    response: Response,
 ):
     """
     # Confirm E-Mail
@@ -129,4 +141,11 @@ async def confirm_email(
         raise HTTPException(detail="Code Expired", status_code=404)
     del temp_accounts[payload.email]
     # Account is confirmed, create the user
-    return LoginResponse(session_token=create_user(acc["form"], background_tasks))
+    session_token = create_user(acc["form"], background_tasks)
+    if SessionConfig.auto_cookie:
+        response.set_cookie(
+            SessionConfig.auto_cookie_name,
+            session_token,
+            expires=SessionConfig.session_expiry_seconds,
+        )
+    return LoginResponse(session_token=session_token)

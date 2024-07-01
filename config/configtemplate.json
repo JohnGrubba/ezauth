@@ -15,7 +15,7 @@
     "session": {
         "session_expiry_seconds": 86400,
         "max_session_count": 5,
-        "auto-cookie": true,
+        "auto_cookie": true,
         "auto_cookie_name": "session"
     },
     "internal": {

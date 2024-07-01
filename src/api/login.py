@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from api.model import LoginRequest, LoginResponse
 from crud.user import get_user_email_or_username
 from crud.sessions import create_login_session
 import bcrypt
+from tools.conf import SessionConfig
 
 router = APIRouter(
     prefix="/login",
@@ -19,7 +20,7 @@ router = APIRouter(
     },
     response_model=LoginResponse,
 )
-async def login(login_form: LoginRequest):
+async def login(login_form: LoginRequest, response: Response):
     """
     # Log In (Create Session)
 
@@ -36,5 +37,12 @@ async def login(login_form: LoginRequest):
         login_form.password.get_secret_value().encode("utf-8"),
         user["password"].encode("utf-8"),
     ):
-        return LoginResponse(session_token=create_login_session(user["_id"]))
+        session_token = create_login_session(user["_id"])
+        if SessionConfig.auto_cookie:
+            response.set_cookie(
+                SessionConfig.auto_cookie_name,
+                session_token,
+                expires=SessionConfig.session_expiry_seconds,
+            )
+        return LoginResponse(session_token=session_token)
     raise HTTPException(detail="Invalid Password", status_code=401)
