@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from . import EmailConfig
 import logging
 from threading import Lock
-from tools import users_collection, insecure_cols
+from tools import users_collection, InternalConfig
 
 
 def load_template(template_name: str, **kwargs) -> str:
@@ -39,7 +39,9 @@ def broadcast_emails(
 ):
     # Iter over all users and send them an email
     try:
-        cursor = users_collection.find(mongodb_search_condition, insecure_cols)
+        cursor = users_collection.find(
+            mongodb_search_condition, InternalConfig.internal_columns
+        )
         for user in cursor:
             try:
                 send_email(template_name, user["email"], **user)

@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Header, HTTPException, Depends, BackgroundTasks
-from typing import Annotated
 from tools import broadcast_emails, InternalConfig
 from api.model import BroadCastEmailRequest
 from threading import Lock
@@ -7,7 +6,7 @@ from threading import Lock
 email_task_running = Lock()
 
 
-async def check_internal_key(internal_api_key: Annotated[str, Header()]):
+async def check_internal_key(internal_api_key: str = Header(default=None)):
     if not internal_api_key:
         raise HTTPException(status_code=401)
     if internal_api_key != InternalConfig.internal_api_key:
@@ -18,7 +17,6 @@ router = APIRouter(
     prefix="/internal",
     tags=["Internal API"],
     dependencies=[Depends(check_internal_key)],
-    responses={401: {"description": "Unauthorized"}},
 )
 
 
@@ -53,3 +51,14 @@ async def broadcast_email(
         broadcast_request.mongodb_search_condition,
     )
     return {"status": "E-Mail Task Started"}
+
+
+@router.get("/profile")
+async def profile():
+    """
+    # Get Profile Information
+
+    ## Description
+    This endpoint is used to get the whole profile information of the user. (Including Internal Information)
+    """
+    return {"status": "ok"}

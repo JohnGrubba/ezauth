@@ -49,3 +49,9 @@ Make sure that all parameters are set correctly before starting the service.
 |  Parameter | Description |
 |------------|-------------|
 | `internal.internal_api_key` | **Datatype:** String <br> **Default:** `CHANGE_ME_NOW` <br> This is **sensitive** information and must **never** be exposed anywhere. |
+| `internal.internal_columns` | **Datatype:** List <br> **Default:** `["_id"]` <br> Columns that should only be revealed via the internal API. This example will never reveal `_id` to public endpoints, but just to the `/internal` endpoints as well as E-Mails. |
+
+### Account Features Configuration
+|  Parameter | Description |
+|------------|-------------|
+| `account_features.enable_change_password` | **Datatype:** Boolean <br> **Default:** `true` <br> Enable or disable the password reset feature. |

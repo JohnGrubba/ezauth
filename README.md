@@ -10,3 +10,11 @@
 
 > [!NOTE]
 > You can find the Documentation <a href="https://johngrubba.github.io/ezauth/" target="_blank">here</a>
+
+## Developement
+
+To enable a efficient development process, you can start the Service with hot reloading enabled. This will automatically restart the service when a file is changed.
+
+```sh
+docker compose -f .\docker-compose.dev.yml up -d --build
+```

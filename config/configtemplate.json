@@ -19,6 +19,12 @@
         "auto_cookie_name": "session"
     },
     "internal": {
-        "internal_api_key": "CHANGE_ME_NOW"
+        "internal_api_key": "CHANGE_ME_NOW",
+        "internal_columns": [
+            "_id"
+        ]
+    },
+    "account_features": {
+        "enable_change_password": true
     }
 }
