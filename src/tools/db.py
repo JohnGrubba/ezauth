@@ -13,7 +13,10 @@ users_collection.create_index("email", unique=True)
 users_collection.create_index("username", unique=True)
 sessions_collection.create_index("session_token", unique=True)
 
-sessions_collection.drop_index("createdAt_1")
+try:
+    sessions_collection.drop_index("createdAt_1")
+except:
+    pass
 # Set TTL For Sessions
 sessions_collection.create_index(
     "createdAt", expireAfterSeconds=SessionConfig.session_expiry_seconds
