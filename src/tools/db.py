@@ -9,8 +9,10 @@ db = client.get_database("ezauth")
 users_collection = db.get_collection("users")
 sessions_collection = db.get_collection("sessions")
 
+# Find Users by email and username fast (id is already indexed)
 users_collection.create_index("email", unique=True)
 users_collection.create_index("username", unique=True)
+# Find Sessions by session_token fast
 sessions_collection.create_index("session_token", unique=True)
 
 try:
@@ -21,6 +23,3 @@ except:
 sessions_collection.create_index(
     "createdAt", expireAfterSeconds=SessionConfig.session_expiry_seconds
 )
-
-# Columns that should never leave EZAuth (maybe get more in the future)
-insecure_cols = {"password": 0}

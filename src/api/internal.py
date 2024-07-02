@@ -51,3 +51,14 @@ async def broadcast_email(
         broadcast_request.mongodb_search_condition,
     )
     return {"status": "E-Mail Task Started"}
+
+
+@router.get("/profile")
+async def profile():
+    """
+    # Get Profile Information
+
+    ## Description
+    This endpoint is used to get the whole profile information of the user. (Including Internal Information)
+    """
+    return {"status": "ok"}

@@ -12,6 +12,15 @@ To guarantee the security of your user data, EZAuth uses the following security 
 - **2FA**: Two-factor authentication can be enabled for users.
 - **OAuth2**: OAuth2 can be enabled for users.
 
+## Documentation
+You are reading the informative documentation for EZAuth. 
+If you need a documentation of all the endpoints, you can start the service and navigate to the `/docs` endpoint to find the API Documentation.
+Because we utilize FastAPI, the documentation is done automatically and displayed via Swagger UI.
+This also makes the API OpenAPI compliant.
+
+!!! Info "API Documentation"
+    Navigate to [`http://localhost:3250/docs`](http://localhost:3250/docs) to see the API Documentation.
+
 ## Code Examples
 
 !!! Info "Official Libraries"
