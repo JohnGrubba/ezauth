@@ -12,6 +12,19 @@ import pymongo, bson
 import datetime
 
 
+def change_pswd(user_id: str, new_password: str) -> None:
+    """Changes the password of a user
+
+    Args:
+        user_id (str): User ID
+        new_password (str): New Password
+    """
+    users_collection.update_one(
+        {"_id": bson.ObjectId(user_id)},
+        {"$set": {"password": new_password}},
+    )
+
+
 def get_user(user_id: str) -> dict:
     """Gets a user by ID
 
