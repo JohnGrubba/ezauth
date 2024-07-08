@@ -1,9 +1,54 @@
 from crud import sessions
-from tools import users_collection, SignupConfig, send_email
+from tools import (
+    users_collection,
+    SignupConfig,
+    send_email,
+    InternalConfig,
+    insecure_cols,
+)
 from fastapi import HTTPException, BackgroundTasks, Response
 from api.model import UserSignupRequest, LoginResponse
-import pymongo
+import pymongo, bson
 import datetime
+
+
+def change_pswd(user_id: str, new_password: str) -> None:
+    """Changes the password of a user
+
+    Args:
+        user_id (str): User ID
+        new_password (str): New Password
+    """
+    users_collection.update_one(
+        {"_id": bson.ObjectId(user_id)},
+        {"$set": {"password": new_password}},
+    )
+
+
+def get_user(user_id: str) -> dict:
+    """Gets a user by ID
+
+    Args:
+        user_id (str): User ID
+
+    Returns:
+        dict: User Data
+    """
+    return users_collection.find_one({"_id": bson.ObjectId(user_id)}, insecure_cols)
+
+
+def get_public_user(user_id: str) -> dict:
+    """Gets public columns of a user
+
+    Args:
+        user_id (str): User ID
+
+    Returns:
+        dict: Public User Data
+    """
+    return users_collection.find_one(
+        {"_id": bson.ObjectId(user_id)}, InternalConfig.internal_columns
+    )
 
 
 def get_user_email_or_username(credential: str) -> dict:

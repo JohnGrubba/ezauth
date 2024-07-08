@@ -1,18 +1,18 @@
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Response, Cookie
 from api.model import LoginRequest, LoginResponse
 from crud.user import get_user_email_or_username
-from crud.sessions import create_login_session
+from crud.sessions import create_login_session, delete_session
 import bcrypt
 from tools.conf import SessionConfig
 
 router = APIRouter(
-    prefix="/login",
+    prefix="",
     tags=["Log In"],
 )
 
 
 @router.post(
-    "/",
+    "/login",
     status_code=200,
     responses={
         401: {"description": "Invalid Credentials"},
@@ -46,3 +46,16 @@ async def login(login_form: LoginRequest, response: Response):
             )
         return LoginResponse(session_token=session_token)
     raise HTTPException(detail="Invalid Password", status_code=401)
+
+
+@router.get("/logout", status_code=204)
+async def logout(
+    session_token: str = Cookie(default=None, alias=SessionConfig.auto_cookie_name)
+):
+    """
+    # Log Out (Delete Session)
+
+    ## Description
+    This endpoint is used to log out a user and delete the session.
+    """
+    delete_session(session_token)

@@ -55,3 +55,4 @@ Make sure that all parameters are set correctly before starting the service.
 |  Parameter | Description |
 |------------|-------------|
 | `account_features.enable_change_password` | **Datatype:** Boolean <br> **Default:** `true` <br> Enable or disable the password reset feature. |
+| `account_features.change_password_confirm_email` | **Datatype:** Boolean <br> **Default:** `true` <br> Enable or disable the password change confirmation E-Mail. |

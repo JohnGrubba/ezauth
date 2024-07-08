@@ -3,7 +3,7 @@ from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
 from tools import send_email
 from tools import SignupConfig, SessionConfig
 from expiring_dict import ExpiringDict
-import random
+from tools import all_ids, regenerate_ids
 from crud.user import create_user, check_unique_usr
 
 router = APIRouter(
@@ -17,32 +17,6 @@ temp_accounts["form"]: UserSignupRequest
 temp_accounts["code"]: str | int
 """
 temp_accounts = ExpiringDict(ttl=SignupConfig.conf_code_expiry * 60, interval=10)
-
-
-# Generate and shuffle 10000 unique IDs for confirmation email (Depending on complexity)
-match (SignupConfig.conf_code_complexity):
-    case 2:
-        # Random 6 Digit Numbers
-        all_ids = [str(random.randint(100000, 999999)) for _ in range(10000)]
-        random.shuffle(all_ids)
-    case 3:
-        # Random 4 Character Strings
-        all_ids = [
-            "".join(random.choices("abcdefghijklmnopqrstuvwxyz", k=4))
-            for _ in range(10000)
-        ]
-        random.shuffle(all_ids)
-    case 4:
-        # Random 6 Character Strings
-        all_ids = [
-            "".join(random.choices("abcdefghijklmnopqrstuvwxyz", k=6))
-            for _ in range(10000)
-        ]
-        random.shuffle(all_ids)
-    case _:
-        # Default Case (1)
-        all_ids = [str(i) for i in range(10000)]
-        random.shuffle(all_ids)
 
 
 @router.post(
@@ -81,11 +55,9 @@ async def signup(
             raise HTTPException(
                 detail="Email or Username already exists", status_code=409
             )
-        # If all numbers have been used, raise an exception
         if not all_ids:
-            raise Exception(
-                "All unique IDs have been used. More than 10000 signups in a short time."
-            )
+            # Generate new ids
+            regenerate_ids()
         # Get a unique ID for confirmation email
         unique_id = all_ids.pop()
         # Save the Account into the expiring dict (delete if user refuses to confirm email in time)

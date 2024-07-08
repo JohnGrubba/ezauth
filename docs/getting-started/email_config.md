@@ -1,5 +1,4 @@
-# Default E-Mail Templates
-
+# E-Mail Templates
 EZAuth uses a set of default E-mail templates to send out e-mails to users. These templates are stored in the `config/email` folder. You can customize these templates as per your requirements.
 
 !!! Info "E-Mail Subject"
@@ -27,7 +26,17 @@ EZAuth uses a set of default E-mail templates to send out e-mails to users. Thes
 - Will be sent out after the user has successfully verified their email address.
 - File Name: `WelcomeMail.html`
 
-# Custom E-Mail Templates
+### 3. **Password Reset**
+- Can be enabled in the `config.json` file.
+- Will be sent out when a user requests a password reset.
+- File Name: `ChangePassword.html`
+
+#### Additional Placeholders
+- `{{code}}`: The confirmation code to confirm the password change.
+- `{{time}}`: Time remaining before the confirmation code expires in minutes. (e.g. 5). This will be the same as the `signup.conf_code_expiry` value in the `config.json` file.
+
+
+## Custom E-Mail Templates
 You can add custom e-mail templates to the `config/email` folder.
 Whenever you are able to specifiy a E-Mail Template, you can specify the template you want to use by providing the file name without the `.html` extension.
 Example: `WelcomeMail` will use the `WelcomeMail.html` template.

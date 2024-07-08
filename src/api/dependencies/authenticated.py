@@ -1,6 +1,7 @@
 from fastapi import HTTPException, Cookie
 from tools import SessionConfig, InternalConfig
 from tools import users_collection, sessions_collection
+from crud.user import get_public_user
 import logging
 
 
@@ -14,9 +15,7 @@ async def get_pub_user(
     if not session:
         logging.debug("No session found")
         raise HTTPException(status_code=401)
-    user = users_collection.find_one(
-        {"_id": session["user_id"]}, InternalConfig.internal_columns
-    )
+    user = get_public_user(session["user_id"])
     if not user:
         logging.debug("No user for session found")
         raise HTTPException(status_code=401)

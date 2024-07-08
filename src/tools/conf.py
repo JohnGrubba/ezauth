@@ -40,3 +40,6 @@ class InternalConfig:
 
 class AccountFeaturesConfig:
     enable_change_password: bool = config["account_features"]["enable_change_password"]
+    change_password_confirm_email: bool = config["account_features"][
+        "change_password_confirm_email"
+    ]

@@ -25,6 +25,7 @@
         ]
     },
     "account_features": {
-        "enable_change_password": true
+        "enable_change_password": true,
+        "change_password_confirm_email": true
     }
 }
