@@ -1,4 +1,10 @@
-from pydantic import BaseModel, field_validator, EmailStr, SecretStr, ConfigDict
+from pydantic import (
+    BaseModel,
+    field_validator,
+    EmailStr,
+    SecretStr,
+    ConfigDict,
+)
 import re
 import bcrypt
 

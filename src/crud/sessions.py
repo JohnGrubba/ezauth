@@ -36,7 +36,7 @@ def create_login_session(user_id: str) -> str:
     return session_token
 
 
-def check_session(session_token: str) -> bool:
+def get_session(session_token: str) -> dict:
     """
     Check if the session is valid.
 
@@ -46,4 +46,20 @@ def check_session(session_token: str) -> bool:
     Returns:
         bool: True if the session is valid
     """
-    return sessions_collection.find_one({"session_token": session_token}) is not None
+    return sessions_collection.find_one({"session_token": session_token})
+
+
+def delete_session(session_token: str) -> bool:
+    """
+    Delete a session.
+
+    Args:
+        session_token (str): Session Token
+
+    Returns:
+        bool: True if the session was deleted
+    """
+    return (
+        sessions_collection.find_one_and_delete({"session_token": session_token})
+        is not None
+    )

@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-import os
+import os, bson.json_util, json
 from tools.conf import SessionConfig
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -23,3 +23,17 @@ except:
 sessions_collection.create_index(
     "createdAt", expireAfterSeconds=SessionConfig.session_expiry_seconds
 )
+
+
+def bson_to_json(data: bson.BSON) -> dict:
+    """Convert BSON to JSON. Also converts the _id to a string.
+
+    Args:
+        data (bson.BSON): BSON Data
+
+    Returns:
+        dict: JSON Data
+    """
+    original_json = json.loads(bson.json_util.dumps(data))
+    original_json["_id"] = str(original_json["_id"]["$oid"])
+    return original_json

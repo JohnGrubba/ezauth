@@ -1,9 +1,39 @@
 from crud import sessions
-from tools import users_collection, SignupConfig, send_email
+from tools import (
+    users_collection,
+    SignupConfig,
+    send_email,
+    InternalConfig,
+    insecure_cols,
+)
 from fastapi import HTTPException, BackgroundTasks, Response
 from api.model import UserSignupRequest, LoginResponse
 import pymongo
 import datetime
+
+
+def get_user(user_id: str) -> dict:
+    """Gets a user by ID
+
+    Args:
+        user_id (str): User ID
+
+    Returns:
+        dict: User Data
+    """
+    return users_collection.find_one({"_id": user_id})
+
+
+def get_public_user(user_id: str) -> dict:
+    """Gets public columns of a user
+
+    Args:
+        user_id (str): User ID
+
+    Returns:
+        dict: Public User Data
+    """
+    return users_collection.find_one({"_id": user_id}, InternalConfig.internal_columns)
 
 
 def get_user_email_or_username(credential: str) -> dict:
