@@ -38,13 +38,13 @@ def create_login_session(user_id: str) -> str:
 
 def get_session(session_token: str) -> dict:
     """
-    Check if the session is valid.
+    Check if the session is valid and return the session information.
 
     Args:
         session_token (str): Session Token
 
     Returns:
-        bool: True if the session is valid
+        dict: Session Information
     """
     return sessions_collection.find_one({"session_token": session_token})
 

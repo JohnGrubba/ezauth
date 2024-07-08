@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Header, HTTPException, Depends, BackgroundTasks
 from tools import broadcast_emails, InternalConfig, bson_to_json
-from api.model import BroadCastEmailRequest
+from api.model import BroadCastEmailRequest, InternalProfileRequest
 from crud.user import get_user
 from crud.sessions import get_session
 from threading import Lock
@@ -57,12 +57,14 @@ async def broadcast_email(
 
 
 @router.post("/profile")
-async def profile(session_token: str = Header(default=None)):
+async def profile(internal_req: InternalProfileRequest):
     """
     # Get Profile Information
 
     ## Description
     This endpoint is used to get the whole profile information of the user. (Including Internal Information)
     """
-    sess = get_session(session_token)
-    return bson_to_json(get_user(sess["user_id"]))
+    sess = (
+        get_session(internal_req.session_token) if internal_req.session_token else None
+    )
+    return bson_to_json(get_user(sess["user_id"] if sess else internal_req.user_id))

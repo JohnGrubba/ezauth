@@ -34,6 +34,8 @@ def bson_to_json(data: bson.BSON) -> dict:
     Returns:
         dict: JSON Data
     """
+    if not data:
+        return None
     original_json = json.loads(bson.json_util.dumps(data))
     original_json["_id"] = str(original_json["_id"]["$oid"])
     return original_json

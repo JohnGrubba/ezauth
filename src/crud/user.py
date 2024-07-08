@@ -8,7 +8,7 @@ from tools import (
 )
 from fastapi import HTTPException, BackgroundTasks, Response
 from api.model import UserSignupRequest, LoginResponse
-import pymongo
+import pymongo, bson
 import datetime
 
 
@@ -21,7 +21,7 @@ def get_user(user_id: str) -> dict:
     Returns:
         dict: User Data
     """
-    return users_collection.find_one({"_id": user_id})
+    return users_collection.find_one({"_id": bson.ObjectId(user_id)}, insecure_cols)
 
 
 def get_public_user(user_id: str) -> dict:
@@ -33,7 +33,9 @@ def get_public_user(user_id: str) -> dict:
     Returns:
         dict: Public User Data
     """
-    return users_collection.find_one({"_id": user_id}, InternalConfig.internal_columns)
+    return users_collection.find_one(
+        {"_id": bson.ObjectId(user_id)}, InternalConfig.internal_columns
+    )
 
 
 def get_user_email_or_username(credential: str) -> dict:

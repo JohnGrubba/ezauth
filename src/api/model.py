@@ -1,12 +1,12 @@
-from pydantic import (
-    BaseModel,
-    field_validator,
-    EmailStr,
-    SecretStr,
-    ConfigDict,
-)
+from pydantic import BaseModel, field_validator, EmailStr, SecretStr, ConfigDict
+from typing import Optional
 import re
 import bcrypt
+
+
+class InternalProfileRequest(BaseModel):
+    session_token: Optional[str] = None
+    user_id: Optional[str] = None
 
 
 class LoginRequest(BaseModel):
