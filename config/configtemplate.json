@@ -26,6 +26,11 @@
     },
     "account_features": {
         "enable_change_password": true,
-        "change_password_confirm_email": true
+        "change_password_confirm_email": true,
+        "2fa": {
+            "enable": false,
+            "issuer_name": "EZAuth",
+            "issuer_image_url": ""
+        }
     }
 }
