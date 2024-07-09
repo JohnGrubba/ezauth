@@ -33,6 +33,12 @@ async def login(login_form: LoginRequest, response: Response):
     user = get_user_email_or_username(login_form.identifier)
     if user is None:
         raise HTTPException(status_code=404)
+    # Check if Password Exists (or if OAuth SignIn)
+    if not user.get("password", None):
+        raise HTTPException(
+            detail="You created your Account with OAuth. Please Reset your Password once logged in.",
+            status_code=406,
+        )
     # Check Password
     if not bcrypt.checkpw(
         login_form.password.get_secret_value().encode("utf-8"),

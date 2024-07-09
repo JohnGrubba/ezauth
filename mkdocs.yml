@@ -14,6 +14,7 @@ nav:
   - Advanced:
     - Advanced E-Mail Templating: advanced/email_templates.md
     - Further Customization: advanced/further_custom.md
+    - OAuth: advanced/oauth.md
 theme:
   name: material
   logo: "ezauth_logo.png"
