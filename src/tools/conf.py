@@ -13,6 +13,8 @@ class SignupConfig:
     conf_code_expiry: int = config["signup"]["conf_code_expiry"]
     conf_code_complexity: int = config["signup"]["conf_code_complexity"]
     enable_welcome_email: bool = config["signup"]["enable_welcome_email"]
+    oauth_providers: list = config["signup"]["oauth"]["providers_enabled"]
+    oauth_base_url: str = str(config["signup"]["oauth"]["base_url"]).removesuffix("/")
 
 
 class EmailConfig:

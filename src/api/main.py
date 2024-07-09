@@ -6,6 +6,7 @@ from api.login import router as loginRouter
 from api.internal import router as internalRouter
 from api.profile import router as profileRouter
 from api.twofactor import router as twofactorRouter
+from api.oauth_providers import router as oauthRouter
 import logging
 
 logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
@@ -41,3 +42,4 @@ app.include_router(loginRouter)
 app.include_router(internalRouter)
 app.include_router(profileRouter)
 app.include_router(twofactorRouter)
+app.include_router(oauthRouter)
