@@ -3,7 +3,13 @@
         "enable_conf_email": false,
         "conf_code_expiry": 5,
         "conf_code_complexity": 1,
-        "enable_welcome_email": false
+        "enable_welcome_email": false,
+        "oauth": {
+            "providers_enabled": [
+                "google"
+            ],
+            "base_url": "http://localhost:3250/"
+        }
     },
     "email": {
         "login_usr": "",

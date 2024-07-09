@@ -12,6 +12,30 @@ import pymongo, bson
 import datetime
 
 
+def link_google_account(user_id: str, google_uid: str) -> None:
+    """Link a Google Account to a User
+
+    Args:
+        user_id (str): User ID
+        google_uid (str): Google UID
+    """
+    users_collection.update_one(
+        {"_id": bson.ObjectId(user_id)}, {"$set": {"google_uid": google_uid}}
+    )
+
+
+def get_user_by_google_uid(google_uid: str) -> dict:
+    """Get a user by Google UID
+
+    Args:
+        google_uid (str): Google UID
+
+    Returns:
+        dict: User Data
+    """
+    return users_collection.find_one({"google_uid": google_uid})
+
+
 def get_batch_users(user_ids: list) -> list:
     """Get a batch of users by ID
 
@@ -141,7 +165,9 @@ def check_unique_usr(email: str, username: str) -> bool:
 
 
 def create_user(
-    signup_model: UserSignupRequest, background_tasks: BackgroundTasks
+    signup_model: UserSignupRequest,
+    background_tasks: BackgroundTasks,
+    additional_data: dict = {},
 ) -> str | HTTPException:
     """Creates a User in the Database
 
@@ -151,20 +177,26 @@ def create_user(
     Returns:
         str: Session Token
     """
+    data = {
+        **(
+            signup_model.model_dump() if type(signup_model) == UserSignupRequest else {}
+        ),
+        **additional_data,
+    }
     # Save the Account into the database
     try:
         user_db = users_collection.insert_one(
-            {**signup_model.model_dump(), "createdAt": datetime.datetime.now()}
+            {
+                **data,
+                "createdAt": datetime.datetime.now(),
+            }
         )
     except pymongo.errors.DuplicateKeyError:
         raise HTTPException(detail="Email or Username already exists.", status_code=409)
+    # Drop password from data
+    data.pop("password")
     # User Created (Create Session Token and send Welcome Email)
     session_token = sessions.create_login_session(user_db.inserted_id)
     if SignupConfig.enable_welcome_email:
-        background_tasks.add_task(
-            send_email,
-            "WelcomeEmail",
-            signup_model.email,
-            **signup_model.model_dump(exclude={"password"})
-        )
+        background_tasks.add_task(send_email, "WelcomeEmail", data["email"], **data)
     return session_token

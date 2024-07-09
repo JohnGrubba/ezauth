@@ -4,7 +4,7 @@ from collections import ChainMap
 config = json.load(open("/src/app/config/config.json", "rb"))
 
 # Columns that should never leave EZAuth (maybe get more in the future)
-insecure_cols = {"password": 0, "2fa_secret": 0}
+insecure_cols = {"password": 0, "2fa_secret": 0, "google_uid": 0}
 # Columns that can leave EZAuth but should only be used internally can be defined in config
 
 
@@ -13,6 +13,8 @@ class SignupConfig:
     conf_code_expiry: int = config["signup"]["conf_code_expiry"]
     conf_code_complexity: int = config["signup"]["conf_code_complexity"]
     enable_welcome_email: bool = config["signup"]["enable_welcome_email"]
+    oauth_providers: list = config["signup"]["oauth"]["providers_enabled"]
+    oauth_base_url: str = str(config["signup"]["oauth"]["base_url"]).removesuffix("/")
 
 
 class EmailConfig:
