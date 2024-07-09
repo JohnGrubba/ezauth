@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from api.dependencies import get_user_dep, get_dangerous_user_dep
+from api.dependencies import get_user_dep
 import pyotp
 from tools import AccountFeaturesConfig
 from crud.user import add_2fa

@@ -6,10 +6,26 @@ from tools import (
     InternalConfig,
     insecure_cols,
 )
-from fastapi import HTTPException, BackgroundTasks, Response
-from api.model import UserSignupRequest, LoginResponse
+from fastapi import HTTPException, BackgroundTasks
+from api.model import UserSignupRequest
 import pymongo, bson
 import datetime
+
+
+def get_batch_users(user_ids: list) -> list:
+    """Get a batch of users by ID
+
+    Args:
+        user_ids (list): List of User IDs
+
+    Returns:
+        list: List of User Data
+    """
+    try:
+        bson_ids = [bson.ObjectId(i) for i in user_ids]
+    except bson.errors.InvalidId:
+        raise HTTPException(detail="Invalid User ID", status_code=400)
+    return list(users_collection.find({"_id": {"$in": bson_ids}}, insecure_cols))
 
 
 def update_public_user(user_id: str, data: dict) -> None:

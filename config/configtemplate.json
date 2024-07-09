@@ -22,11 +22,14 @@
         "internal_api_key": "CHANGE_ME_NOW",
         "internal_columns": [
             "_id"
+        ],
+        "not_updateable_columns": [
+            "email"
         ]
     },
     "account_features": {
-        "enable_change_password": true,
-        "change_password_confirm_email": false,
+        "enable_reset_pswd": true,
+        "reset_pswd_conf_mail": false,
         "2fa": {
             "enable": false,
             "issuer_name": "EZAuth",

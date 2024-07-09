@@ -42,10 +42,8 @@ class InternalConfig:
 
 
 class AccountFeaturesConfig:
-    enable_change_password: bool = config["account_features"]["enable_change_password"]
-    change_password_confirm_email: bool = config["account_features"][
-        "change_password_confirm_email"
-    ]
+    enable_reset_pswd: bool = config["account_features"]["enable_reset_pswd"]
+    reset_pswd_conf_mail: bool = config["account_features"]["reset_pswd_conf_mail"]
     enable_2fa: bool = config["account_features"]["2fa"]["enable"]
     issuer_name_2fa: str = config["account_features"]["2fa"]["issuer_name"]
     issuer_image_url_2fa: str = config["account_features"]["2fa"]["issuer_image_url"]

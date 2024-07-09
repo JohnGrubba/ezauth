@@ -1,6 +1,6 @@
 from fastapi import HTTPException, Cookie
-from tools import SessionConfig, InternalConfig
-from tools import users_collection, sessions_collection
+from tools import SessionConfig
+from tools import sessions_collection
 from crud.user import get_public_user, get_user, get_dangerous_user
 import logging
 

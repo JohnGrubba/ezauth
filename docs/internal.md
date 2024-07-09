@@ -1,6 +1,8 @@
 # Internal API
 
 EZAuth provides an internal API for other services to interact with the service. This API is not meant to be exposed to the public and should only be used by services that are running on the same network as the EZAuth service.
+The Idea is to provide only the User ID to other services, which can then be stored in their own database to reference the user.
+And once the data is needed, the service can use the internal API to get the user data. This way the user data is not exposed to the public and always kept secure by EZAuth :)
 
 !!! danger "Internal API Key"
     Even though it is recommended to hide the `/internal` endpoints from the public with a middleware, you should still keep the `internal_api_key` secret. If someone gets access to this key, they can access all the internal API endpoints.
@@ -27,4 +29,4 @@ Any request to an internal endpoint without the `internal_api_key` header will r
 
 
 !!! Info "E-Mail Information"
-    For more information on how to send E-Mails using the internal API, see the [E-Mail Configuration](./getting-started/email_config.md#custom-e-mail-templates) section.
+    For more information on how to send E-Mails using the internal API, see the [E-Mail Configuration](./configuration/email_templates.md#custom-e-mail-templates) section.
