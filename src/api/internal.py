@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Header, HTTPException, Depends, BackgroundTasks
 from tools import broadcast_emails, InternalConfig, bson_to_json
 from api.model import BroadCastEmailRequest, InternalProfileRequest
-from crud.user import get_user
+from crud.user import get_user, get_batch_users
 from crud.sessions import get_session
 from threading import Lock
 
@@ -68,3 +68,22 @@ async def profile(internal_req: InternalProfileRequest):
         get_session(internal_req.session_token) if internal_req.session_token else None
     )
     return bson_to_json(get_user(sess["user_id"] if sess else internal_req.user_id))
+
+
+@router.get("/batch-users")
+async def batch_users(user_ids_req: str):
+    """
+    # Get Batch User Information
+
+    ## Description
+    This endpoint is used to get the whole profile information of multiple users. (Including Internal Information)
+
+    ## Query Parameters
+    - **user_ids**: List of User IDs seperated by `,`
+    """
+    ids = user_ids_req.split(",")
+    if len(ids) > 50:
+        raise HTTPException(
+            status_code=400, detail="Too many User IDs. Max 50 User IDs allowed."
+        )
+    return [bson_to_json(_) for _ in get_batch_users(ids)]
