@@ -42,9 +42,9 @@ class InternalConfig:
 
 
 class AccountFeaturesConfig:
-    enable_change_password: bool = config["account_features"]["enable_change_password"]
-    change_password_confirm_email: bool = config["account_features"][
-        "change_password_confirm_email"
+    enable_reset_password: bool = config["account_features"]["enable_reset_password"]
+    reset_password_confirm_email: bool = config["account_features"][
+        "reset_password_confirm_email"
     ]
     enable_2fa: bool = config["account_features"]["2fa"]["enable"]
     issuer_name_2fa: str = config["account_features"]["2fa"]["issuer_name"]
