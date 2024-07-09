@@ -9,11 +9,12 @@ from crud.user import (
     get_user_email_or_username,
     link_google_account,
 )
-from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
+from api.model import LoginResponse
 import jwt
 from crud.sessions import create_login_session
 from tools import SignupConfig, SessionConfig
 
+# Required for HTTP
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 router = APIRouter(
@@ -21,6 +22,7 @@ router = APIRouter(
     dependencies=[],
 )
 
+# Initialize Googles OAuth Flow
 flow = Flow.from_client_secrets_file(
     client_secrets_file="/src/app/config/client_secret.env.json",
     scopes=[
@@ -66,7 +68,11 @@ async def oauth_callback(
     ## Description
     This endpoint is used to handle the OAuth callback.
     """
-    token = flow.fetch_token(authorization_response=request.url.__str__())
+    # Get Information about user from Google
+    try:
+        token = flow.fetch_token(authorization_response=request.url.__str__())
+    except:
+        raise HTTPException(status_code=401, detail="Invalid OAuth Token")
     jwt_id = token["id_token"]
     jwt_decoded = jwt.decode(
         jwt_id, algorithms=["RS256"], options={"verify_signature": False}
@@ -88,6 +94,7 @@ async def oauth_callback(
         link_google_account(usr["_id"], jwt_decoded["sub"])
         return login_usr(response, usr)
 
+    # Custom SignUp Form (Password Field missing etc.)
     signup_form = {
         "email": jwt_decoded["email"],
         "username": username,
@@ -95,7 +102,7 @@ async def oauth_callback(
         "google_uid": jwt_decoded["sub"],
     }
     # Persist user in DB
-    session_token = create_user(None, background_tasks, signup_form)
+    session_token = create_user(signup_form, background_tasks, signup_form)
     if SessionConfig.auto_cookie:
         response.set_cookie(
             SessionConfig.auto_cookie_name,

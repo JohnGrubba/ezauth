@@ -177,24 +177,26 @@ def create_user(
     Returns:
         str: Session Token
     """
+    data = {
+        **(
+            signup_model.model_dump() if type(signup_model) == UserSignupRequest else {}
+        ),
+        **additional_data,
+    }
     # Save the Account into the database
     try:
         user_db = users_collection.insert_one(
             {
-                **(signup_model.model_dump() if signup_model else {}),
-                **additional_data,
+                **data,
                 "createdAt": datetime.datetime.now(),
             }
         )
     except pymongo.errors.DuplicateKeyError:
         raise HTTPException(detail="Email or Username already exists.", status_code=409)
+    # Drop password from data
+    data.pop("password")
     # User Created (Create Session Token and send Welcome Email)
     session_token = sessions.create_login_session(user_db.inserted_id)
     if SignupConfig.enable_welcome_email:
-        background_tasks.add_task(
-            send_email,
-            "WelcomeEmail",
-            signup_model.email,
-            **signup_model.model_dump(exclude={"password"})
-        )
+        background_tasks.add_task(send_email, "WelcomeEmail", data["email"], **data)
     return session_token
