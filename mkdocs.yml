@@ -4,12 +4,16 @@ use_directory_urls: True
 repo_url: https://github.com/JohnGrubba/ezauth
 nav:
   - Home: index.md
+  - Information: information.md
   - Getting Started:
     - Installation / Setup: getting-started/setup.md
-    - Configuration: getting-started/configuration.md
-  - E-Mail Templates: getting-started/email_config.md
-  - Information: information.md
+  - Configuration:
+    - Configuration File: configuration/configuration.md
+    - E-Mail Templates: configuration/email_templates.md
   - Internal API: internal.md
+  - Advanced:
+    - Advanced E-Mail Templating: advanced/email_templates.md
+    - Further Customization: advanced/further_custom.md
 theme:
   name: material
   logo: "ezauth_logo.png"

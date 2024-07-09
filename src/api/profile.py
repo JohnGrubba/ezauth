@@ -39,10 +39,10 @@ async def reset_password(
     ## Description
     This endpoint is used to reset the password of the user.
     """
-    if not AccountFeaturesConfig.enable_reset_password:
+    if not AccountFeaturesConfig.enable_reset_pswd:
         raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
     # Send Confirmation E-Mail (If enabled)
-    if AccountFeaturesConfig.reset_password_confirm_email:
+    if AccountFeaturesConfig.reset_pswd_conf_mail:
         if not all_ids:
             # Generate new ids
             regenerate_ids()
@@ -73,7 +73,7 @@ async def confirm_password(code: str | int, user=Depends(get_user_dep)):
     ## Description
     This endpoint is used to confirm a password reset.
     """
-    if not AccountFeaturesConfig.enable_reset_password:
+    if not AccountFeaturesConfig.enable_reset_pswd:
         raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
     try:
         change_req = temp_changes[user["email"]]
