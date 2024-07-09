@@ -36,6 +36,9 @@ class InternalConfig:
         ChainMap(*[{col: 0} for col in config["internal"]["internal_columns"]])
     )
     internal_columns.update(insecure_cols)
+    not_updateable_columns: list = config["internal"]["not_updateable_columns"] + list(
+        internal_columns.keys()
+    )
 
 
 class AccountFeaturesConfig:

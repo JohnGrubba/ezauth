@@ -1,10 +1,8 @@
 from fastapi import APIRouter, Depends, Cookie, HTTPException, BackgroundTasks
-from tools.conf import SessionConfig, AccountFeaturesConfig, SignupConfig
+from tools.conf import AccountFeaturesConfig, SignupConfig
 from api.model import PasswordHashed
-from crud.user import change_pswd
+from crud.user import change_pswd, update_public_user
 from api.dependencies.authenticated import get_pub_user_dep, get_user_dep
-from crud.user import get_user
-from crud.sessions import get_session
 from tools import send_email, all_ids, regenerate_ids
 from expiring_dict import ExpiringDict
 
@@ -87,3 +85,16 @@ async def confirm_password(code: str | int, user=Depends(get_user_dep)):
 
     change_pswd(user["_id"], change_req["new_pswd"])
     del temp_changes[user["email"]]
+
+
+@router.patch("/", status_code=200)
+async def update_profile(update_data: dict, user: dict = Depends(get_user_dep)):
+    """
+    # Update Profile Information
+    Public user can only update existing fields and viewable fields for him.
+    If you want to edit internal columns, use an internal endpoint.
+
+    ## Description
+    This endpoint is used to update the profile information of the user.
+    """
+    return update_public_user(user["_id"], update_data)
