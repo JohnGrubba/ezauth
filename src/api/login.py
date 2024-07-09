@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Response, Cookie
 from api.model import LoginRequest, LoginResponse
 from crud.user import get_user_email_or_username
 from crud.sessions import create_login_session, delete_session
-import bcrypt
+import bcrypt, pyotp
 from tools.conf import SessionConfig
 
 router = APIRouter(
@@ -17,6 +17,7 @@ router = APIRouter(
     responses={
         401: {"description": "Invalid Credentials"},
         404: {"description": "User not found"},
+        406: {"description": "2FA Required"},
     },
     response_model=LoginResponse,
 )
@@ -33,19 +34,24 @@ async def login(login_form: LoginRequest, response: Response):
     if user is None:
         raise HTTPException(status_code=404)
     # Check Password
-    if bcrypt.checkpw(
+    if not bcrypt.checkpw(
         login_form.password.get_secret_value().encode("utf-8"),
         user["password"].encode("utf-8"),
     ):
-        session_token = create_login_session(user["_id"])
-        if SessionConfig.auto_cookie:
-            response.set_cookie(
-                SessionConfig.auto_cookie_name,
-                session_token,
-                expires=SessionConfig.session_expiry_seconds,
-            )
-        return LoginResponse(session_token=session_token)
-    raise HTTPException(detail="Invalid Password", status_code=401)
+        raise HTTPException(detail="Invalid Password", status_code=401)
+    # Check if 2FA
+    if user.get("2fa_secret", None):
+        # Validate 2FA
+        if not pyotp.TOTP(user["2fa_secret"]).verify(login_form.two_factor_code):
+            raise HTTPException(detail="Invalid 2FA Code", status_code=401)
+    session_token = create_login_session(user["_id"])
+    if SessionConfig.auto_cookie:
+        response.set_cookie(
+            SessionConfig.auto_cookie_name,
+            session_token,
+            expires=SessionConfig.session_expiry_seconds,
+        )
+    return LoginResponse(session_token=session_token)
 
 
 @router.get("/logout", status_code=204)

@@ -16,6 +16,7 @@ class InternalProfileRequest(BaseModel):
 class LoginRequest(BaseModel):
     identifier: str
     password: SecretStr
+    two_factor_code: Optional[int] = None
 
 
 class LoginResponse(BaseModel):
