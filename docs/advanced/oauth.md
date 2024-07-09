@@ -21,7 +21,7 @@ The following Rules are applied when using OAuth:<br>
 6. Add the following URIs to the `Authorized redirect URIs`:
     - `http://localhost:3250/oauth/google/callback`
 7. Add the following scopes
-<img src="/assets/scopes_google.png" style='margin-top: 10px;' />
+<img src="../assets/scopes_google.png" style='margin-top: 10px;' />
 
 8. Click on `Create` and download the credentials as JSON and place them in the `config` folder.
 Make sure the name of the file is `client_secret.env.json`.
