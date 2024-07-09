@@ -4,6 +4,10 @@ import re
 import bcrypt
 
 
+class TwoFactorAddResponse(BaseModel):
+    provision_uri: str
+
+
 class InternalProfileRequest(BaseModel):
     session_token: Optional[str] = None
     user_id: Optional[str] = None

@@ -3,7 +3,7 @@
         "enable_conf_email": false,
         "conf_code_expiry": 5,
         "conf_code_complexity": 1,
-        "enable_welcome_email": true
+        "enable_welcome_email": false
     },
     "email": {
         "login_usr": "",
@@ -26,6 +26,11 @@
     },
     "account_features": {
         "enable_change_password": true,
-        "change_password_confirm_email": true
+        "change_password_confirm_email": false,
+        "2fa": {
+            "enable": false,
+            "issuer_name": "EZAuth",
+            "issuer_image_url": ""
+        }
     }
 }

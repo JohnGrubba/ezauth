@@ -12,6 +12,37 @@ import pymongo, bson
 import datetime
 
 
+def update_public_user(user_id: str, data: dict) -> None:
+    """Updates Public User Data
+
+    Args:
+        user_id (str): User ID
+        data (dict): Data to Update
+    """
+    # Allow update of all columns except InternalConfig.internal_columns
+    data = {
+        k: v for k, v in data.items() if k not in InternalConfig.not_updateable_columns
+    }
+    return users_collection.find_one_and_update(
+        {"_id": bson.ObjectId(user_id)},
+        {"$set": data},
+        InternalConfig.internal_columns,
+        return_document=pymongo.ReturnDocument.AFTER,
+    )
+
+
+def add_2fa(user_id: str, secret: str) -> None:
+    """Adds 2FA to a user
+
+    Args:
+        user_id (str): User ID
+        secret (str): 2FA Secret
+    """
+    users_collection.update_one(
+        {"_id": bson.ObjectId(user_id)}, {"$set": {"2fa_secret": secret}}
+    )
+
+
 def change_pswd(user_id: str, new_password: str) -> None:
     """Changes the password of a user
 
@@ -23,6 +54,18 @@ def change_pswd(user_id: str, new_password: str) -> None:
         {"_id": bson.ObjectId(user_id)},
         {"$set": {"password": new_password}},
     )
+
+
+def get_dangerous_user(user_id: str) -> dict:
+    """Gets a user by ID
+
+    Args:
+        user_id (str): User ID
+
+    Returns:
+        dict: User Data
+    """
+    return users_collection.find_one({"_id": bson.ObjectId(user_id)})
 
 
 def get_user(user_id: str) -> dict:

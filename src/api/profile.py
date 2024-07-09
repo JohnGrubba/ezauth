@@ -1,24 +1,22 @@
 from fastapi import APIRouter, Depends, Cookie, HTTPException, BackgroundTasks
-from tools.conf import SessionConfig, AccountFeaturesConfig, SignupConfig
+from tools.conf import AccountFeaturesConfig, SignupConfig
 from api.model import PasswordHashed
-from crud.user import change_pswd
-from api.dependencies.authenticated import get_pub_user
-from crud.user import get_user
-from crud.sessions import get_session
+from crud.user import change_pswd, update_public_user
+from api.dependencies.authenticated import get_pub_user_dep, get_user_dep
 from tools import send_email, all_ids, regenerate_ids
 from expiring_dict import ExpiringDict
 
 router = APIRouter(
     prefix="/profile",
     tags=["Profile"],
-    dependencies=[Depends(get_pub_user)],
+    dependencies=[Depends(get_pub_user_dep)],
 )
 
 temp_changes = ExpiringDict(ttl=SignupConfig.conf_code_expiry * 60, interval=10)
 
 
 @router.get("/")
-async def profile(user: dict = Depends(get_pub_user)):
+async def profile(user: dict = Depends(get_pub_user_dep)):
     """
     # Get Profile Information
 
@@ -32,8 +30,8 @@ async def profile(user: dict = Depends(get_pub_user)):
 async def change_password(
     new_password: PasswordHashed,
     background_tasks: BackgroundTasks,
-    session_token: str = Cookie(default=None, alias=SessionConfig.auto_cookie_name),
-    public_user: dict = Depends(get_pub_user),
+    user=Depends(get_user_dep),
+    public_user: dict = Depends(get_pub_user_dep),
 ):
     """
     # Change Password
@@ -43,10 +41,6 @@ async def change_password(
     """
     if not AccountFeaturesConfig.enable_change_password:
         raise HTTPException(status_code=403, detail="Changing Password is disabled.")
-    sess = get_session(session_token)
-    if not sess:
-        raise HTTPException(status_code=401)
-    user = get_user(sess["user_id"])
     # Send Confirmation E-Mail (If enabled)
     if AccountFeaturesConfig.change_password_confirm_email:
         if not all_ids:
@@ -72,20 +66,13 @@ async def change_password(
 
 
 @router.post("/confirm-password", status_code=204)
-async def confirm_password(
-    code: str | int,
-    session_token: str = Cookie(default=None, alias=SessionConfig.auto_cookie_name),
-):
+async def confirm_password(code: str | int, user=Depends(get_user_dep)):
     """
     # Confirm Password Change
 
     ## Description
     This endpoint is used to confirm a password change.
     """
-    sess = get_session(session_token)
-    if not sess:
-        raise HTTPException(status_code=401)
-    user = get_user(sess["user_id"])
     if not AccountFeaturesConfig.enable_change_password:
         raise HTTPException(status_code=403, detail="Changing Password is disabled.")
     try:
@@ -98,3 +85,16 @@ async def confirm_password(
 
     change_pswd(user["_id"], change_req["new_pswd"])
     del temp_changes[user["email"]]
+
+
+@router.patch("/", status_code=200)
+async def update_profile(update_data: dict, user: dict = Depends(get_user_dep)):
+    """
+    # Update Profile Information
+    Public user can only update existing fields and viewable fields for him.
+    If you want to edit internal columns, use an internal endpoint.
+
+    ## Description
+    This endpoint is used to update the profile information of the user.
+    """
+    return update_public_user(user["_id"], update_data)
