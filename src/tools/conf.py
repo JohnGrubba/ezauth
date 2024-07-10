@@ -49,3 +49,4 @@ class AccountFeaturesConfig:
     enable_2fa: bool = config["account_features"]["2fa"]["enable"]
     issuer_name_2fa: str = config["account_features"]["2fa"]["issuer_name"]
     issuer_image_url_2fa: str = config["account_features"]["2fa"]["issuer_image_url"]
+    qr_code_endpoint_2fa: bool = config["account_features"]["2fa"]["qr_endpoint"]
