@@ -9,7 +9,7 @@ from api.twofactor import router as twofactorRouter
 from api.oauth_providers import router as oauthRouter
 import logging
 
-logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
+logging.basicConfig(format="%(message)s", level=logging.INFO, force=True)
 
 app = FastAPI(
     title="EZAuth API",

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Response, BackgroundTasks, HTTPException
 from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
 from tools import send_email
+import json
 from tools import SignupConfig, SessionConfig
-from expiring_dict import ExpiringDict
-from tools import all_ids, regenerate_ids
+from tools import all_ids, regenerate_ids, r
 from crud.user import create_user, check_unique_usr
 
 router = APIRouter(
@@ -16,7 +16,6 @@ router = APIRouter(
 temp_accounts["form"]: UserSignupRequest
 temp_accounts["code"]: str | int
 """
-temp_accounts = ExpiringDict(ttl=SignupConfig.conf_code_expiry * 60, interval=10)
 
 
 @router.post(
@@ -44,11 +43,7 @@ async def signup(
     if SignupConfig.enable_conf_email:
         # Those checks are only needed when confirmation emails are enabled (otherwise, create the user directly and raise duplicate from mongodb)
         # Check if email in confirmation email dict
-        try:
-            temp_accounts[signup_form.email]
-        except KeyError:
-            pass
-        else:
+        if r.get("signup:" + signup_form.email):
             raise HTTPException(detail="E-Mail already sent", status_code=409)
         # Check if user already exists in database
         if check_unique_usr(signup_form.email, signup_form.username):
@@ -62,7 +57,11 @@ async def signup(
         unique_id = all_ids.pop()
         # Save the Account into the expiring dict (delete if user refuses to confirm email in time)
         # Indexed by E-Mail to quickly check if the user has already signed up (O(1))
-        temp_accounts[signup_form.email] = {"form": signup_form, "code": unique_id}
+        r.setex(
+            "signup:" + signup_form.email,
+            SignupConfig.conf_code_expiry * 60,
+            json.dumps({"form": signup_form.model_dump(), "code": unique_id}),
+        )
 
         # Generate and send confirmation email
         background_tasks.add_task(
@@ -105,19 +104,21 @@ async def confirm_email(
     ## Description
     This endpoint is used to confirm the E-Mail of a user. This is only needed if confirmation E-Mails are enabled.
     """
-    try:
-        acc = temp_accounts[payload.email]
-        if acc["code"] != payload.code:
-            raise HTTPException(detail="Invalid Code", status_code=404)
-    except KeyError:
-        raise HTTPException(detail="Code Expired", status_code=404)
-    del temp_accounts[payload.email]
+    acc = r.get("signup:" + payload.email)
+    if not acc:
+        raise HTTPException(detail="No Account Found with this code.", status_code=404)
+    acc = json.loads(acc)
+    if str(acc["code"]) != str(payload.code):
+        raise HTTPException(detail="Invalid Code", status_code=404)
     # Account is confirmed, create the user
-    session_token = create_user(acc["form"], background_tasks)
+    session_token = create_user(
+        None, background_tasks=background_tasks, additional_data=acc["form"]
+    )
     if SessionConfig.auto_cookie:
         response.set_cookie(
             SessionConfig.auto_cookie_name,
             session_token,
             expires=SessionConfig.session_expiry_seconds,
         )
+    r.delete("signup:" + payload.email)
     return LoginResponse(session_token=session_token)

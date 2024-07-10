@@ -6,9 +6,14 @@ services:
       - "3250:80"
     environment:
       - DATABASE_URL=mongodb://admin:admin@db/ezauth?authSource=admin&retryWrites=true&w=majority
+      - REDIS_PASSWORD=admin
+      - REDIS_HOST=redis
     restart: always
     volumes:
       - ./config:/src/app/config
+    depends_on:
+      - db
+      - redis
   db:
       image: mongo
       expose:
@@ -20,6 +25,12 @@ services:
         - MONGO_INITDB_DATABASE=ezauth
       volumes:
         - ezauth-data:/data/db
+  redis:
+    image: redis:alpine
+    restart: always
+    expose:
+      - 6379
+    command: redis-server --requirepass admin
 
 volumes:
   ezauth-data:

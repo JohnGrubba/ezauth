@@ -1,18 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from tools.conf import AccountFeaturesConfig, SignupConfig
 from api.model import PasswordHashed
+import json
 from crud.user import change_pswd, update_public_user
 from api.dependencies.authenticated import get_pub_user_dep, get_user_dep
-from tools import send_email, all_ids, regenerate_ids
-from expiring_dict import ExpiringDict
+from tools import send_email, all_ids, regenerate_ids, r
 
 router = APIRouter(
     prefix="/profile",
     tags=["Profile"],
     dependencies=[Depends(get_pub_user_dep)],
 )
-
-temp_changes = ExpiringDict(ttl=SignupConfig.conf_code_expiry * 60, interval=10)
 
 
 @router.get("/")
@@ -43,16 +41,27 @@ async def reset_password(
         raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
     # Send Confirmation E-Mail (If enabled)
     if AccountFeaturesConfig.reset_pswd_conf_mail:
+        if r.get("reset_pswd:" + user["email"]):
+            raise HTTPException(
+                status_code=409,
+                detail="Password Reset Email already sent. You have one request pending.",
+            )
         if not all_ids:
             # Generate new ids
             regenerate_ids()
         # Get a unique ID for confirmation email
         unique_id = all_ids.pop()
-        temp_changes[user["email"]] = {
-            "action": "password_reset",
-            "code": unique_id,
-            "new_pswd": new_password.password,
-        }
+        r.setex(
+            "reset_pswd:" + user["email"],
+            SignupConfig.conf_code_expiry * 60,
+            json.dumps(
+                {
+                    "action": "password_reset",
+                    "code": unique_id,
+                    "new_pswd": new_password.password,
+                }
+            ),
+        )
         background_tasks.add_task(
             send_email,
             "ChangePassword",
@@ -75,16 +84,16 @@ async def confirm_password(code: str | int, user=Depends(get_user_dep)):
     """
     if not AccountFeaturesConfig.enable_reset_pswd:
         raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
-    try:
-        change_req = temp_changes[user["email"]]
-    except KeyError:
+    change_req = r.get("reset_pswd:" + user["email"])
+    if not change_req:
         raise HTTPException(status_code=404, detail="No Password Reset Request found.")
+    change_req = json.loads(change_req)
     # Check code
     if change_req["code"] != code:
         raise HTTPException(status_code=401, detail="Invalid Code")
 
     change_pswd(user["_id"], change_req["new_pswd"])
-    del temp_changes[user["email"]]
+    r.delete("reset_pswd:" + user["email"])
 
 
 @router.patch("/", status_code=200)

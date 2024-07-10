@@ -6,3 +6,4 @@ pyotp==2.9.0
 google-auth-oauthlib==1.2.1
 pyjwt[crypto]==2.8.0
 qrcode==7.4.2
+redis[hiredis]==5.0.7
