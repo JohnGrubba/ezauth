@@ -1,7 +1,7 @@
 # Information about EZAuth
 
 EZAuth is a simple and easy-to-use authentication service for your applications. It is built on top of [FastAPI](https://fastapi.tiangolo.com/)
-and [MongoDB](https://www.mongodb.com/).
+and [MongoDB](https://www.mongodb.com/). It also uses [Redis](https://redis.io/) for temporary storage.
 
 ## Security
 To guarantee the security of your user data, EZAuth uses the following security measures:
