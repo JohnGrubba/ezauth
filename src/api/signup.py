@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, BackgroundTasks, HTTPException
+from fastapi import APIRouter, Response, BackgroundTasks, HTTPException, Request
 from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
 from tools import send_email
 import json
@@ -32,6 +32,7 @@ async def signup(
     signup_form: UserSignupRequest,
     background_tasks: BackgroundTasks,
     response: Response,
+    request: Request,
 ):
     """
     # Sign Up
@@ -74,7 +75,7 @@ async def signup(
         )
         return Response(status_code=204)
     else:
-        session_token = create_user(signup_form, background_tasks)
+        session_token = create_user(signup_form, background_tasks, request)
         if SessionConfig.auto_cookie:
             response.set_cookie(
                 SessionConfig.auto_cookie_name,
@@ -97,6 +98,7 @@ async def confirm_email(
     payload: ConfirmEmailCodeRequest,
     background_tasks: BackgroundTasks,
     response: Response,
+    request: Request,
 ):
     """
     # Confirm E-Mail
@@ -112,7 +114,7 @@ async def confirm_email(
         raise HTTPException(detail="Invalid Code", status_code=404)
     # Account is confirmed, create the user
     session_token = create_user(
-        None, background_tasks=background_tasks, additional_data=acc["form"]
+        None, background_tasks, request, additional_data=acc["form"]
     )
     if SessionConfig.auto_cookie:
         response.set_cookie(

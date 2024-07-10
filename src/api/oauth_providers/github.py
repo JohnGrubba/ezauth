@@ -35,9 +35,9 @@ async def oauth_login():
     )
 
 
-def login_usr(response: Response, usr: dict) -> LoginResponse:
+def login_usr(response: Response, usr: dict, request: Request) -> LoginResponse:
     # User already exists
-    session_token = create_login_session(usr["_id"])
+    session_token = create_login_session(usr["_id"], request)
     if SessionConfig.auto_cookie:
         response.set_cookie(
             SessionConfig.auto_cookie_name,
@@ -80,7 +80,7 @@ async def oauth_callback(
     # Check if SignIn Possible
     usr = get_user_by_github_uid(rsp["id"])
     if usr:
-        return login_usr(response, usr)
+        return login_usr(response, usr, request)
     # Because you can somehow hide emails on github, we have to query them separately
     email_query = requests.get(
         "https://api.github.com/user/emails",
@@ -102,7 +102,7 @@ async def oauth_callback(
     usr = get_user_email_or_username(primary_email)
     if usr:
         link_github_account(usr["_id"], rsp["id"])
-        return login_usr(response, usr)
+        return login_usr(response, usr, request)
 
     # Custom SignUp Form (Password Field missing etc.)
     signup_form = {
@@ -112,7 +112,7 @@ async def oauth_callback(
         "github_uid": rsp["id"],
     }
     # Persist user in DB
-    session_token = create_user(signup_form, background_tasks, signup_form)
+    session_token = create_user(signup_form, background_tasks, request, signup_form)
     if SessionConfig.auto_cookie:
         response.set_cookie(
             SessionConfig.auto_cookie_name,
