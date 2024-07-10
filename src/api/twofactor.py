@@ -3,7 +3,6 @@ from api.dependencies import get_dangerous_user_dep
 import pyotp, bson
 from tools import AccountFeaturesConfig, r
 from crud.user import add_2fa
-from expiring_dict import ExpiringDict
 from api.model import TwoFactorAddResponse
 from qrcode.main import QRCode
 import qrcode.image.svg
