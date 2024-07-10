@@ -36,6 +36,30 @@ def get_user_by_google_uid(google_uid: str) -> dict:
     return users_collection.find_one({"google_uid": google_uid})
 
 
+def link_github_account(user_id: str, github_uid: str) -> None:
+    """Link a Github Account to a User
+
+    Args:
+        user_id (str): User ID
+        github_uid (str): Github UID
+    """
+    users_collection.update_one(
+        {"_id": bson.ObjectId(user_id)}, {"$set": {"github_uid": github_uid}}
+    )
+
+
+def get_user_by_github_uid(github_uid: str) -> dict:
+    """Get a user by Github UID
+
+    Args:
+        github_uid (str): Github UID
+
+    Returns:
+        dict: User Data
+    """
+    return users_collection.find_one({"github_uid": github_uid})
+
+
 def get_batch_users(user_ids: list) -> list:
     """Get a batch of users by ID
 

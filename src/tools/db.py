@@ -23,6 +23,7 @@ sessions_collection = db.get_collection("sessions")
 users_collection.create_index("email", unique=True)
 users_collection.create_index("username", unique=True)
 users_collection.create_index("google_uid", unique=True)
+users_collection.create_index("github_uid", unique=True)
 # Find Sessions by session_token fast
 sessions_collection.create_index("session_token", unique=True)
 

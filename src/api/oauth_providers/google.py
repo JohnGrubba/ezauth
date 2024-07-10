@@ -24,7 +24,7 @@ router = APIRouter(
 
 # Initialize Googles OAuth Flow
 flow = Flow.from_client_secrets_file(
-    client_secrets_file="/src/app/config/client_secret.env.json",
+    client_secrets_file="/src/app/config/google_client_secret.env.json",
     scopes=[
         "https://www.googleapis.com/auth/userinfo.email",
         "openid",
