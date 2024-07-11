@@ -82,7 +82,9 @@ async def signup(
                 session_token,
                 expires=SessionConfig.session_expiry_seconds,
             )
-        return LoginResponse(session_token=session_token)
+        return LoginResponse(
+            session_token=session_token, expires=SessionConfig.session_expiry_seconds
+        )
 
 
 @router.post(
@@ -123,4 +125,6 @@ async def confirm_email(
             expires=SessionConfig.session_expiry_seconds,
         )
     r.delete("signup:" + payload.email)
-    return LoginResponse(session_token=session_token)
+    return LoginResponse(
+        session_token=session_token, expires=SessionConfig.session_expiry_seconds
+    )

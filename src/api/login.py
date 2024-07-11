@@ -57,7 +57,9 @@ async def login(login_form: LoginRequest, response: Response, request: Request):
             session_token,
             expires=SessionConfig.session_expiry_seconds,
         )
-    return LoginResponse(session_token=session_token)
+    return LoginResponse(
+        session_token=session_token, expires=SessionConfig.session_expiry_seconds
+    )
 
 
 @router.get("/logout", status_code=204)

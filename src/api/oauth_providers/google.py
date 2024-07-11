@@ -55,7 +55,9 @@ def login_usr(response: Response, usr: dict, request: Request) -> LoginResponse:
             session_token,
             expires=SessionConfig.session_expiry_seconds,
         )
-    return LoginResponse(session_token=session_token)
+    return LoginResponse(
+        session_token=session_token, expires=SessionConfig.session_expiry_seconds
+    )
 
 
 @router.get("/callback")
@@ -109,4 +111,6 @@ async def oauth_callback(
             session_token,
             expires=SessionConfig.session_expiry_seconds,
         )
-    return LoginResponse(session_token=session_token)
+    return LoginResponse(
+        session_token=session_token, expires=SessionConfig.session_expiry_seconds
+    )
