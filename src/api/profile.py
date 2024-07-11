@@ -1,9 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from tools.conf import AccountFeaturesConfig, SignupConfig
-from api.model import PasswordHashed
-import json
+from api.model import ResetPasswordRequest
+import json, bcrypt
 from crud.user import change_pswd, update_public_user
-from api.dependencies.authenticated import get_pub_user_dep, get_user_dep
+from api.dependencies.authenticated import (
+    get_pub_user_dep,
+    get_dangerous_user_dep,
+    get_user_dep,
+)
 from tools import send_email, all_ids, regenerate_ids, r
 
 router = APIRouter(
@@ -26,9 +30,9 @@ async def profile(user: dict = Depends(get_pub_user_dep)):
 
 @router.post("/reset-password", status_code=204)
 async def reset_password(
-    new_password: PasswordHashed,
+    password_reset_form: ResetPasswordRequest,
     background_tasks: BackgroundTasks,
-    user=Depends(get_user_dep),
+    user=Depends(get_dangerous_user_dep),
     public_user: dict = Depends(get_pub_user_dep),
 ):
     """
@@ -39,6 +43,16 @@ async def reset_password(
     """
     if not AccountFeaturesConfig.enable_reset_pswd:
         raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
+
+    # If user has old password, validate it, else don't care about that field (maybe he only has OAuth signin so far, so let him reset)
+    if user.get("password", None):
+        # Check Password
+        if not bcrypt.checkpw(
+            password_reset_form.old_password.get_secret_value().encode("utf-8"),
+            user["password"].encode("utf-8"),
+        ):
+            raise HTTPException(detail="Invalid Old Password", status_code=401)
+
     # Send Confirmation E-Mail (If enabled)
     if AccountFeaturesConfig.reset_pswd_conf_mail:
         if r.get("reset_pswd:" + user["email"]):
@@ -58,7 +72,7 @@ async def reset_password(
                 {
                     "action": "password_reset",
                     "code": unique_id,
-                    "new_pswd": new_password.password,
+                    "new_pswd": password_reset_form.password,
                 }
             ),
         )
@@ -71,7 +85,7 @@ async def reset_password(
             **public_user,
         )
     else:
-        change_pswd(user["_id"], new_password.password)
+        change_pswd(user["_id"], password_reset_form.password)
 
 
 @router.post("/confirm-password", status_code=204)
