@@ -1,4 +1,4 @@
-from .db import users_collection, sessions_collection, bson_to_json
+from .db import users_collection, sessions_collection, bson_to_json, r
 from .conf import (
     SignupConfig,
     EmailConfig,

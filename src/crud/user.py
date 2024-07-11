@@ -6,7 +6,7 @@ from tools import (
     InternalConfig,
     insecure_cols,
 )
-from fastapi import HTTPException, BackgroundTasks
+from fastapi import HTTPException, BackgroundTasks, Request
 from api.model import UserSignupRequest
 import pymongo, bson
 import datetime
@@ -34,6 +34,30 @@ def get_user_by_google_uid(google_uid: str) -> dict:
         dict: User Data
     """
     return users_collection.find_one({"google_uid": google_uid})
+
+
+def link_github_account(user_id: str, github_uid: str) -> None:
+    """Link a Github Account to a User
+
+    Args:
+        user_id (str): User ID
+        github_uid (str): Github UID
+    """
+    users_collection.update_one(
+        {"_id": bson.ObjectId(user_id)}, {"$set": {"github_uid": github_uid}}
+    )
+
+
+def get_user_by_github_uid(github_uid: str) -> dict:
+    """Get a user by Github UID
+
+    Args:
+        github_uid (str): Github UID
+
+    Returns:
+        dict: User Data
+    """
+    return users_collection.find_one({"github_uid": github_uid})
 
 
 def get_batch_users(user_ids: list) -> list:
@@ -167,6 +191,7 @@ def check_unique_usr(email: str, username: str) -> bool:
 def create_user(
     signup_model: UserSignupRequest,
     background_tasks: BackgroundTasks,
+    request: Request,
     additional_data: dict = {},
 ) -> str | HTTPException:
     """Creates a User in the Database
@@ -196,7 +221,7 @@ def create_user(
     # Drop password from data
     data.pop("password")
     # User Created (Create Session Token and send Welcome Email)
-    session_token = sessions.create_login_session(user_db.inserted_id)
+    session_token = sessions.create_login_session(user_db.inserted_id, request)
     if SignupConfig.enable_welcome_email:
         background_tasks.add_task(send_email, "WelcomeEmail", data["email"], **data)
     return session_token

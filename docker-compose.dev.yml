@@ -6,12 +6,17 @@ services:
       - "3250:80"
     environment:
       - DATABASE_URL=mongodb://admin:admin@db/ezauth?authSource=admin&retryWrites=true&w=majority
+      - REDIS_PASSWORD=admin
+      - REDIS_HOST=redis
     restart: always
     volumes:
       - ./config:/src/app/config
       - ./src:/src/app
     command: |
-      bash -c 'uvicorn api.main:app --reload --host 0.0.0.0 --port 80 --log-level info'
+      bash -c 'uvicorn api.main:app --reload --host 0.0.0.0 --port 80'
+    depends_on:
+      - db
+      - redis
   db:
       image: mongo
       ports:
@@ -23,6 +28,12 @@ services:
         - MONGO_INITDB_DATABASE=ezauth
       volumes:
         - ezauth-data:/data/db
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --requirepass admin
 
 volumes:
   ezauth-data:

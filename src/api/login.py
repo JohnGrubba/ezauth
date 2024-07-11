@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Response, Cookie
+from fastapi import APIRouter, HTTPException, Response, Cookie, Request
 from api.model import LoginRequest, LoginResponse
 from crud.user import get_user_email_or_username
 from crud.sessions import create_login_session, delete_session
@@ -21,7 +21,7 @@ router = APIRouter(
     },
     response_model=LoginResponse,
 )
-async def login(login_form: LoginRequest, response: Response):
+async def login(login_form: LoginRequest, response: Response, request: Request):
     """
     # Log In (Create Session)
 
@@ -50,14 +50,16 @@ async def login(login_form: LoginRequest, response: Response):
         # Validate 2FA
         if not pyotp.TOTP(user["2fa_secret"]).verify(login_form.two_factor_code):
             raise HTTPException(detail="Invalid 2FA Code", status_code=401)
-    session_token = create_login_session(user["_id"])
+    session_token = create_login_session(user["_id"], request)
     if SessionConfig.auto_cookie:
         response.set_cookie(
             SessionConfig.auto_cookie_name,
             session_token,
             expires=SessionConfig.session_expiry_seconds,
         )
-    return LoginResponse(session_token=session_token)
+    return LoginResponse(
+        session_token=session_token, expires=SessionConfig.session_expiry_seconds
+    )
 
 
 @router.get("/logout", status_code=204)

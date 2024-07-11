@@ -24,7 +24,7 @@ router = APIRouter(
 
 # Initialize Googles OAuth Flow
 flow = Flow.from_client_secrets_file(
-    client_secrets_file="/src/app/config/client_secret.env.json",
+    client_secrets_file="/src/app/config/google_client_secret.env.json",
     scopes=[
         "https://www.googleapis.com/auth/userinfo.email",
         "openid",
@@ -46,16 +46,18 @@ async def oauth_login():
     return RedirectResponse(auth_url)
 
 
-def login_usr(response: Response, usr: dict) -> LoginResponse:
+def login_usr(response: Response, usr: dict, request: Request) -> LoginResponse:
     # User already exists
-    session_token = create_login_session(usr["_id"])
+    session_token = create_login_session(usr["_id"], request)
     if SessionConfig.auto_cookie:
         response.set_cookie(
             SessionConfig.auto_cookie_name,
             session_token,
             expires=SessionConfig.session_expiry_seconds,
         )
-    return LoginResponse(session_token=session_token)
+    return LoginResponse(
+        session_token=session_token, expires=SessionConfig.session_expiry_seconds
+    )
 
 
 @router.get("/callback")
@@ -86,13 +88,13 @@ async def oauth_callback(
     # Check if SignIn Possible
     usr = get_user_by_google_uid(jwt_decoded["sub"])
     if usr:
-        return login_usr(response, usr)
+        return login_usr(response, usr, request)
 
     # If users email already exists, link the google account
     usr = get_user_email_or_username(jwt_decoded["email"])
     if usr:
         link_google_account(usr["_id"], jwt_decoded["sub"])
-        return login_usr(response, usr)
+        return login_usr(response, usr, request)
 
     # Custom SignUp Form (Password Field missing etc.)
     signup_form = {
@@ -102,11 +104,13 @@ async def oauth_callback(
         "google_uid": jwt_decoded["sub"],
     }
     # Persist user in DB
-    session_token = create_user(signup_form, background_tasks, signup_form)
+    session_token = create_user(None, background_tasks, request, signup_form)
     if SessionConfig.auto_cookie:
         response.set_cookie(
             SessionConfig.auto_cookie_name,
             session_token,
             expires=SessionConfig.session_expiry_seconds,
         )
-    return LoginResponse(session_token=session_token)
+    return LoginResponse(
+        session_token=session_token, expires=SessionConfig.session_expiry_seconds
+    )

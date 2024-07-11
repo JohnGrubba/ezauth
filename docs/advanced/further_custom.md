@@ -22,3 +22,11 @@ The following environment variables can be set in the `docker-compose.yml` file 
 | `MONGO_INITDB_DATABASE` | **Datatype:** String <br> **Default:** `"ezauth"` <br> The Database Name. |
 
 You can also change the location of the database data by changing the `volumes` section of the `db` section in the `docker-compose.yml` file.
+
+#### Redis Configuration
+The Prefix for all Parameters here is `services.redis`.
+When changing the Redis configuration, make sure to also change the `api` section in the `docker-compose.yml` file to reflect the new Redis connection.
+
+| Parameter | Description |
+|-----------|-------------|
+| `command` | **Datatype:** String <br> **Default:** `redis-server --requirepass admin` <br> You can change the password for the redis server here. It has to be set in the environment of the API section too. |

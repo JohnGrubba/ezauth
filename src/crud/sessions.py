@@ -2,18 +2,33 @@ import uuid
 from tools.db import sessions_collection
 import datetime
 from tools.conf import SessionConfig
+from fastapi import Request
+from user_agents import parse
 
 
-def create_login_session(user_id: str) -> str:
+def create_login_session(user_id: str, request: Request) -> str:
     """
     Create a login session for the user.
 
     Args:
         user_id (str): User ID
+        request (Request): Request Object (For Device Information Extraction)
 
     Returns:
         str: Session Token
     """
+    u_agent = request.headers.get("User-Agent")
+    ua = parse(u_agent)
+    device_information = {
+        "is_mobile": ua.is_mobile,
+        "is_tablet": ua.is_tablet,
+        "is_pc": ua.is_pc,
+        "is_touch_capable": ua.is_touch_capable,
+        "is_bot": ua.is_bot,
+        "device_name": ua.get_device(),
+        "browser_name": ua.get_browser(),
+        "os_name": ua.get_os(),
+    }
     # Check maximum amount of sessions
     if (
         sessions_collection.count_documents({"user_id": user_id})
@@ -31,6 +46,7 @@ def create_login_session(user_id: str) -> str:
             "session_token": session_token,
             "user_id": user_id,
             "createdAt": datetime.datetime.now(),
+            "device_information": device_information,
         }
     )
     return session_token

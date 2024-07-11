@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from api.signup import router as signupRouter
@@ -9,7 +9,7 @@ from api.twofactor import router as twofactorRouter
 from api.oauth_providers import router as oauthRouter
 import logging
 
-logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
+logging.basicConfig(format="%(message)s", level=logging.INFO, force=True)
 
 app = FastAPI(
     title="EZAuth API",
@@ -34,6 +34,11 @@ router = APIRouter(include_in_schema=False)
 @router.get("/")
 async def root():
     return RedirectResponse("/docs", status_code=301)
+
+
+@router.get("/up")
+async def up():
+    return Response(status_code=200)
 
 
 app.include_router(router)

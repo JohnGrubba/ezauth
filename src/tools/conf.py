@@ -4,7 +4,7 @@ from collections import ChainMap
 config = json.load(open("/src/app/config/config.json", "rb"))
 
 # Columns that should never leave EZAuth (maybe get more in the future)
-insecure_cols = {"password": 0, "2fa_secret": 0, "google_uid": 0}
+insecure_cols = {"password": 0, "2fa_secret": 0, "google_uid": 0, "github_uid": 0}
 # Columns that can leave EZAuth but should only be used internally can be defined in config
 
 
@@ -49,3 +49,4 @@ class AccountFeaturesConfig:
     enable_2fa: bool = config["account_features"]["2fa"]["enable"]
     issuer_name_2fa: str = config["account_features"]["2fa"]["issuer_name"]
     issuer_image_url_2fa: str = config["account_features"]["2fa"]["issuer_image_url"]
+    qr_code_endpoint_2fa: bool = config["account_features"]["2fa"]["qr_endpoint"]

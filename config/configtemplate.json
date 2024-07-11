@@ -39,7 +39,8 @@
         "2fa": {
             "enable": false,
             "issuer_name": "EZAuth",
-            "issuer_image_url": ""
+            "issuer_image_url": "",
+            "qr_endpoint": true
         }
     }
 }

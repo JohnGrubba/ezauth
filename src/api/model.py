@@ -21,6 +21,7 @@ class LoginRequest(BaseModel):
 
 class LoginResponse(BaseModel):
     session_token: str
+    expires: int
 
 
 class ConfirmEmailCodeRequest(BaseModel):
