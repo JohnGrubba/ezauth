@@ -203,19 +203,15 @@ def create_user(
         str: Session Token
     """
     data = {
+        **additional_data,
         **(
             signup_model.model_dump() if type(signup_model) == UserSignupRequest else {}
         ),
-        **additional_data,
+        "createdAt": datetime.datetime.now(),
     }
     # Save the Account into the database
     try:
-        user_db = users_collection.insert_one(
-            {
-                **data,
-                "createdAt": datetime.datetime.now(),
-            }
-        )
+        user_db = users_collection.insert_one(data)
     except pymongo.errors.DuplicateKeyError:
         raise HTTPException(detail="Email or Username already exists.", status_code=409)
     # Drop password from data

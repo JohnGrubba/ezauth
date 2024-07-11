@@ -57,6 +57,10 @@ class PasswordHashed(BaseModel):
         return hashed_pswd
 
 
+class ResetPasswordRequest(PasswordHashed):
+    old_password: SecretStr
+
+
 class UserSignupRequest(PasswordHashed):
     email: EmailStr
     username: str
