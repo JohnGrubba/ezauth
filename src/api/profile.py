@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
 from tools.conf import AccountFeaturesConfig, SignupConfig
-from api.model import ResetPasswordRequest
+from api.model import ResetPasswordRequest, ConfirmEmailRequest
 import json, bcrypt
 from crud.user import change_pswd, update_public_user
 from api.dependencies.authenticated import (
@@ -28,7 +28,19 @@ async def profile(user: dict = Depends(get_pub_user_dep)):
     return user
 
 
-@router.post("/reset-password", status_code=204)
+@router.post(
+    "/reset-password",
+    status_code=204,
+    responses={
+        204: {"description": "Password Reset Email Sent"},
+        403: {"description": "Resetting Password is disabled."},
+        409: {
+            "description": "Password Reset Email already sent. You have one request pending."
+        },
+        401: {"description": "Invalid Old Password"},
+        200: {"description": "Password Reset Successfully"},
+    },
+)
 async def reset_password(
     password_reset_form: ResetPasswordRequest,
     background_tasks: BackgroundTasks,
@@ -84,12 +96,14 @@ async def reset_password(
             time=SignupConfig.conf_code_expiry,
             **public_user,
         )
+        return Response(status_code=204)
     else:
         change_pswd(user["_id"], password_reset_form.password)
+        return Response(status_code=200)
 
 
 @router.post("/confirm-password", status_code=204)
-async def confirm_password(code: str | int, user=Depends(get_user_dep)):
+async def confirm_password(code: ConfirmEmailRequest, user=Depends(get_user_dep)):
     """
     # Confirm Password Reset
 
@@ -103,7 +117,7 @@ async def confirm_password(code: str | int, user=Depends(get_user_dep)):
         raise HTTPException(status_code=404, detail="No Password Reset Request found.")
     change_req = json.loads(change_req)
     # Check code
-    if change_req["code"] != code:
+    if str(change_req["code"]) != str(code.code):
         raise HTTPException(status_code=401, detail="Invalid Code")
 
     change_pswd(user["_id"], change_req["new_pswd"])

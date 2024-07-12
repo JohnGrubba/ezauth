@@ -4,6 +4,10 @@ import re
 import bcrypt
 
 
+class ConfirmEmailRequest(BaseModel):
+    code: int | str
+
+
 class TwoFactorAddResponse(BaseModel):
     provision_uri: str
 

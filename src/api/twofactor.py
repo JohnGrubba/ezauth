@@ -3,7 +3,7 @@ from api.dependencies import get_dangerous_user_dep
 import pyotp, bson
 from tools import AccountFeaturesConfig, r
 from crud.user import add_2fa
-from api.model import TwoFactorAddResponse
+from api.model import TwoFactorAddResponse, ConfirmEmailRequest
 from qrcode.main import QRCode
 import qrcode.image.svg
 from tools.conf import AccountFeaturesConfig
@@ -30,7 +30,7 @@ def enable_2fa_temp(user: dict) -> str:
         issuer_name=AccountFeaturesConfig.issuer_name_2fa,
         image=AccountFeaturesConfig.issuer_image_url_2fa,
     )
-    r.setex("2fa:" + bson.ObjectId(user["_id"]).__str__(), 30, secret_bytes)
+    r.setex("2fa:" + bson.ObjectId(user["_id"]).__str__(), 60, secret_bytes)
     return prov_url
 
 
@@ -68,9 +68,16 @@ async def enable_2fa_qr(user=Depends(get_dangerous_user_dep)):
 
 
 @router.post(
-    "/confirm-enable", responses={400: {"description": "2FA activation expired"}}
+    "/confirm-enable",
+    responses={
+        400: {"description": "2FA activation expired"},
+        204: {"description": "2FA enabled"},
+    },
+    status_code=204,
 )
-async def confirm_enable_2fa(code: str, user=Depends(get_dangerous_user_dep)):
+async def confirm_enable_2fa(
+    code: ConfirmEmailRequest, user=Depends(get_dangerous_user_dep)
+):
     """
     # Confirm Enable 2FA
 
@@ -81,9 +88,9 @@ async def confirm_enable_2fa(code: str, user=Depends(get_dangerous_user_dep)):
     if not secret:
         raise HTTPException(status_code=400, detail="2FA activation expired")
     totp = pyotp.TOTP(secret)
-    if totp.verify(code):
+    if totp.verify(str(code.code)):
         # Persist 2FA in the Database
         add_2fa(user["_id"], secret)
         r.delete("2fa:" + bson.ObjectId(user["_id"]).__str__())
-        return Response(status_code=204)
-    raise HTTPException(status_code=400, detail="Invalid code")
+    else:
+        raise HTTPException(status_code=400, detail="Invalid code")
