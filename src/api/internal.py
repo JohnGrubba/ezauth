@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Header, HTTPException, Depends, BackgroundTasks
 from tools import broadcast_emails, InternalConfig, bson_to_json
 from api.model import BroadCastEmailRequest, InternalProfileRequest
-from crud.user import get_user, get_batch_users
+from crud.user import get_user, get_batch_users, update_public_user
 from crud.sessions import get_session
 from threading import Lock
 
@@ -68,6 +68,21 @@ async def profile(internal_req: InternalProfileRequest):
         get_session(internal_req.session_token) if internal_req.session_token else None
     )
     return bson_to_json(get_user(sess["user_id"] if sess else internal_req.user_id))
+
+
+@router.patch("/profile")
+async def update_profile(internal_req: InternalProfileRequest, update_data: dict):
+    """
+    # Update Profile Information
+
+    ## Description
+    This endpoint is used to update the profile information of the user.
+    """
+    sess = (
+        get_session(internal_req.session_token) if internal_req.session_token else None
+    )
+    usr = get_user(sess["user_id"] if sess else internal_req.user_id)
+    return update_public_user(usr["_id"], update_data)
 
 
 @router.get("/batch-users")
