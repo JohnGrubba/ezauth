@@ -29,9 +29,7 @@
         "internal_columns": [
             "_id"
         ],
-        "not_updateable_columns": [
-            "email"
-        ]
+        "not_updateable_columns": []
     },
     "account_features": {
         "enable_reset_pswd": true,

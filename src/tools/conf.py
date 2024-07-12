@@ -5,6 +5,7 @@ config = json.load(open("/src/app/config/config.json", "rb"))
 
 # Columns that should never leave EZAuth (maybe get more in the future)
 insecure_cols = {"password": 0, "2fa_secret": 0, "google_uid": 0, "github_uid": 0}
+not_updateable_cols_internal = ["email", "username", "createdAt"]
 # Columns that can leave EZAuth but should only be used internally can be defined in config
 
 
@@ -38,8 +39,11 @@ class InternalConfig:
         ChainMap(*[{col: 0} for col in config["internal"]["internal_columns"]])
     )
     internal_columns.update(insecure_cols)
-    not_updateable_columns: list = config["internal"]["not_updateable_columns"] + list(
-        internal_columns.keys()
+    # Insecure Cols + Internal Cols can't be updated by the user
+    not_updateable_columns: list = (
+        config["internal"]["not_updateable_columns"]
+        + list(internal_columns.keys())
+        + not_updateable_cols_internal
     )
 
 
