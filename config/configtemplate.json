@@ -22,7 +22,9 @@
         "session_expiry_seconds": 86400,
         "max_session_count": 5,
         "auto_cookie": true,
-        "auto_cookie_name": "session"
+        "auto_cookie_name": "session",
+        "cookie_samesite": "none",
+        "cookie_secure": true
     },
     "internal": {
         "internal_api_key": "CHANGE_ME_NOW",

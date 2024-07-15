@@ -56,6 +56,8 @@ async def login(login_form: LoginRequest, response: Response, request: Request):
             SessionConfig.auto_cookie_name,
             session_token,
             expires=SessionConfig.session_expiry_seconds,
+            samesite=SessionConfig.cookie_samesite,
+            secure=SessionConfig.cookie_secure,
         )
     return LoginResponse(
         session_token=session_token, expires=SessionConfig.session_expiry_seconds

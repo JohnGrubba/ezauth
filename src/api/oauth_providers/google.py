@@ -54,6 +54,8 @@ def login_usr(response: Response, usr: dict, request: Request) -> LoginResponse:
             SessionConfig.auto_cookie_name,
             session_token,
             expires=SessionConfig.session_expiry_seconds,
+            samesite=SessionConfig.cookie_samesite,
+            secure=SessionConfig.cookie_secure,
         )
     return LoginResponse(
         session_token=session_token, expires=SessionConfig.session_expiry_seconds
@@ -110,6 +112,8 @@ async def oauth_callback(
             SessionConfig.auto_cookie_name,
             session_token,
             expires=SessionConfig.session_expiry_seconds,
+            samesite=SessionConfig.cookie_samesite,
+            secure=SessionConfig.cookie_secure,
         )
     return LoginResponse(
         session_token=session_token, expires=SessionConfig.session_expiry_seconds

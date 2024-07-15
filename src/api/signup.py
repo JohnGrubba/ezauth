@@ -81,6 +81,8 @@ async def signup(
                 SessionConfig.auto_cookie_name,
                 session_token,
                 expires=SessionConfig.session_expiry_seconds,
+                samesite=SessionConfig.cookie_samesite,
+                secure=SessionConfig.cookie_secure,
             )
         return LoginResponse(
             session_token=session_token, expires=SessionConfig.session_expiry_seconds
@@ -123,6 +125,8 @@ async def confirm_email(
             SessionConfig.auto_cookie_name,
             session_token,
             expires=SessionConfig.session_expiry_seconds,
+            samesite=SessionConfig.cookie_samesite,
+            secure=SessionConfig.cookie_secure,
         )
     r.delete("signup:" + payload.email)
     return LoginResponse(
