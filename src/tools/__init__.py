@@ -6,6 +6,7 @@ from .conf import (
     InternalConfig,
     AccountFeaturesConfig,
     insecure_cols,
+    AccessConfig,
 )
 from .mail import send_email, broadcast_emails
 from .confirmation_codes import all_ids, regenerate_ids
