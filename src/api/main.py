@@ -38,7 +38,7 @@ async def root():
 
 @router.get("/up")
 async def up():
-    return Response(status_code=200)
+    return Response(status_code=204)
 
 
 app.include_router(router)
