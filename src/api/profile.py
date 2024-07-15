@@ -17,7 +17,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("")
 async def profile(user: dict = Depends(get_pub_user_dep)):
     """
     # Get Profile Information
@@ -124,7 +124,7 @@ async def confirm_password(code: ConfirmEmailRequest, user=Depends(get_user_dep)
     r.delete("reset_pswd:" + user["email"])
 
 
-@router.patch("/", status_code=200)
+@router.patch("", status_code=200)
 async def update_profile(update_data: dict, user: dict = Depends(get_user_dep)):
     """
     # Update Profile Information

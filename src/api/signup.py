@@ -19,7 +19,7 @@ temp_accounts["code"]: str | int
 
 
 @router.post(
-    "/",
+    "",
     status_code=200,
     responses={
         409: {"description": "Duplicate Entry"},
