@@ -4,9 +4,10 @@ import datetime
 from tools.conf import SessionConfig
 from fastapi import Request
 from user_agents import parse
+from bson import ObjectId
 
 
-def create_login_session(user_id: str, request: Request) -> str:
+def create_login_session(user_id: ObjectId, request: Request) -> str:
     """
     Create a login session for the user.
 

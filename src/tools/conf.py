@@ -58,6 +58,9 @@ class AccountFeaturesConfig:
     qr_code_endpoint_2fa: bool = config["account_features"]["2fa"]["qr_endpoint"]
 
 
-class AccessConfig:
-    access_control_origins: list = config["access"]["allow_origins"]
-    allow_headers: list = config["access"]["allow_headers"]
+class SecurityConfig:
+    access_control_origins: list = config["security"]["allow_origins"]
+    allow_headers: list = config["security"]["allow_headers"]
+    max_login_attempts: int = config["security"]["max_login_attempts"]
+    login_timeout: int = config["security"]["login_timeout"]
+    expire_unfinished_timeout: int = config["security"]["expire_unfinished_timeout"]

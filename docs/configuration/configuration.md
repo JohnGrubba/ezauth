@@ -65,3 +65,16 @@ Make sure that all parameters are set correctly before starting the service.
 | `account_features.2fa.issuer_name` | **Datatype:** String <br> **Default:** `"EZAuth"` <br> How the two factor code will be titled in the users 2FA App. (Mostly the App Name) |
 | `account_features.2fa.issuer_image_url` | **Datatype:** String <br> **Default:** `""` <br> URL for an optional Image which will be displayed in the 2FA App. |
 | `account_features.2fa.qr_endpoint` | **Datatype:** Boolean <br> **Default:** `true` <br> Enable or disable QR Code Generation Endpoint for 2FA Login. This can be useful if you don't want to use any libraries on the client Side. |
+
+### Security Configuration
+
+!!! Warning "CORS Configuration"
+    Be careful when configuring CORS. Leaving the `security.allow_origins` at `*` can lead to security vulnerabilities. Make sure to also check if your `session.cookie*` settings work with your CORS settings. When setting `allow_origins` to `*`, the auto cookie functionality may not work Cross Site. Google Chrome will remove Cross Domain Cookies Support in the future so be careful when configuring this setting and always test it before deploying.
+
+|  Parameter | Description |
+|------------|-------------|
+| `security.allow_origins` | **Datatype:** List <br> **Default:** `["*"]` <br> CORS (Cross Origin Ressource Sharing) Policy. Enables access from different domains. Don't leave at `*` |
+| `security.allow_headers` | **Datatype:** List <br> **Default:** `["*"]` <br> Allowed HTTP Headers. Can be used to restrict certain users from accessing EZAuth. |
+| `security.max_login_attempts` | **Datatype:** Integer <br> **Default:** `5` <br> Maximum amount of login attempts before the account gets locked. Set to `0` to disable. If a User performs a successfull login the counter gets deleted. If this doesn't happen (counter doesn't reach maximum but still has a value), the failed attempts will be expired after `security.expire_unfinished_timeout`. |
+| `security.login_timeout` | **Datatype:** Integer <br> **Default:** `5` <br> Time in minutes until the account gets unlocked after the maximum login attempts. |
+| `security.expire_unfinished_timeout` | **Datatype:** Integer <br> **Default:** `60` <br> Time in minutes until the failed login attempts get expired. (Without reaching the max_login_attempts) |

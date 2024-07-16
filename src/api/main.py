@@ -8,7 +8,7 @@ from api.profile import router as profileRouter
 from api.twofactor import router as twofactorRouter
 from api.oauth_providers import router as oauthRouter
 import logging
-from tools import AccessConfig
+from tools import SecurityConfig
 
 logging.basicConfig(format="%(message)s", level=logging.INFO, force=True)
 
@@ -22,10 +22,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=AccessConfig.access_control_origins,
+    allow_origins=SecurityConfig.access_control_origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=AccessConfig.allow_headers,
+    allow_headers=SecurityConfig.allow_headers,
 )
 
 router = APIRouter(include_in_schema=False)
