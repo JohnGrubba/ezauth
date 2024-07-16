@@ -66,7 +66,8 @@ async def login(login_form: LoginRequest, response: Response, request: Request):
 
 @router.get("/logout", status_code=204)
 async def logout(
-    session_token: str = Cookie(default=None, alias=SessionConfig.auto_cookie_name)
+    response: Response,
+    session_token: str = Cookie(default=None, alias=SessionConfig.auto_cookie_name),
 ):
     """
     # Log Out (Delete Session)
@@ -74,4 +75,9 @@ async def logout(
     ## Description
     This endpoint is used to log out a user and delete the session.
     """
+    response.delete_cookie(
+        SessionConfig.auto_cookie_name,
+        samesite=SessionConfig.cookie_samesite,
+        secure=SessionConfig.cookie_secure,
+    )
     delete_session(session_token)
