@@ -22,16 +22,16 @@
         "session_expiry_seconds": 86400,
         "max_session_count": 5,
         "auto_cookie": true,
-        "auto_cookie_name": "session"
+        "auto_cookie_name": "session",
+        "cookie_samesite": "none",
+        "cookie_secure": true
     },
     "internal": {
         "internal_api_key": "CHANGE_ME_NOW",
         "internal_columns": [
             "_id"
         ],
-        "not_updateable_columns": [
-            "email"
-        ]
+        "not_updateable_columns": []
     },
     "account_features": {
         "enable_reset_pswd": true,
@@ -42,5 +42,16 @@
             "issuer_image_url": "",
             "qr_endpoint": true
         }
+    },
+    "security": {
+        "allow_origins": [
+            "*"
+        ],
+        "allow_headers": [
+            "*"
+        ],
+        "max_login_attempts": 5,
+        "login_timeout": 5,
+        "expire_unfinished_timeout": 60
     }
 }

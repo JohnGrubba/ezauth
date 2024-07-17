@@ -1,10 +1,19 @@
 import json
 from collections import ChainMap
+import sys, os
 
-config = json.load(open("/src/app/config/config.json", "rb"))
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+if "pytest" in sys.modules:
+    # Running Tests (Load Testing Config)
+    config = json.load(open(os.path.join(__location__, "testing_config.json"), "rb"))
+else:
+    # Normal Startup
+    config = json.load(open("/src/app/config/config.json", "rb"))
 
 # Columns that should never leave EZAuth (maybe get more in the future)
 insecure_cols = {"password": 0, "2fa_secret": 0, "google_uid": 0, "github_uid": 0}
+not_updateable_cols_internal = ["email", "username", "createdAt"]
 # Columns that can leave EZAuth but should only be used internally can be defined in config
 
 
@@ -30,6 +39,8 @@ class SessionConfig:
     max_session_count: int = config["session"]["max_session_count"]
     auto_cookie: bool = config["session"]["auto_cookie"]
     auto_cookie_name: str = config["session"]["auto_cookie_name"]
+    cookie_samesite: str = config["session"]["cookie_samesite"]
+    cookie_secure: bool = config["session"]["cookie_secure"]
 
 
 class InternalConfig:
@@ -38,8 +49,11 @@ class InternalConfig:
         ChainMap(*[{col: 0} for col in config["internal"]["internal_columns"]])
     )
     internal_columns.update(insecure_cols)
-    not_updateable_columns: list = config["internal"]["not_updateable_columns"] + list(
-        internal_columns.keys()
+    # Insecure Cols + Internal Cols can't be updated by the user
+    not_updateable_columns: list = (
+        config["internal"]["not_updateable_columns"]
+        + list(internal_columns.keys())
+        + not_updateable_cols_internal
     )
 
 
@@ -50,3 +64,11 @@ class AccountFeaturesConfig:
     issuer_name_2fa: str = config["account_features"]["2fa"]["issuer_name"]
     issuer_image_url_2fa: str = config["account_features"]["2fa"]["issuer_image_url"]
     qr_code_endpoint_2fa: bool = config["account_features"]["2fa"]["qr_endpoint"]
+
+
+class SecurityConfig:
+    access_control_origins: list = config["security"]["allow_origins"]
+    allow_headers: list = config["security"]["allow_headers"]
+    max_login_attempts: int = config["security"]["max_login_attempts"]
+    login_timeout: int = config["security"]["login_timeout"]
+    expire_unfinished_timeout: int = config["security"]["expire_unfinished_timeout"]

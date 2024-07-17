@@ -8,6 +8,7 @@ from api.profile import router as profileRouter
 from api.twofactor import router as twofactorRouter
 from api.oauth_providers import router as oauthRouter
 import logging
+from tools import SecurityConfig
 
 logging.basicConfig(format="%(message)s", level=logging.INFO, force=True)
 
@@ -19,13 +20,12 @@ app = FastAPI(
 """,
 )
 
-origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=SecurityConfig.access_control_origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=SecurityConfig.allow_headers,
 )
 
 router = APIRouter(include_in_schema=False)
@@ -38,7 +38,7 @@ async def root():
 
 @router.get("/up")
 async def up():
-    return Response(status_code=200)
+    return Response(status_code=204)
 
 
 app.include_router(router)
