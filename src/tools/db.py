@@ -1,7 +1,9 @@
 from pymongo import MongoClient
 import os, bson.json_util, json
 from tools.conf import SessionConfig
-import redis, logging
+import redis, logging, sys
+from mongomock import MongoClient as MongoTestClient
+import fakeredis
 
 logger = logging.getLogger("uvicorn.info")
 
@@ -10,10 +12,16 @@ REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
 REDIS_HOST = os.getenv("REDIS_HOST")
 
 logger.info(f"\u001b[34mConnecting to Redis...\u001b[0m")
-r = redis.Redis(host=REDIS_HOST, decode_responses=True, password=REDIS_PASSWORD)
+if "pytest" in sys.modules:
+    r = fakeredis.FakeRedis()
+else:
+    r = redis.Redis(host=REDIS_HOST, decode_responses=True, password=REDIS_PASSWORD)
 logger.info("\u001b[32m+ Connected to Redis\u001b[0m")
 logger.info("\u001b[34mConnecting to MongoDB...\u001b[0m")
-client = MongoClient(DATABASE_URL)
+if "pytest" in sys.modules:
+    client = MongoTestClient()
+else:
+    client = MongoClient(DATABASE_URL)
 logger.info("\u001b[32m+ Connected to MongoDB\u001b[0m")
 db = client.get_database("ezauth")
 users_collection = db.get_collection("users")

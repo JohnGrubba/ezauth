@@ -1,7 +1,15 @@
 import json
 from collections import ChainMap
+import sys, os
 
-config = json.load(open("/src/app/config/config.json", "rb"))
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+if "pytest" in sys.modules:
+    # Running Tests (Load Testing Config)
+    config = json.load(open(os.path.join(__location__, "testing_config.json"), "rb"))
+else:
+    # Normal Startup
+    config = json.load(open("/src/app/config/config.json", "rb"))
 
 # Columns that should never leave EZAuth (maybe get more in the future)
 insecure_cols = {"password": 0, "2fa_secret": 0, "google_uid": 0, "github_uid": 0}

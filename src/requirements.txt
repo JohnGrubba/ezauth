@@ -7,3 +7,6 @@ pyjwt[crypto]==2.8.0
 qrcode==7.4.2
 redis[hiredis]==5.0.7
 user-agents==2.2.0
+mongomock==4.1.2
+pytest==8.2.2
+fakeredis==2.23.3
