@@ -32,7 +32,7 @@ async def login(login_form: LoginRequest, response: Response, request: Request):
     """
     user = get_user_email_or_username(login_form.identifier)
     if user is None:
-        raise HTTPException(status_code=404)
+        raise HTTPException(detail="User not found", status_code=404)
     # Check if Password Exists (or if OAuth SignIn)
     if not user.get("password", None):
         raise HTTPException(

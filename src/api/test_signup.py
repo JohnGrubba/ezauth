@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-from tools import users_collection
 
 from .main import app
 
