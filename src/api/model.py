@@ -54,6 +54,8 @@ class PasswordHashed(BaseModel):
             raise ValueError("Make sure your password has a capital letter in it")
         elif re.search("[^a-zA-Z0-9]", pswd) is None:
             raise ValueError("Make sure your password has a special character in it")
+        elif len(pswd) > 50:
+            raise ValueError("Make sure your password is at most 50 characters")
         # Hash Password
         hashed_pswd = bcrypt.hashpw(pswd.encode("utf-8"), bcrypt.gensalt(5)).decode(
             "utf-8"
@@ -78,6 +80,8 @@ class UserSignupRequest(PasswordHashed):
     def username_check(cls, username: str) -> str:
         if len(username) < 4:
             raise ValueError("Username must be at least 4 characters long")
+        if len(username) > 20:
+            raise ValueError("Username must be at most 20 characters long")
         elif re.search("[^a-zA-Z0-9]", username) is not None:
             raise ValueError("Username must only contain letters and numbers")
         return username
