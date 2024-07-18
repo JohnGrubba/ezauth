@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Request, BackgroundTasks, Response, HTTPException
 from fastapi.responses import RedirectResponse
 from google_auth_oauthlib.flow import Flow
-from tools.conf import SignupConfig
-import os, re
+import os
+import re
 from crud.user import (
     create_user,
     get_user_by_google_uid,
@@ -75,7 +75,7 @@ async def oauth_callback(
     # Get Information about user from Google
     try:
         token = flow.fetch_token(authorization_response=request.url.__str__())
-    except:
+    except Exception:
         raise HTTPException(status_code=401, detail="Invalid OAuth Token")
     jwt_id = token["id_token"]
     jwt_decoded = jwt.decode(

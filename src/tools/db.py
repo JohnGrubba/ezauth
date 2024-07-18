@@ -1,7 +1,11 @@
 from pymongo import MongoClient
-import os, bson.json_util, json
+import os
+import bson.json_util
+import json
 from tools.conf import SessionConfig
-import redis, logging, sys
+import redis
+import logging
+import sys
 from mongomock import MongoClient as MongoTestClient
 import fakeredis
 
@@ -11,7 +15,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
 REDIS_HOST = os.getenv("REDIS_HOST")
 
-logger.info(f"\u001b[34mConnecting to Redis...\u001b[0m")
+logger.info("\u001b[34mConnecting to Redis...\u001b[0m")
 if "pytest" in sys.modules:
     r = fakeredis.FakeRedis()
 else:
@@ -37,7 +41,7 @@ sessions_collection.create_index("session_token", unique=True)
 
 try:
     sessions_collection.drop_index("createdAt_1")
-except:
+except Exception:
     pass
 # Set TTL For Sessions
 sessions_collection.create_index(

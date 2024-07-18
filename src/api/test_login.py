@@ -1,4 +1,6 @@
-import pytest, datetime, bcrypt
+import pytest
+import datetime
+import bcrypt
 from tools import users_collection
 from fastapi.testclient import TestClient
 
@@ -51,7 +53,7 @@ def test_login_username_identifier(fixtureuser):
 
 
 # INVALID PASSWORD
-def test_login_username_identifier(fixtureuser):
+def test_login_invalid_password(fixtureuser):
     response = client.post(
         "/login",
         json={

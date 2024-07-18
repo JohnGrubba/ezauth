@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 from api.dependencies import get_dangerous_user_dep
-import pyotp, bson
+import pyotp
+import bson
 from tools import AccountFeaturesConfig, r
 from crud.user import add_2fa
 from api.model import TwoFactorAddResponse, ConfirmEmailRequest
 from qrcode.main import QRCode
 import qrcode.image.svg
-from tools.conf import AccountFeaturesConfig
 
 router = APIRouter(
     prefix="/2fa",

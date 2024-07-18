@@ -42,7 +42,8 @@ async def signup(
     """
     # Handle signup
     if SignupConfig.enable_conf_email:
-        # Those checks are only needed when confirmation emails are enabled (otherwise, create the user directly and raise duplicate from mongodb)
+        # Those checks are only needed when confirmation emails are enabled
+        # otherwise, create the user directly and raise duplicate from mongodb
         # Check if email in confirmation email dict
         if r.get("signup:" + signup_form.email):
             raise HTTPException(detail="E-Mail already sent", status_code=409)

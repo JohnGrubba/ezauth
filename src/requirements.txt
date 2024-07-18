@@ -7,6 +7,7 @@ pyjwt[crypto]==2.8.0
 qrcode==7.4.2
 redis[hiredis]==5.0.7
 user-agents==2.2.0
-mongomock==4.1.2
+mongomock @ git+https://github.com/JohnGrubba/mongomock@d1f360e951eb6ba14a5f30b344464d5b3403e813
 pytest==8.2.2
 fakeredis==2.23.3
+flake8==7.1.0

@@ -30,5 +30,5 @@ Those Libraries automatically get used instead of `pymongo` and `redis` when tes
 To run the tests, you can use the following command:
 
 ```sh
-docker exec ezauth-api pytest -W ignore::DeprecationWarning
+docker exec ezauth-api pytest
 ```

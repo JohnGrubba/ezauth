@@ -2,7 +2,8 @@ from fastapi import APIRouter, HTTPException, Response, Cookie, Request
 from api.model import LoginRequest, LoginResponse
 from crud.user import get_user_email_or_username
 from crud.sessions import create_login_session, delete_session
-import bcrypt, pyotp
+import bcrypt
+import pyotp
 from tools import SessionConfig, r, SecurityConfig
 
 router = APIRouter(

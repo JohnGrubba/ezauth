@@ -8,7 +8,8 @@ from tools import (
 )
 from fastapi import HTTPException, BackgroundTasks, Request
 from api.model import UserSignupRequest
-import pymongo, bson
+import pymongo
+import bson
 import datetime
 
 
@@ -205,7 +206,9 @@ def create_user(
     data = {
         **additional_data,
         **(
-            signup_model.model_dump() if type(signup_model) == UserSignupRequest else {}
+            signup_model.model_dump()
+            if isinstance(signup_model, UserSignupRequest)
+            else {}
         ),
         "createdAt": datetime.datetime.now(),
     }
