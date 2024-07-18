@@ -1,0 +1,57 @@
+{
+    "signup": {
+        "enable_conf_email": false,
+        "conf_code_expiry": 5,
+        "conf_code_complexity": 1,
+        "enable_welcome_email": false,
+        "oauth": {
+            "providers_enabled": [
+                "google"
+            ],
+            "base_url": "http://localhost:3250/"
+        }
+    },
+    "email": {
+        "login_usr": "",
+        "login_pwd": "",
+        "sender_email": "",
+        "smtp_host": "",
+        "smtp_port": 465
+    },
+    "session": {
+        "session_expiry_seconds": 86400,
+        "max_session_count": 5,
+        "auto_cookie": true,
+        "auto_cookie_name": "session",
+        "cookie_samesite": "none",
+        "cookie_secure": true
+    },
+    "internal": {
+        "internal_api_key": "TEST_INTERNAL",
+        "internal_columns": [
+            "_id"
+        ],
+        "not_updateable_columns": []
+    },
+    "account_features": {
+        "enable_reset_pswd": true,
+        "reset_pswd_conf_mail": false,
+        "2fa": {
+            "enable": true,
+            "issuer_name": "EZAuth",
+            "issuer_image_url": "",
+            "qr_endpoint": true
+        }
+    },
+    "security": {
+        "allow_origins": [
+            "*"
+        ],
+        "allow_headers": [
+            "*"
+        ],
+        "max_login_attempts": 5,
+        "login_timeout": 5,
+        "expire_unfinished_timeout": 60
+    }
+}
