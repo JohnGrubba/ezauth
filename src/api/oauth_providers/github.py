@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Request, BackgroundTasks, Response, HTTPException
 from fastapi.responses import RedirectResponse
 from tools.conf import SignupConfig, SessionConfig
-import json, requests, re
+import json
+import requests
+import re
 from crud.user import (
     create_user,
     get_user_by_github_uid,

@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
 from tools.conf import AccountFeaturesConfig, SignupConfig
 from api.model import ResetPasswordRequest, ConfirmEmailRequest
-import json, bcrypt
+import json
+import bcrypt
 from crud.user import change_pswd, update_public_user
 from api.dependencies.authenticated import (
     get_pub_user_dep,
@@ -56,7 +57,8 @@ async def reset_password(
     if not AccountFeaturesConfig.enable_reset_pswd:
         raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
 
-    # If user has old password, validate it, else don't care about that field (maybe he only has OAuth signin so far, so let him reset)
+    # If user has old password, validate it, else don't care about that field
+    # He only has OAuth signin so far, so let him reset
     if user.get("password", None):
         # Check Password
         if not bcrypt.checkpw(
