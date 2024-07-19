@@ -11,6 +11,14 @@
 > [!NOTE]
 > You can find the Documentation <a href="https://johngrubba.github.io/ezauth/" target="_blank">here</a>
 
+## Quickstart
+
+To test a Demo Setup of EZAuth quickly, go into the <a href="demo/">`demo`</a> folder and run the following command:
+
+```sh
+docker-compose up -d
+```
+
 ## Developement
 
 To enable a efficient development process, you can start the Service with hot reloading enabled. This will automatically restart the service when a file is changed.
