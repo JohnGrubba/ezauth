@@ -13,8 +13,9 @@ else:
     config = json.load(open("/src/app/config/config.json", "rb"))
 
 # Columns that should never leave EZAuth (maybe get more in the future)
+default_signup_fields = {"username", "email", "password"}
 insecure_cols = {"password": 0, "2fa_secret": 0, "google_uid": 0, "github_uid": 0}
-not_updateable_cols_internal = ["email", "username", "createdAt"]
+not_updateable_cols_internal = ["email", "createdAt"]
 # Columns that can leave EZAuth but should only be used internally can be defined in config
 
 
@@ -23,7 +24,7 @@ class SignupConfig:
     conf_code_expiry: int = config["signup"]["conf_code_expiry"]
     conf_code_complexity: int = config["signup"]["conf_code_complexity"]
     enable_welcome_email: bool = config["signup"]["enable_welcome_email"]
-    oauth_providers: list = config["signup"]["oauth"]["providers_enabled"]
+    oauth_providers: list[str] = config["signup"]["oauth"]["providers_enabled"]
     oauth_base_url: str = str(config["signup"]["oauth"]["base_url"]).removesuffix("/")
 
 
@@ -65,11 +66,17 @@ class AccountFeaturesConfig:
     issuer_name_2fa: str = config["account_features"]["2fa"]["issuer_name"]
     issuer_image_url_2fa: str = config["account_features"]["2fa"]["issuer_image_url"]
     qr_code_endpoint_2fa: bool = config["account_features"]["2fa"]["qr_endpoint"]
+    allow_add_fields_on_signup: set[str] = set(
+        config["account_features"]["allow_add_fields_on_signup"]
+    )
+    allow_add_fields_patch_user: set[str] = set(
+        config["account_features"]["allow_add_fields_patch_user"]
+    )
 
 
 class SecurityConfig:
-    access_control_origins: list = config["security"]["allow_origins"]
-    allow_headers: list = config["security"]["allow_headers"]
+    access_control_origins: set[str] = set(config["security"]["allow_origins"])
+    allow_headers: set[str] = set(config["security"]["allow_headers"])
     max_login_attempts: int = config["security"]["max_login_attempts"]
     login_timeout: int = config["security"]["login_timeout"]
     expire_unfinished_timeout: int = config["security"]["expire_unfinished_timeout"]

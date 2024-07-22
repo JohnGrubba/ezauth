@@ -7,6 +7,7 @@ from .conf import (
     AccountFeaturesConfig,
     insecure_cols,
     SecurityConfig,
+    default_signup_fields,
 )
 from .mail import send_email, broadcast_emails
 from .confirmation_codes import all_ids, regenerate_ids
@@ -27,4 +28,5 @@ __all__ = [
     "broadcast_emails",
     "all_ids",
     "regenerate_ids",
+    "default_signup_fields",
 ]
