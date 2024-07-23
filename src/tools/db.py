@@ -64,6 +64,8 @@ def bson_to_json(data: bson.BSON) -> dict:
     # Iterate over the keys and convert the _id to a string
     for key in original_json:
         if isinstance(original_json[key], dict):
+            if len(list(original_json[key].keys())) == 0:
+                continue
             if list(original_json[key].keys())[0] == "$oid":
                 original_json[key] = str(original_json[key]["$oid"])
             elif list(original_json[key].keys())[0] == "$date":

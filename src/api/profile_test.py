@@ -7,7 +7,13 @@ client = TestClient(app)
 
 
 # Unauthorized Route Test
-def test_unauthorized_profile(fixtureuser):
+def test_unauthorized_profile():
+    response = client.get("/profile")
+    assert response.status_code == 401
+
+
+def test_get_profile_invalid_session():
+    client.cookies.set("session", "invalid")
     response = client.get("/profile")
     assert response.status_code == 401
 

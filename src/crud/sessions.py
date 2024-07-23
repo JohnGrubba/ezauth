@@ -1,10 +1,11 @@
 import uuid
-from tools.db import sessions_collection
+from tools import sessions_collection
 import datetime
 from tools.conf import SessionConfig
 from fastapi import Request
 from user_agents import parse
-from bson import ObjectId
+from bson import ObjectId, errors
+from fastapi import HTTPException
 
 
 def create_login_session(user_id: ObjectId, request: Request) -> str:
@@ -82,7 +83,7 @@ def delete_session(session_token: str) -> bool:
     )
 
 
-def get_user_sessions(user_id: str) -> list:
+def get_user_sessions(user_id: ObjectId) -> list:
     """
     Get all sessions for a user.
 
@@ -92,6 +93,10 @@ def get_user_sessions(user_id: str) -> list:
     Returns:
         list: List of Sessions
     """
+    try:
+        user_id = ObjectId(user_id)
+    except errors.InvalidId:
+        raise HTTPException(status_code=404, detail="User not found.")
     return list(sessions_collection.find({"user_id": user_id}))
 
 
@@ -105,4 +110,8 @@ def get_session_by_id(session_id: str) -> dict:
     Returns:
         dict: Session Information
     """
-    return sessions_collection.find_one({"_id": ObjectId(session_id)})
+    try:
+        object_id = ObjectId(session_id)
+    except errors.InvalidId:
+        raise HTTPException(status_code=404, detail="Session not found.")
+    return sessions_collection.find_one({"_id": object_id})
