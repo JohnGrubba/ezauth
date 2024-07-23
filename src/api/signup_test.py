@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from tools import users_collection
 
 from .main import app
 
@@ -37,6 +38,12 @@ def test_create_account_additional_data():
     assert response.status_code == 200
     assert resp_js.get("session_token") is not None
     assert int(resp_js.get("expires")) is not None
+    # Check which aditional data was saved
+    usr = users_collection.find_one({"email": "user1@example.com"})
+    # Check which data should be saved (testing_conf.json)
+    assert usr.get("test") is True
+    assert usr.get("test2") is None
+    assert usr.get("test3") is None
 
 
 # MISSING DATA TESTS

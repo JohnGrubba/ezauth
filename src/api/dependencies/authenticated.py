@@ -14,9 +14,9 @@ async def get_pub_user_dep(
         session_token (str, optional): Session Token. Defaults to Cookie(default=None, alias=SessionConfig.auto_cookie_name).
 
     Raises:
-        HTTPException: _description_
-        HTTPException: _description_
-        HTTPException: _description_
+        HTTPException: No Session Token
+        HTTPException: No Session Found
+        HTTPException: No User for Session Found
 
     Returns:
         User: User Dictionary
@@ -44,9 +44,9 @@ async def get_user_dep(
         session_token (str, optional): Session Token. Defaults to Cookie(default=None, alias=SessionConfig.auto_cookie_name).
 
     Raises:
-        HTTPException: _description_
-        HTTPException: _description_
-        HTTPException: _description_
+        HTTPException: No Session Token
+        HTTPException: No Session Found
+        HTTPException: No User for Session Found
 
     Returns:
         User: User Dictionary
@@ -74,9 +74,9 @@ async def get_dangerous_user_dep(
         session_token (str, optional): Session Token. Defaults to Cookie(default=None, alias=SessionConfig.auto_cookie_name).
 
     Raises:
-        HTTPException: _description_
-        HTTPException: _description_
-        HTTPException: _description_
+        HTTPException: No Session Token
+        HTTPException: No Session Found
+        HTTPException: No User for Session Found
 
     Returns:
         User: User Dictionary

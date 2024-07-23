@@ -39,7 +39,9 @@
             "issuer_name": "EZAuth",
             "issuer_image_url": "",
             "qr_endpoint": true
-        }
+        },
+        "allow_add_fields_on_signup": [],
+        "allow_add_fields_patch_user": []
     },
     "security": {
         "allow_origins": [

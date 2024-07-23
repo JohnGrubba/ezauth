@@ -5,6 +5,8 @@ from tools import (
     send_email,
     InternalConfig,
     insecure_cols,
+    AccountFeaturesConfig,
+    default_signup_fields,
 )
 from fastapi import HTTPException, BackgroundTasks, Request
 from api.model import UserSignupRequest
@@ -84,10 +86,22 @@ def update_public_user(user_id: str, data: dict) -> None:
         user_id (str): User ID
         data (dict): Data to Update
     """
+    # Retrieve the existing user data
+    existing_user = users_collection.find_one({"_id": bson.ObjectId(user_id)})
     # Allow update of all columns except InternalConfig.internal_columns
     data = {
         k: v for k, v in data.items() if k not in InternalConfig.not_updateable_columns
     }
+
+    if AccountFeaturesConfig.allow_add_fields_patch_user:
+        data = {
+            k: v
+            for k, v in data.items()
+            if k in AccountFeaturesConfig.allow_add_fields_patch_user
+            or k in existing_user
+        }
+    else:
+        data = {k: v for k, v in data.items() if k in existing_user}
     return users_collection.find_one_and_update(
         {"_id": bson.ObjectId(user_id)},
         {"$set": data},
@@ -203,13 +217,26 @@ def create_user(
     Returns:
         str: Session Token
     """
-    data = {
-        **additional_data,
-        **(
-            signup_model.model_dump()
+    if AccountFeaturesConfig.allow_add_fields_on_signup:
+        # Dump all fields
+        dmp = (
+            signup_model.model_dump(
+                include=default_signup_fields
+                | AccountFeaturesConfig.allow_add_fields_on_signup,
+            )
             if isinstance(signup_model, UserSignupRequest)
             else {}
-        ),
+        )
+    else:
+        # Only Dump Required Fields
+        dmp = (
+            signup_model.model_dump(include=default_signup_fields)
+            if isinstance(signup_model, UserSignupRequest)
+            else {}
+        )
+    data = {
+        **additional_data,
+        **dmp,
         "createdAt": datetime.datetime.now(),
     }
     # Save the Account into the database

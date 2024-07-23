@@ -1,7 +1,17 @@
-from pydantic import BaseModel, field_validator, EmailStr, SecretStr, ConfigDict
-from typing import Optional
+from pydantic import BaseModel, field_validator, EmailStr, SecretStr, ConfigDict, Field
+from typing import Optional, List
 import re
 import bcrypt
+
+
+class SessionDetailResponse(BaseModel):
+    id: str = Field(alias="_id")
+    device_information: dict
+    createdAt: str
+
+
+class SessionListResponseModel(BaseModel):
+    sessions: List[SessionDetailResponse]
 
 
 class ConfirmEmailRequest(BaseModel):

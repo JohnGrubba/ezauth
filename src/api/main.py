@@ -7,6 +7,7 @@ from api.internal import router as internalRouter
 from api.profile import router as profileRouter
 from api.twofactor import router as twofactorRouter
 from api.oauth_providers import router as oauthRouter
+from api.sessions import router as sessionsRouter
 import logging
 from tools import SecurityConfig
 
@@ -44,7 +45,8 @@ async def up():
 app.include_router(router)
 app.include_router(signupRouter)
 app.include_router(loginRouter)
-app.include_router(internalRouter)
 app.include_router(profileRouter)
+app.include_router(sessionsRouter)
 app.include_router(twofactorRouter)
 app.include_router(oauthRouter)
+app.include_router(internalRouter)
