@@ -2,6 +2,10 @@
 
 <h3 align="center">High performance self-hosted and fully customizable authentication service</h3>
 
+![Last Updated](https://raw.githubusercontent.com/JohnGrubba/ezauth/badges/updated.svg)
+![Lines of Code](https://raw.githubusercontent.com/JohnGrubba/ezauth/badges/lines.svg)
+![Total Files](https://raw.githubusercontent.com/JohnGrubba/ezauth/badges/files.svg)
+
 ## Disclaimer
 
 - ⚠️ The project is under **very active** development.
