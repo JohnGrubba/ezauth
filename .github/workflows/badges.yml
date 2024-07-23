@@ -1,0 +1,52 @@
+name: Badges
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - created
+
+jobs:
+  create_badges:
+    runs-on: ubuntu-latest
+    name: Create Badges
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v1
+        
+      - name: Generate Badges
+        uses: thewerthon/RepoBadges@v1.0.0
+        id: badges
+        with:
+          directory: ./
+          patterns: "**"
+          ignore: "node_modules"
+          version_prefix: "v"
+          version_fallback: "v0.0.0"
+          version_badge: ./output/version.svg
+          updated_badge: ./output/updated.svg
+          files_badge: ./output/files.svg
+          lines_badge: ./output/lines.svg
+          version_badge_label: "Current Version"
+          updated_badge_label: "Last Updated"
+          files_badge_label: "Total of Files"
+          lines_badge_label: "Lines of Code"
+          version_badge_style: "classic"
+          updated_badge_style: "classic"
+          files_badge_style: "classic"
+          lines_badge_style: "classic"
+          version_badge_color: "green"
+          updated_badge_color: "blue"
+          files_badge_color: "blue"
+          lines_badge_color: "blue"
+
+      - name: Deploy to Branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./output
+          publish_branch: badges
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
