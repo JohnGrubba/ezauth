@@ -34,7 +34,7 @@ docker compose -f .\docker-compose.dev.yml up -d --build
 ## Testing
 
 To be able to perform tests, that represent a real environment, the following technologies are used:
-- [MongoMock](https://github.com/mongomock/mongomock)
+- [MongoMock](https://github.com/JohnGrubba/mongomock)
 - [FakeRedis](https://github.com/cunla/fakeredis-py)
 
 Those Libraries automatically get used instead of `pymongo` and `redis` when testing, to avoid the need of an additional Redis and MongoDB instance.
