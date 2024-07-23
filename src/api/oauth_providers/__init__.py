@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-import sys
 from tools.conf import SignupConfig
 
 router = APIRouter(
@@ -7,9 +6,6 @@ router = APIRouter(
     tags=["OAuth"],
     dependencies=[],
 )
-
-if "pytest" in sys.modules:
-    SignupConfig.oauth_providers = []
 
 if "google" in SignupConfig.oauth_providers:
     from .google import router as ggl

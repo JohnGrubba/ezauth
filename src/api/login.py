@@ -32,6 +32,7 @@ async def login(login_form: LoginRequest, response: Response, request: Request):
     Can also return a `Set-Cookie` header with the session token. (See Config)
     """
     user = get_user_email_or_username(login_form.identifier)
+    # Check if User can be found
     if user is None:
         raise HTTPException(detail="User not found", status_code=404)
     # Check if Password Exists (or if OAuth SignIn)
@@ -43,8 +44,9 @@ async def login(login_form: LoginRequest, response: Response, request: Request):
 
     uid_email_key = "invallogin:" + user["email"]
 
+    # Get Failed Attempts from Redis
     failed_attempts = r.get(uid_email_key)
-    # Max Login Attempts enabed? and already failed attempts? and reached max?
+    # Max Login Attempts enabled? and already failed attempts? and reached max?
     if (
         SecurityConfig.max_login_attempts > 0
         and failed_attempts
@@ -62,6 +64,7 @@ async def login(login_form: LoginRequest, response: Response, request: Request):
         login_form.password.get_secret_value().encode("utf-8"),
         user["password"].encode("utf-8"),
     ):
+        # Wrong Password
         if SecurityConfig.max_login_attempts > 0:
             r.incrby(uid_email_key, 1)
             r.expire(uid_email_key, SecurityConfig.expire_unfinished_timeout * 60)
