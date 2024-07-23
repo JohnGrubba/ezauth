@@ -25,12 +25,15 @@ def enable_2fa_temp(user: dict) -> str:
     secret_bytes = pyotp.random_base32()
     totp = pyotp.TOTP(secret_bytes)
 
+    # Generate provisioning URL
     prov_url = totp.provisioning_uri(
         name=user["email"],
         issuer_name=AccountFeaturesConfig.issuer_name_2fa,
         image=AccountFeaturesConfig.issuer_image_url_2fa,
     )
+    # Set the secret in Redis (for confirmation)
     r.setex("2fa:" + bson.ObjectId(user["_id"]).__str__(), 60, secret_bytes)
+    # Return the provisioning URL for further processing
     return prov_url
 
 
@@ -62,6 +65,7 @@ async def enable_2fa_qr(user=Depends(get_dangerous_user_dep)):
     if not AccountFeaturesConfig.qr_code_endpoint_2fa:
         raise HTTPException(status_code=403, detail="QR Code endpoint is disabled.")
     prov_url = enable_2fa_temp(user)
+    # Generate QR Code for the Provisioning URL
     qr = QRCode(image_factory=qrcode.image.svg.SvgPathImage)
     qr.add_data(prov_url)
     return Response(qr.make_image().to_string(), media_type="image/svg+xml")
@@ -84,9 +88,11 @@ async def confirm_enable_2fa(
     ## Description
     This endpoint is used to confirm the enablement of 2FA for the user.
     """
+    # Retrieve Secret from redis
     secret = r.get("2fa:" + bson.ObjectId(user["_id"]).__str__())
     if not secret:
         raise HTTPException(status_code=400, detail="2FA activation expired")
+    # Initialize TOTP Generator from the Secret
     totp = pyotp.TOTP(secret)
     if totp.verify(str(code.code)):
         # Persist 2FA in the Database
