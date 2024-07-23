@@ -80,3 +80,29 @@ def delete_session(session_token: str) -> bool:
         sessions_collection.find_one_and_delete({"session_token": session_token})
         is not None
     )
+
+
+def get_user_sessions(user_id: str) -> list:
+    """
+    Get all sessions for a user.
+
+    Args:
+        user_id (str): User ID
+
+    Returns:
+        list: List of Sessions
+    """
+    return list(sessions_collection.find({"user_id": user_id}))
+
+
+def get_session_by_id(session_id: str) -> dict:
+    """
+    Get a session by ID.
+
+    Args:
+        session_id (str): Session ID
+
+    Returns:
+        dict: Session Information
+    """
+    return sessions_collection.find_one({"_id": ObjectId(session_id)})

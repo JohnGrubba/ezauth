@@ -50,7 +50,7 @@ sessions_collection.create_index(
 
 
 def bson_to_json(data: bson.BSON) -> dict:
-    """Convert BSON to JSON. Also converts the _id to a string.
+    """Convert BSON to JSON. From MongoDB to JSON.
 
     Args:
         data (bson.BSON): BSON Data
@@ -61,5 +61,11 @@ def bson_to_json(data: bson.BSON) -> dict:
     if not data:
         return None
     original_json = json.loads(bson.json_util.dumps(data))
-    original_json["_id"] = str(original_json["_id"]["$oid"])
+    # Iterate over the keys and convert the _id to a string
+    for key in original_json:
+        if isinstance(original_json[key], dict):
+            if list(original_json[key].keys())[0] == "$oid":
+                original_json[key] = str(original_json[key]["$oid"])
+            elif list(original_json[key].keys())[0] == "$date":
+                original_json[key] = str(original_json[key]["$date"])
     return original_json
