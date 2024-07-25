@@ -43,7 +43,9 @@
             "qr_endpoint": true
         },
         "allow_add_fields_on_signup": [],
-        "allow_add_fields_patch_user": []
+        "allow_add_fields_patch_user": [],
+        "allow_deletion": true,
+        "deletion_pending_minutes": 10080
     },
     "security": {
         "allow_origins": [

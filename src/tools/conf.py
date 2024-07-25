@@ -15,7 +15,7 @@ else:
 # Columns that should never leave EZAuth (maybe get more in the future)
 default_signup_fields = {"username", "email", "password"}
 insecure_cols = {"password": 0, "2fa_secret": 0, "google_uid": 0, "github_uid": 0}
-not_updateable_cols_internal = ["email", "createdAt"]
+not_updateable_cols_internal = ["email", "createdAt", "expireAt"]
 # Columns that can leave EZAuth but should only be used internally can be defined in config
 
 
@@ -70,10 +70,14 @@ class AccountFeaturesConfig:
     qr_code_endpoint_2fa: bool = config["account_features"]["2fa"]["qr_endpoint"]
     allow_add_fields_on_signup: set[str] = set(
         config["account_features"]["allow_add_fields_on_signup"]
-    )
+    ) - set(not_updateable_cols_internal)
     allow_add_fields_patch_user: set[str] = set(
         config["account_features"]["allow_add_fields_patch_user"]
-    )
+    ) - set(not_updateable_cols_internal)
+    allow_deletion: bool = config["account_features"]["allow_deletion"]
+    deletion_pending_minutes: int = config["account_features"][
+        "deletion_pending_minutes"
+    ]
 
 
 class SecurityConfig:

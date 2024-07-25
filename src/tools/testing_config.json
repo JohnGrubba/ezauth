@@ -7,7 +7,9 @@
         "oauth": {
             "providers_enabled": [],
             "base_url": "http://localhost:3250/"
-        }
+        },
+        "password_complexity": 4,
+        "username_complexity": 2
     },
     "email": {
         "login_usr": "",
@@ -45,7 +47,9 @@
         ],
         "allow_add_fields_patch_user": [
             "test2"
-        ]
+        ],
+        "allow_deletion": true,
+        "deletion_pending_minutes": 10080
     },
     "security": {
         "allow_origins": [

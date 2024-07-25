@@ -1,5 +1,5 @@
 import uuid
-from tools import sessions_collection
+from tools import sessions_collection, users_collection
 import datetime
 from tools.conf import SessionConfig
 from fastapi import Request
@@ -19,6 +19,14 @@ def create_login_session(user_id: ObjectId, request: Request) -> str:
     Returns:
         str: Session Token
     """
+    # Check if User is already scheduled for deletion before creating a session
+    user = users_collection.find_one({"_id": ObjectId(user_id)})
+    if user.get("expiresAfter", None) is not None:
+        raise HTTPException(
+            status_code=403,
+            detail="User scheduled for deletion. Please Contact an Administrator for more information.",
+        )
+
     u_agent = request.headers.get("User-Agent")
     ua = parse(u_agent)
     device_information = {
@@ -115,3 +123,13 @@ def get_session_by_id(session_id: str) -> dict:
     except errors.InvalidId:
         raise HTTPException(status_code=404, detail="Session not found.")
     return sessions_collection.find_one({"_id": object_id})
+
+
+def clear_sessions_for_user(user_id: ObjectId) -> None:
+    """
+    Clear all sessions for a user.
+
+    Args:
+        user_id (str): User ID
+    """
+    sessions_collection.delete_many({"user_id": user_id})

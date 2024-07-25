@@ -45,8 +45,14 @@ except Exception:
     pass
 # Set TTL For Sessions
 sessions_collection.create_index(
-    "createdAt", expireAfterSeconds=SessionConfig.session_expiry_seconds
+    "createdAt", expireAfterSeconds=SessionConfig.session_expiry_seconds, sparse=True
 )
+try:
+    users_collection.drop_index("expiresAfter_1")
+except Exception:
+    pass
+# Create TTL For Account Deletions
+users_collection.create_index("expiresAfter", expireAfterSeconds=0, sparse=True)
 
 
 def bson_to_json(data: bson.BSON) -> dict:

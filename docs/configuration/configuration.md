@@ -68,6 +68,8 @@ Make sure that all parameters are set correctly before starting the service.
 | `account_features.2fa.qr_endpoint` | **Datatype:** Boolean <br> **Default:** `true` <br> Enable or disable QR Code Generation Endpoint for 2FA Login. This can be useful if you don't want to use any libraries on the client Side. |
 | `account_features.allow_add_fields_on_signup` | **Datatype:** List <br> **Default:** `[]` <br> Allow those additional fields on signup. Leave empty if not sure. |
 | `account_features.allow_add_fields_patch_user` | **Datatype:** List <br> **Default:** `[]` <br> Allow those additional fields to be set when modifying user. Leave empty if not sure. The entries here extend already set `account_features.allow_add_fields_on_signup` fields. |
+| `account_features.allow_deletion` | **Datatype:** Boolean <br> **Default:** `true` <br> Allow the user to request an account deletion. |
+| `account_features.deletion_pending_minutes` | **Datatype:** Integer <br> **Default:** `10080` <br> Minutes before the account gets deleted. Directly after requesting deletion, the User can't log in anymore, but the data will be persisted until this value passes by. Example Value is a Week.  |
 
 !!! Note "Additional Fields"
     The `allow_add_fields_on_signup` makes it possible to add custom fields to the signup process. If you don't set the fields that are allowed here on signup, you can't update them later, except you also have them in `allow_add_fields_patch_user`.
