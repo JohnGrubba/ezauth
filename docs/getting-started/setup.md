@@ -34,6 +34,6 @@ For an explanation of the configuration options, see the [Configuration](../conf
 After you have configured the service you can start it by running the following command:
 
 ``` bash
-docker compose up -d
+docker compose up -d --build
 ```
 The service should now be running and you can access the API by navigating to <a href="http://localhost:3250">`http://localhost:3250`</a> in your browser. The API Documentation is available at <a href="http://localhost:3250/docs">`http://localhost:3250/docs`</a>.
