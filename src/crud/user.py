@@ -13,6 +13,7 @@ from api.model import UserSignupRequest
 import pymongo
 import bson
 import datetime
+from crud.sessions import clear_sessions_for_user
 
 
 def link_google_account(user_id: str, google_uid: str) -> None:
@@ -251,3 +252,23 @@ def create_user(
     if SignupConfig.enable_welcome_email:
         background_tasks.add_task(send_email, "WelcomeEmail", data["email"], **data)
     return session_token
+
+
+def schedule_delete_user(user_id: str) -> None:
+    """Schedule a User for Deletion
+
+    Args:
+        user_id (str): User ID
+    """
+    users_collection.update_one(
+        {"_id": bson.ObjectId(user_id)},
+        {
+            "$set": {
+                "expiresAfter": datetime.datetime.now(datetime.UTC)
+                + datetime.timedelta(
+                    minutes=AccountFeaturesConfig.deletion_pending_minutes
+                )
+            }
+        },
+    )
+    clear_sessions_for_user(user_id)

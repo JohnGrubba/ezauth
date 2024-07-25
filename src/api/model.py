@@ -73,6 +73,10 @@ class PasswordHashed(BaseModel):
         return hashed_pswd
 
 
+class DeleteAccountRequest(BaseModel):
+    password: SecretStr
+
+
 class ResetPasswordRequest(PasswordHashed):
     old_password: SecretStr
 

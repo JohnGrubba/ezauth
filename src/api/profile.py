@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
 from tools.conf import AccountFeaturesConfig, SignupConfig
-from api.model import ResetPasswordRequest, ConfirmEmailRequest
+from api.model import ResetPasswordRequest, ConfirmEmailRequest, DeleteAccountRequest
 import json
 import bcrypt
-from crud.user import change_pswd, update_public_user
+from crud.user import change_pswd, update_public_user, schedule_delete_user
 from api.dependencies.authenticated import (
     get_pub_user_dep,
     get_dangerous_user_dep,
     get_user_dep,
 )
-from tools import send_email, all_ids, regenerate_ids, r
+from tools import send_email, all_ids, regenerate_ids, r, SessionConfig
 
 router = APIRouter(
     prefix="/profile",
@@ -137,3 +137,32 @@ async def update_profile(update_data: dict, user: dict = Depends(get_user_dep)):
     This endpoint is used to update the profile information of the user.
     """
     return update_public_user(user["_id"], update_data)
+
+
+@router.delete("", status_code=204)
+async def delete_account(
+    password: DeleteAccountRequest,
+    response: Response,
+    user: dict = Depends(get_dangerous_user_dep),
+):
+    """
+    # Delete Account
+
+    ## Description
+    This endpoint is used to request a deletion of the user's account.
+    This process can only be canceled by the administration of the system.
+    """
+    if not AccountFeaturesConfig.allow_deletion:
+        raise HTTPException(status_code=403, detail="Account Deletion is disabled.")
+    # Check Password
+    if not bcrypt.checkpw(
+        password.password.get_secret_value().encode("utf-8"),
+        user["password"].encode("utf-8"),
+    ):
+        raise HTTPException(detail="Invalid Password", status_code=401)
+    schedule_delete_user(user["_id"])
+    response.delete_cookie(
+        SessionConfig.auto_cookie_name,
+        samesite=SessionConfig.cookie_samesite,
+        secure=SessionConfig.cookie_secure,
+    )
