@@ -1,5 +1,6 @@
 from pydantic import BaseModel, field_validator, EmailStr, SecretStr, ConfigDict, Field
 from typing import Optional, List
+from tools import SignupConfig
 import re
 import bcrypt
 
@@ -56,13 +57,15 @@ class PasswordHashed(BaseModel):
     def password_check_hash(cls, password: SecretStr) -> str:
         # Validate Password
         pswd = password.get_secret_value()
-        if len(pswd) < 8:
-            raise ValueError("Make sure your password is at least 8 letters")
-        elif re.search("[0-9]", pswd) is None:
+        if len(pswd) == 0:
+            raise ValueError("Password cannot be empty")
+        if len(pswd) < 8 and SignupConfig.password_complexity >= 1:
+            raise ValueError("Make sure your password has at least 8 letters")
+        elif re.search("[0-9]", pswd) is None and SignupConfig.password_complexity >= 2:
             raise ValueError("Make sure your password has a number in it")
-        elif re.search("[A-Z]", pswd) is None:
+        elif re.search("[A-Z]", pswd) is None and SignupConfig.password_complexity >= 3:
             raise ValueError("Make sure your password has a capital letter in it")
-        elif re.search("[^a-zA-Z0-9]", pswd) is None:
+        elif re.search("[^a-zA-Z0-9]", pswd) is None and SignupConfig.password_complexity >= 4:
             raise ValueError("Make sure your password has a special character in it")
         elif len(pswd) > 50:
             raise ValueError("Make sure your password is at most 50 characters")
@@ -88,10 +91,12 @@ class UserSignupRequest(PasswordHashed):
     @field_validator("username")
     @classmethod
     def username_check(cls, username: str) -> str:
+        if len(username) == 0:
+            raise ValueError("Username cannot be empty")
         if len(username) < 4:
-            raise ValueError("Username must be at least 4 characters long")
+            if SignupConfig.username_complexity >= 1: raise ValueError("Username must be at least 4 characters long")
         if len(username) > 20:
-            raise ValueError("Username must be at most 20 characters long")
+            if SignupConfig.username_complexity >= 2: raise ValueError("Username must be at most 20 characters long")
         elif re.search("[^a-zA-Z0-9]", username) is not None:
             raise ValueError("Username must only contain letters and numbers")
         return username

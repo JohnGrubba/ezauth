@@ -7,7 +7,9 @@
         "oauth": {
             "providers_enabled": [],
             "base_url": "http://localhost:3250/"
-        }
+        },
+        "password_complexity": 4,
+        "username_complexity": 2
     },
     "email": {
         "login_usr": "",

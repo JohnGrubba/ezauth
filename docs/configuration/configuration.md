@@ -19,7 +19,8 @@ Make sure that all parameters are set correctly before starting the service.
 | `signup.enable_welcome_email` | **Datatype:** Boolean <br> **Default:** `false` <br> Enable or disable the welcome E-Mail for new users. |
 | `signup.oauth.providers_enabled` | **Datatype:** List <br> **Default:** `[]` <br> Enabled OAuth Providers.  <br> **Possible Providers**<ul><li>[**google**](../advanced/oauth.md#google-oauth)</li></ul>  |
 | `signup.oauth.base_url` | **Datatype:** String <br> **Default:** `"http://localhost:3250/"` <br> The Base URL for the callback URL from OAuth Providers. When you host the service somewhere, you may want to change this to the official Domain instead of an IP. This is also the value you set when setting up your OAuth Providers. Make sure those values match. |
-
+| `signup.password_complexity` | **Datatype:** Integer <br> **Default:** `4` <br> Password Complexity Requirement. Every higher value, includes all the previous ones too.<br> <ul><li>**1**: Minimum 8 Characters</li><li>**2**: Min. One Digit</li><li>**3**: Min. One Capital Letter</li><li>**4**: Min. One Special Character</li></ul>  |
+| `signup.username_complexity` | **Datatype:** Integer <br> **Default:** `2` <br> Username Complexity Requirement. Every higher value, includes all the previous ones too.<br> <ul><li>**1**: Minimum 4 Characters</li><li>**2**: Max. 20 Characters</li></ul>  |
 
 ### E-Mail Configuration
 

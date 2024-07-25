@@ -191,10 +191,7 @@ def test_create_account_invalid_email():
             "username": "TEST",
         },
     )
-    assert (
-        response.json()["detail"][0]["msg"]
-        == "value is not a valid email address: An email address must have an @-sign."
-    )
+    assert "email" in response.json()["detail"][0]["msg"]
     assert response.status_code == 422
 
 

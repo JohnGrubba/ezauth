@@ -26,6 +26,8 @@ class SignupConfig:
     enable_welcome_email: bool = config["signup"]["enable_welcome_email"]
     oauth_providers: list[str] = config["signup"]["oauth"]["providers_enabled"]
     oauth_base_url: str = str(config["signup"]["oauth"]["base_url"]).removesuffix("/")
+    password_complexity: int = config["signup"]["password_complexity"]
+    username_complexity: int = config["signup"]["username_complexity"]
 
 
 class EmailConfig:
