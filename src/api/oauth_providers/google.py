@@ -35,7 +35,8 @@ try:
     )
 except FileNotFoundError:
     raise FileNotFoundError(
-        "Google OAuth Config File not found (google_client_secret.env.json). Please disable this OAuth Provider, or create the file as described in the Docs."
+        "Google OAuth Config File not found (google_client_secret.env.json).\
+        Please disable this OAuth Provider, or create the file as described in the Docs."
     )
 
 
