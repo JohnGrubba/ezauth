@@ -104,7 +104,12 @@ async def reset_password(
         return Response(status_code=200)
 
 
-@router.post("/confirm-password", status_code=204)
+@router.post("/confirm-password", status_code=204, responses={
+    204: {"description": "Password Reset Successfully"},
+    403: {"description": "Resetting Password is disabled."},
+    404: {"description": "No Password Reset Request found."},
+    401: {"description": "Invalid Code"},
+})
 async def confirm_password(code: ConfirmEmailRequest, user=Depends(get_user_dep)):
     """
     # Confirm Password Reset
