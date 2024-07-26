@@ -19,13 +19,13 @@ class SignupConfig:
         Returns:
             bool: _description_
         """
-        if type(self.enable_conf_email) != bool:
+        if isinstance(self.enable_conf_email, bool):
             raise ValueError(
                 "signup.enable_conf_email must be a boolean (got type {})".format(
                     type(self.enable_conf_email)
                 )
             )
-        if type(self.conf_code_expiry) != int:
+        if isinstance(self.conf_code_expiry, int):
             raise ValueError(
                 "signup.conf_code_expiry must be an integer (got type {})".format(
                     type(self.conf_code_expiry)
