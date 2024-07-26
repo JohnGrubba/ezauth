@@ -23,15 +23,21 @@ router = APIRouter(
 )
 
 # Initialize Googles OAuth Flow
-flow = Flow.from_client_secrets_file(
-    client_secrets_file="/src/app/config/google_client_secret.env.json",
-    scopes=[
-        "https://www.googleapis.com/auth/userinfo.email",
-        "openid",
-        "https://www.googleapis.com/auth/userinfo.profile",
-    ],
-    redirect_uri=SignupConfig.oauth_base_url + "/oauth/google/callback",
-)
+try:
+    flow = Flow.from_client_secrets_file(
+        client_secrets_file="/src/app/config/google_client_secret.env.json",
+        scopes=[
+            "https://www.googleapis.com/auth/userinfo.email",
+            "openid",
+            "https://www.googleapis.com/auth/userinfo.profile",
+        ],
+        redirect_uri=SignupConfig.oauth_base_url + "/oauth/google/callback",
+    )
+except FileNotFoundError:
+    raise FileNotFoundError(
+        "Google OAuth Config File not found (google_client_secret.env.json).\
+        Please disable this OAuth Provider, or create the file as described in the Docs."
+    )
 
 
 @router.get("/login")

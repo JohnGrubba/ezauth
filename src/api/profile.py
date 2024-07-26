@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
-from tools.conf import AccountFeaturesConfig, SignupConfig
+from tools import AccountFeaturesConfig, SignupConfig
 from api.model import ResetPasswordRequest, ConfirmEmailRequest, DeleteAccountRequest
 import json
 import bcrypt

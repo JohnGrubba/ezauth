@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from tools.conf import SignupConfig
+from tools import SignupConfig
 
 router = APIRouter(
     prefix="/oauth",

@@ -65,7 +65,10 @@ class PasswordHashed(BaseModel):
             raise ValueError("Make sure your password has a number in it")
         elif re.search("[A-Z]", pswd) is None and SignupConfig.password_complexity >= 3:
             raise ValueError("Make sure your password has a capital letter in it")
-        elif re.search("[^a-zA-Z0-9]", pswd) is None and SignupConfig.password_complexity >= 4:
+        elif (
+            re.search("[^a-zA-Z0-9]", pswd) is None
+            and SignupConfig.password_complexity >= 4
+        ):
             raise ValueError("Make sure your password has a special character in it")
         elif len(pswd) > 50:
             raise ValueError("Make sure your password is at most 50 characters")
@@ -98,9 +101,11 @@ class UserSignupRequest(PasswordHashed):
         if len(username) == 0:
             raise ValueError("Username cannot be empty")
         if len(username) < 4:
-            if SignupConfig.username_complexity >= 1: raise ValueError("Username must be at least 4 characters long")
+            if SignupConfig.username_complexity >= 1:
+                raise ValueError("Username must be at least 4 characters long")
         if len(username) > 20:
-            if SignupConfig.username_complexity >= 2: raise ValueError("Username must be at most 20 characters long")
+            if SignupConfig.username_complexity >= 2:
+                raise ValueError("Username must be at most 20 characters long")
         elif re.search("[^a-zA-Z0-9]", username) is not None:
             raise ValueError("Username must only contain letters and numbers")
         return username

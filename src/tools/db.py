@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import os
 import bson.json_util
 import json
-from tools.conf import SessionConfig
+from .conf import SessionConfig
 import redis
 import logging
 import sys
@@ -53,6 +53,8 @@ except Exception:
     pass
 # Create TTL For Account Deletions
 users_collection.create_index("expiresAfter", expireAfterSeconds=0, sparse=True)
+
+logger.info("\u001b[32m+ MongoDB Setup Done\u001b[0m")
 
 
 def bson_to_json(data: bson.BSON) -> dict:
