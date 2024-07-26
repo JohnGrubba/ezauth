@@ -13,7 +13,12 @@ from crud.user import (
 from crud.sessions import create_login_session
 from api.model import LoginResponse
 
-github_cnf = json.load(open("/src/app/config/github_client_secret.env.json"))
+try:
+    github_cnf = json.load(open("/src/app/config/github_client_secret.env.json"))
+except FileNotFoundError:
+    raise FileNotFoundError(
+        "GitHub OAuth Config File not found (github_client_secret.env.json). Please disable this OAuth Provider, or create the file as described in the Docs."
+    )
 REDIRECT_URI = SignupConfig.oauth_base_url + "/oauth/github/callback"
 CLIENT_ID = github_cnf["client_id"]
 CLIENT_SECRET = github_cnf["client_secret"]
