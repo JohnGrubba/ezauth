@@ -8,6 +8,8 @@ class SignupConfig:
     enable_welcome_email: bool = config["signup"]["enable_welcome_email"]
     oauth_providers: set[str] = config["signup"]["oauth"]["providers_enabled"]
     oauth_base_url: str = str(config["signup"]["oauth"]["base_url"]).removesuffix("/")
+    password_complexity: int = config["signup"]["password_complexity"]
+    username_complexity: int = config["signup"]["username_complexity"]
 
     def validate_types(self) -> bool:
         """This is to Type Check the Configuration"""
@@ -48,6 +50,18 @@ class SignupConfig:
             raise ValueError(
                 "signup.oauth.base_url must be a string (got type {})".format(
                     type(self.oauth_base_url)
+                )
+            )
+        if not isinstance(self.password_complexity, int):
+            raise ValueError(
+                "signup.password_complexity must be an integer (got type {})".format(
+                    type(self.password_complexity)
+                )
+            )
+        if not isinstance(self.username_complexity, int):
+            raise ValueError(
+                "signup.username_complexity must be an integer (got type {})".format(
+                    type(self.username_complexity)
                 )
             )
 
