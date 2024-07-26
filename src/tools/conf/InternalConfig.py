@@ -37,5 +37,15 @@ class InternalConfig:
                 )
             )
 
+    def validate_values(self) -> bool:
+        """This is to Value Check the Configuration"""
+        if not self.internal_api_key:
+            raise ValueError("internal.internal_api_key must not be empty")
+        if len(self.internal_api_key) < 8:
+            raise ValueError(
+                "internal.internal_api_key must be at least 8 characters long"
+            )
+
 
 InternalConfig().validate_types()
+InternalConfig().validate_values()
