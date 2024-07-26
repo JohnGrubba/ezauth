@@ -118,9 +118,7 @@ async def confirm_email(
     if str(acc["code"]) != str(payload.code):
         raise HTTPException(detail="Invalid Code", status_code=404)
     # Account is confirmed, create the user
-    session_token = create_user(
-        None, background_tasks, request, additional_data=acc["form"]
-    )
+    session_token = create_user(acc["form"], background_tasks, request)
     if SessionConfig.auto_cookie:
         response.set_cookie(
             SessionConfig.auto_cookie_name,

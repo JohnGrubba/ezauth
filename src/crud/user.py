@@ -205,7 +205,7 @@ def check_unique_usr(email: str, username: str) -> bool:
 
 
 def create_user(
-    signup_model: UserSignupRequest,
+    signup_model: UserSignupRequest | dict,
     background_tasks: BackgroundTasks,
     request: Request,
     additional_data: dict = {},
@@ -218,23 +218,20 @@ def create_user(
     Returns:
         str: Session Token
     """
-    if AccountFeaturesConfig.allow_add_fields_on_signup:
-        # Dump all fields
-        dmp = (
-            signup_model.model_dump(
+    if isinstance(signup_model, UserSignupRequest):
+        if AccountFeaturesConfig.allow_add_fields_on_signup:
+            dmp = signup_model.model_dump(
                 include=default_signup_fields
                 | AccountFeaturesConfig.allow_add_fields_on_signup,
             )
-            if isinstance(signup_model, UserSignupRequest)
-            else {}
-        )
+        else:
+            # Only Dump Required Fields
+            dmp = signup_model.model_dump(include=default_signup_fields)
     else:
-        # Only Dump Required Fields
-        dmp = (
-            signup_model.model_dump(include=default_signup_fields)
-            if isinstance(signup_model, UserSignupRequest)
-            else {}
-        )
+        # Input is a dictionary (from redis maybe)
+        # Only dump default_signup_fields
+        dmp = {k: v for k, v in signup_model.items() if k in default_signup_fields}
+
     data = {
         **additional_data,
         **dmp,
