@@ -86,5 +86,17 @@ class AccountFeaturesConfig:
                 )
             )
 
+    def validate_values(self) -> bool:
+        """This is to Value Check the Configuration"""
+        if not self.issuer_name_2fa:
+            raise ValueError("account_features.2fa.issuer_name must not be empty")
+        if not self.deletion_pending_minutes > 0:
+            raise ValueError(
+                "account_features.deletion_pending_minutes must be a positive integer (got {})".format(
+                    self.deletion_pending_minutes
+                )
+            )
+
 
 AccountFeaturesConfig().validate_types()
+AccountFeaturesConfig().validate_values()

@@ -48,5 +48,31 @@ class SessionConfig:
                 )
             )
 
+    def validate_values(self) -> bool:
+        """This is to Value Check the Configuration"""
+        if not self.session_expiry_seconds > 0:
+            raise ValueError(
+                "session.session_expiry_seconds must be a positive integer (got {})".format(
+                    self.session_expiry_seconds
+                )
+            )
+        if not self.max_session_count > 0:
+            raise ValueError(
+                "session.max_session_count must be a positive integer (got {})".format(
+                    self.max_session_count
+                )
+            )
+        if self.auto_cookie and self.auto_cookie_name == "":
+            raise ValueError(
+                "session.auto_cookie_name must not be an empty string, when enabled"
+            )
+        if self.cookie_samesite not in ["strict", "lax", "none"]:
+            raise ValueError(
+                "session.cookie_samesite must be one of 'strict', 'lax', or 'none' (got {})".format(
+                    self.cookie_samesite
+                )
+            )
+
 
 SessionConfig().validate_types()
+SessionConfig().validate_values()

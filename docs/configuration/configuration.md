@@ -17,7 +17,7 @@ Make sure that all parameters are set correctly before starting the service.
 | `signup.conf_code_expiry` | **Datatype:** Integer <br> **Default:** `5` <br> The time in minutes until the confirmation code expires. |
 | `signup.conf_code_complexity` | **Datatype:** Integer <br> **Default:** `1` <br> The complexity of the confirmation code. <br> **Possible Values** <br> <ul><li>**1**: `4 Digit Numeric`</li><li>**2**: `6 Digit Numeric`</li><li>**3**: `4 Characters`</li><li>**4**: `6 Characters`</li></ul>  |
 | `signup.enable_welcome_email` | **Datatype:** Boolean <br> **Default:** `false` <br> Enable or disable the welcome E-Mail for new users. |
-| `signup.oauth.providers_enabled` | **Datatype:** List <br> **Default:** `[]` <br> Enabled OAuth Providers.  <br> **Possible Providers**<ul><li>[**google**](../advanced/oauth.md#google-oauth)</li></ul>  |
+| `signup.oauth.providers_enabled` | **Datatype:** List <br> **Default:** `[]` <br> Enabled OAuth Providers.  <br> **Possible Providers**<ul><li>[**Google**](../advanced/oauth.md#google-oauth)</li><li>[**GitHub**](../advanced/oauth.md#github-oauth)</li></ul>  |
 | `signup.oauth.base_url` | **Datatype:** String <br> **Default:** `"http://localhost:3250/"` <br> The Base URL for the callback URL from OAuth Providers. When you host the service somewhere, you may want to change this to the official Domain instead of an IP. This is also the value you set when setting up your OAuth Providers. Make sure those values match. |
 | `signup.password_complexity` | **Datatype:** Integer <br> **Default:** `4` <br> Password Complexity Requirement. Every higher value, includes all the previous ones too.<br> <ul><li>**1**: Minimum 8 Characters</li><li>**2**: Min. One Digit</li><li>**3**: Min. One Capital Letter</li><li>**4**: Min. One Special Character</li></ul>  |
 | `signup.username_complexity` | **Datatype:** Integer <br> **Default:** `2` <br> Username Complexity Requirement. Every higher value, includes all the previous ones too.<br> <ul><li>**1**: Minimum 4 Characters</li><li>**2**: Max. 20 Characters</li></ul>  |
@@ -32,7 +32,7 @@ Make sure that all parameters are set correctly before starting the service.
 |------------|-------------|
 | `email.login_usr` | **Datatype:** String <br> **Default:** `""` <br> E-Mail Login Identifier (mostly the E-Mail itself). <br> **Example:** test@test.com |
 | `email.login_pwd` | **Datatype:** String <br> **Default:** `""` <br> E-Mail Login Password. |
-| `email.sender_email` | **Datatype:** String <br> **Default:** `""` <br> E-Mail address from which the E-Mails are sent (mostly the same as `email.login_usr`) |
+| `email.sender_email` | **Datatype:** String <br> **Default:** `""` <br> E-Mail address from which the E-Mails are sent. Can be changed to something like `EZAuth <ezauth.noreply@gmail.com` to achieve a nicer looking E-Mail. |
 | `email.smtp_host` | **Datatype:** String <br> **Default:** `""` <br> SMTP Host for the E-Mail server. <br> **Example:** `smtp.gmail.com` |
 | `email.smtp_port` | **Datatype:** Integer <br> **Default:** `465` <br> SMTP Port for the E-Mail server. |
 

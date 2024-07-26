@@ -43,5 +43,27 @@ class SecurityConfig:
                 )
             )
 
+    def validate_values(self) -> bool:
+        """This is to Value Check the Configuration"""
+        if not self.max_login_attempts >= 0:
+            raise ValueError(
+                "security.max_login_attempts must be a positive integer (got {})".format(
+                    self.max_login_attempts
+                )
+            )
+        if not self.login_timeout > 0:
+            raise ValueError(
+                "security.login_timeout must be a positive integer (got {})".format(
+                    self.login_timeout
+                )
+            )
+        if not self.expire_unfinished_timeout > 0:
+            raise ValueError(
+                "security.expire_unfinished_timeout must be a positive integer (got {})".format(
+                    self.expire_unfinished_timeout
+                )
+            )
+
 
 SecurityConfig().validate_types()
+SecurityConfig().validate_values()

@@ -15,6 +15,7 @@ nav:
     - Advanced E-Mail Templating: advanced/email_templates.md
     - Further Customization: advanced/further_custom.md
     - OAuth: advanced/oauth.md
+    - SSL / HTTPS: advanced/ssl.md
 theme:
   name: material
   logo: "ezauth_logo.png"
@@ -54,3 +55,6 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tilde

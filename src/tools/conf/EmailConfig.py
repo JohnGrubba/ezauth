@@ -41,5 +41,28 @@ class EmailConfig:
                 )
             )
 
+    def validate_values(self) -> None:
+        """This is to Value Check the Configuration"""
+        if self.sender_email and "@" not in self.sender_email:
+            raise ValueError(
+                "email.sender_email must contain a valid email address.\
+                    This also works: `Test <test@test.com>` (got {})".format(
+                    self.sender_email
+                )
+            )
+        if self.smtp_host.startswith("http"):
+            raise ValueError(
+                "email.smtp_host must not contain `http` or `https` or `smtp` (got {})".format(
+                    self.smtp_host
+                )
+            )
+        if not 0 < self.smtp_port < 65536:
+            raise ValueError(
+                "email.smtp_port must be a valid port number (got {})".format(
+                    self.smtp_port
+                )
+            )
+
 
 EmailConfig().validate_types()
+EmailConfig().validate_values()

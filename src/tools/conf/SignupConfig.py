@@ -65,5 +65,33 @@ class SignupConfig:
                 )
             )
 
+    def validate_values(self) -> bool:
+        """This is to Value Check the Configuration"""
+        if not self.conf_code_expiry > 0:
+            raise ValueError(
+                f"signup.conf_code_expiry must be greater than 0, got {self.conf_code_expiry}"
+            )
+        if self.conf_code_complexity not in range(1, 5):
+            raise ValueError(
+                f"signup.conf_code_complexity must be between 1 and 4 (Check Docs), got {self.conf_code_complexity}"
+            )
+        if (
+            len(self.oauth_providers) > 0
+            and not self.oauth_base_url
+            and "http" not in self.oauth_base_url
+        ):
+            raise ValueError(
+                f"signup.oauth.base_url cannot be empty or malformed when OAuth is enabled, got {self.oauth_base_url}"
+            )
+        if self.password_complexity not in range(1, 5):
+            raise ValueError(
+                f"signup.password_complexity must be between 1 and 4 (Check Docs), got {self.password_complexity}"
+            )
+        if self.username_complexity not in range(1, 3):
+            raise ValueError(
+                f"signup.username_complexity must be 1 or 2 (Check Docs), got {self.username_complexity}"
+            )
+
 
 SignupConfig().validate_types()
+SignupConfig().validate_values()
