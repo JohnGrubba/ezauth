@@ -1,7 +1,7 @@
 import uuid
 from tools import sessions_collection, users_collection
 import datetime
-from tools.conf import SessionConfig
+from tools import SessionConfig
 from fastapi import Request
 from user_agents import parse
 from bson import ObjectId, errors

@@ -1,7 +1,7 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from . import EmailConfig
+from .conf import EmailConfig
 import logging
 from threading import Lock
 from tools import users_collection, InternalConfig

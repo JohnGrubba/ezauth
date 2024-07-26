@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import os
 import bson.json_util
 import json
-from tools.conf import SessionConfig
+from .conf import SessionConfig
 import redis
 import logging
 import sys

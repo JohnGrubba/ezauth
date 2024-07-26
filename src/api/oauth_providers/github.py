@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, BackgroundTasks, Response, HTTPException
 from fastapi.responses import RedirectResponse
-from tools.conf import SignupConfig, SessionConfig
+from tools import SignupConfig, SessionConfig
 import json
 import requests
 import re
