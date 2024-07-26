@@ -6,7 +6,7 @@ class SignupConfig:
     conf_code_expiry: int = config["signup"]["conf_code_expiry"]
     conf_code_complexity: int = config["signup"]["conf_code_complexity"]
     enable_welcome_email: bool = config["signup"]["enable_welcome_email"]
-    oauth_providers: list[str] = config["signup"]["oauth"]["providers_enabled"]
+    oauth_providers: set[str] = config["signup"]["oauth"]["providers_enabled"]
     oauth_base_url: str = str(config["signup"]["oauth"]["base_url"]).removesuffix("/")
 
     def validate_types(self) -> bool:
@@ -36,6 +36,7 @@ class SignupConfig:
                 )
             )
         if not isinstance(self.oauth_providers, list):
+            self.oauth_providers = set(self.oauth_providers)
             raise ValueError(
                 "signup.oauth.providers_enabled must be a list (got type {})".format(
                     type(self.oauth_providers)
@@ -49,7 +50,6 @@ class SignupConfig:
                     type(self.oauth_base_url)
                 )
             )
-        pass
 
 
 SignupConfig().validate_types()
