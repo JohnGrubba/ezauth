@@ -50,7 +50,7 @@ class EmailConfig:
                     self.sender_email
                 )
             )
-        if "http" in self.smtp_host or "smtp" in self.smtp_host:
+        if self.smtp_host.startswith("http"):
             raise ValueError(
                 "email.smtp_host must not contain `http` or `https` or `smtp` (got {})".format(
                     self.smtp_host
