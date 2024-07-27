@@ -4,7 +4,7 @@ import pyotp
 import bson
 from tools import AccountFeaturesConfig, r
 from crud.user import add_2fa
-from api.model import TwoFactorAddResponse, ConfirmEmailRequest
+from api.model import TwoFactorAddResponse, ConfirmationCode
 from qrcode.main import QRCode
 import qrcode.image.svg
 
@@ -80,7 +80,7 @@ async def enable_2fa_qr(user=Depends(get_dangerous_user_dep)):
     status_code=204,
 )
 async def confirm_enable_2fa(
-    code: ConfirmEmailRequest, user=Depends(get_dangerous_user_dep)
+    code: ConfirmationCode, user=Depends(get_dangerous_user_dep)
 ):
     """
     # Confirm Enable 2FA

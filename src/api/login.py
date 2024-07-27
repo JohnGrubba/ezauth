@@ -1,15 +1,122 @@
-from fastapi import APIRouter, HTTPException, Response, Cookie, Request
-from api.model import LoginRequest, LoginResponse
-from crud.user import get_user_email_or_username
+from fastapi import APIRouter, HTTPException, Response, Cookie, Request, BackgroundTasks
+from api.model import (
+    LoginRequest,
+    LoginResponse,
+    ResetPasswordRequest,
+    ConfirmEmailCodeRequest,
+)
+from crud.user import get_user_email_or_username, get_public_user, change_pswd
 from crud.sessions import create_login_session, delete_session
 import bcrypt
 import pyotp
-from tools import SessionConfig, r, SecurityConfig
+import json
+from tools import (
+    SessionConfig,
+    r,
+    SecurityConfig,
+    send_email,
+    all_ids,
+    regenerate_ids,
+    SignupConfig,
+    AccountFeaturesConfig,
+)
 
 router = APIRouter(
     prefix="",
     tags=["Log In"],
 )
+
+
+@router.post(
+    "/forgot-password",
+    status_code=204,
+    responses={
+        204: {"description": "Password Reset Email Sent"},
+        403: {"description": "Resetting Password is disabled."},
+        409: {
+            "description": "Password Reset Email already sent. You have one request pending."
+        },
+        401: {"description": "Invalid Old Password"},
+        200: {"description": "Password Reset Successfully"},
+    },
+)
+async def forgot_password(
+    password_reset_form: ResetPasswordRequest, background_tasks: BackgroundTasks
+):
+    """
+    # Reset Password
+
+    ## Description
+    This endpoint is used to reset the password of the user.
+    """
+    user = get_user_email_or_username(password_reset_form.identifier)
+    public_user = get_public_user(user["_id"])
+    if not AccountFeaturesConfig.enable_reset_pswd:
+        raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
+
+    # Send Confirmation E-Mail
+    if r.get("reset_pswd:" + user["email"]):
+        raise HTTPException(
+            status_code=409,
+            detail="Password Reset Email already sent. You have one request pending.",
+        )
+    if not all_ids:
+        # Generate new ids
+        regenerate_ids()
+    # Get a unique ID for confirmation email
+    unique_id = all_ids.pop()
+    r.setex(
+        "reset_pswd:" + user["email"],
+        SignupConfig.conf_code_expiry * 60,
+        json.dumps(
+            {
+                "action": "password_reset",
+                "code": unique_id,
+                "new_pswd": password_reset_form.password,
+            }
+        ),
+    )
+    background_tasks.add_task(
+        send_email,
+        "ChangePassword",
+        user["email"],
+        code=unique_id,
+        time=SignupConfig.conf_code_expiry,
+        **public_user,
+    )
+    return Response(status_code=204)
+
+
+@router.post(
+    "/confirm-password",
+    status_code=204,
+    responses={
+        204: {"description": "Password Reset Successfully"},
+        403: {"description": "Resetting Password is disabled."},
+        404: {"description": "No Password Reset Request found."},
+        401: {"description": "Invalid Code"},
+    },
+)
+async def confirm_reset(code: ConfirmEmailCodeRequest):
+    """
+    # Confirm Password Reset
+
+    ## Description
+    This endpoint is used to confirm a password reset.
+    """
+    user = get_user_email_or_username(code.identifier)
+    if not AccountFeaturesConfig.enable_reset_pswd:
+        raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
+    change_req = r.get("reset_pswd:" + user["email"])
+    if not change_req:
+        raise HTTPException(status_code=404, detail="No Password Reset Request found.")
+    change_req = json.loads(change_req)
+    # Check code
+    if str(change_req["code"]) != str(code.code):
+        raise HTTPException(status_code=401, detail="Invalid Code")
+
+    change_pswd(user["_id"], change_req["new_pswd"])
+    r.delete("reset_pswd:" + user["email"])
 
 
 @router.post(
