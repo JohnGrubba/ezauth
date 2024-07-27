@@ -3,7 +3,6 @@ from .conf import config, not_updateable_cols_internal
 
 class AccountFeaturesConfig:
     enable_reset_pswd: bool = config["account_features"]["enable_reset_pswd"]
-    reset_pswd_conf_mail: bool = config["account_features"]["reset_pswd_conf_mail"]
     enable_2fa: bool = config["account_features"]["2fa"]["enable"]
     issuer_name_2fa: str = config["account_features"]["2fa"]["issuer_name"]
     issuer_image_url_2fa: str = config["account_features"]["2fa"]["issuer_image_url"]
@@ -41,12 +40,6 @@ class AccountFeaturesConfig:
             raise ValueError(
                 "account_features.enable_reset_pswd must be a boolean (got type {})".format(
                     type(self.enable_reset_pswd)
-                )
-            )
-        if not isinstance(self.reset_pswd_conf_mail, bool):
-            raise ValueError(
-                "account_features.reset_pswd_conf_mail must be a boolean (got type {})".format(
-                    type(self.reset_pswd_conf_mail)
                 )
             )
         if not isinstance(self.enable_2fa, bool):

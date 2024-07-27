@@ -15,7 +15,7 @@ class SessionListResponseModel(BaseModel):
     sessions: List[SessionDetailResponse]
 
 
-class ConfirmEmailRequest(BaseModel):
+class ConfirmationCode(BaseModel):
     code: int | str
 
 
@@ -39,9 +39,8 @@ class LoginResponse(BaseModel):
     expires: int
 
 
-class ConfirmEmailCodeRequest(BaseModel):
-    code: int | str
-    email: str
+class ConfirmEmailCodeRequest(ConfirmationCode):
+    identifier: str
 
 
 class BroadCastEmailRequest(BaseModel):
@@ -84,7 +83,7 @@ class DeleteAccountRequest(BaseModel):
 
 
 class ResetPasswordRequest(PasswordHashed):
-    old_password: SecretStr
+    identifier: str
 
 
 class UserSignupRequest(PasswordHashed):

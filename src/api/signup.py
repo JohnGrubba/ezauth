@@ -111,7 +111,7 @@ async def confirm_email(
     ## Description
     This endpoint is used to confirm the E-Mail of a user. This is only needed if confirmation E-Mails are enabled.
     """
-    acc = r.get("signup:" + payload.email)
+    acc = r.get("signup:" + payload.identifier)
     if not acc:
         raise HTTPException(detail="No Account Found with this code.", status_code=404)
     acc = json.loads(acc)
@@ -127,7 +127,7 @@ async def confirm_email(
             samesite=SessionConfig.cookie_samesite,
             secure=SessionConfig.cookie_secure,
         )
-    r.delete("signup:" + payload.email)
+    r.delete("signup:" + payload.identifier)
     return LoginResponse(
         session_token=session_token, expires=SessionConfig.session_expiry_seconds
     )
