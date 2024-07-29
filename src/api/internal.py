@@ -1,10 +1,18 @@
 from fastapi import APIRouter, Header, HTTPException, Depends, BackgroundTasks
 from tools import broadcast_emails, InternalConfig, bson_to_json
-from api.model import BroadCastEmailRequest, InternalProfileRequest
-from crud.user import get_user, get_batch_users, update_public_user
-from crud.sessions import get_session
+from api.model import BroadCastEmailRequest, InternalProfileRequest, InternalUserQuery
+from crud.user import (
+    get_user,
+    get_batch_users,
+    update_public_user,
+    query_users,
+    remove_user,
+    restore_usr,
+    count_users,
+    count_oauth,
+)
+from crud.sessions import get_session, count_sessions
 from threading import Lock
-
 
 email_task_running = Lock()
 
@@ -102,3 +110,59 @@ async def batch_users(user_ids_req: str):
             status_code=400, detail="Too many User IDs. Max 50 User IDs allowed."
         )
     return [bson_to_json(_) for _ in get_batch_users(ids)]
+
+
+@router.post("/users")
+async def query_users_paginated(query: InternalUserQuery):
+    """
+    # Query Users
+
+    ## Description
+    This endpoint is used to query users based on the query string provided.
+
+    ## Query Parameters
+    - **query**: Query String
+    """
+    return [bson_to_json(_) for _ in query_users(query.query, query.sort, query.page)]
+
+
+@router.delete("/removeuser")
+async def remove_user_instant(user_id: str):
+    """
+    # Remove User
+
+    ## Description
+    This endpoint is used to remove a user from the database instantly.
+    """
+    remove_user(user_id)
+    return {"status": "ok"}
+
+
+@router.put("/restoreuser")
+async def restore_user(user_id: str):
+    """
+    # Restore User
+
+    ## Description
+    This endpoint is used to restore a user from the database.
+    """
+    restore_usr(user_id)
+    return {"status": "ok"}
+
+
+@router.get("/stats")
+async def stats():
+    """
+    # Get Stats (Ressource Intensive)
+
+    ## Description
+    This endpoint is used to get stats about the application.
+    """
+    usr_count = count_users()
+    sess_count = count_sessions()
+    return {
+        "users": usr_count,
+        "sessions": sess_count,
+        "avg_sess_per_usr": sess_count / usr_count if usr_count else 0,
+        **count_oauth(),
+    }

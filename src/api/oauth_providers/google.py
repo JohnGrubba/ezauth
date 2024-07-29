@@ -112,7 +112,7 @@ async def oauth_callback(
         "google_uid": jwt_decoded["sub"],
     }
     # Persist user in DB
-    session_token = create_user(None, background_tasks, request, signup_form)
+    session_token = create_user(signup_form, background_tasks, request, signup_form)
     if SessionConfig.auto_cookie:
         response.set_cookie(
             SessionConfig.auto_cookie_name,

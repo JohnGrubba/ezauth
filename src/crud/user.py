@@ -251,6 +251,16 @@ def create_user(
     return session_token
 
 
+def remove_user(user_id: str) -> None:
+    """Remove a User from the Database
+
+    Args:
+        user_id (str): User ID
+    """
+    users_collection.delete_one({"_id": bson.ObjectId(user_id)})
+    clear_sessions_for_user(user_id)
+
+
 def schedule_delete_user(user_id: str) -> None:
     """Schedule a User for Deletion
 
@@ -269,3 +279,56 @@ def schedule_delete_user(user_id: str) -> None:
         },
     )
     clear_sessions_for_user(user_id)
+
+
+def query_users(query: dict, sort: dict, page: 0) -> list:
+    """Query Users based on a query string
+
+    Args:
+        query (str): Query String
+
+    Returns:
+        list: List of User Data
+    """
+    max_results = 100
+    return list(
+        users_collection.find(query, sort=sort)
+        .skip(page * max_results)
+        .limit(max_results)
+    )
+
+
+def restore_usr(user_id: str) -> None:
+    """Restore a User from Deletion
+
+    Args:
+        user_id (str): User ID
+    """
+    users_collection.update_one(
+        {"_id": bson.ObjectId(user_id)}, {"$unset": {"expiresAfter": ""}}
+    )
+
+
+def count_users() -> int:
+    """Count the number of users
+
+    Returns:
+        int: Number of Users
+    """
+    return users_collection.count_documents({})
+
+
+def count_oauth() -> dict:
+    """Count the number of users
+
+    Returns:
+        dict: Number of Users
+    """
+    return {
+        "google_oauth_count": users_collection.count_documents(
+            {"google_uid": {"$exists": True}}
+        ),
+        "github_oauth_count": users_collection.count_documents(
+            {"github_uid": {"$exists": True}}
+        ),
+    }

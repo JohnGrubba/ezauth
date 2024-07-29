@@ -14,5 +14,5 @@ else:
 # Columns that should never leave EZAuth (maybe get more in the future)
 default_signup_fields = {"username", "email", "password"}
 insecure_cols = {"password": 0, "2fa_secret": 0, "google_uid": 0, "github_uid": 0}
-not_updateable_cols_internal = ["email", "createdAt", "expireAt"]
+not_updateable_cols_internal = ["email", "createdAt", "expiresAfter"]
 # Columns that can leave EZAuth but should only be used internally can be defined in config
