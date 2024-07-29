@@ -16,6 +16,7 @@ nav:
     - Further Customization: advanced/further_custom.md
     - OAuth: advanced/oauth.md
     - SSL / HTTPS: advanced/ssl.md
+    - Extensions: advanced/extensions.md
 theme:
   name: material
   logo: "ezauth_logo.png"
