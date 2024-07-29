@@ -78,7 +78,7 @@ def load_extensions():
             modules.append([spec, module])
 
     for spec, module in modules:
-        app.include_router(module.router)
+        app.include_router(module.router, prefix=f"/ext/{module.__name__}")
 
     logger.info(
         "\u001b[32m-> Loaded Extensions: "
