@@ -1,6 +1,7 @@
-let currentPage = 0
+var currentPage = window.location.hash ? parseInt(window.location.hash.substring(1)) : 0
 
 handleActivePageNumber = () => {
+    window.location.hash = currentPage
     updateTable({}, currentPage)
     const pageButton = document.querySelector('#page-number')
     pageButton.innerHTML = currentPage + 1
@@ -28,6 +29,6 @@ const nextPage = () => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    setCurrentPage(0)
+    setCurrentPage(currentPage)
     handlePageButtonsStatus()
 })
