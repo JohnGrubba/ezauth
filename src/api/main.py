@@ -37,7 +37,7 @@ app.add_middleware(
 router = APIRouter(include_in_schema=False)
 
 
-app.mount("/admin", StaticFiles(directory="admin", html=True))
+app.mount("/admin", StaticFiles(directory="admin", html=True, check_dir=False))
 
 
 @router.get("/")
