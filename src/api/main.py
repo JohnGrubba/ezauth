@@ -1,6 +1,7 @@
 from fastapi import FastAPI, APIRouter, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from api.signup import router as signupRouter
 from api.login import router as loginRouter
 from api.internal import router as internalRouter
@@ -34,6 +35,9 @@ app.add_middleware(
 )
 
 router = APIRouter(include_in_schema=False)
+
+
+app.mount("/admin", StaticFiles(directory="admin", html=True, check_dir=False))
 
 
 @router.get("/")

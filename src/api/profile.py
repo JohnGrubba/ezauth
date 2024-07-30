@@ -56,12 +56,13 @@ async def delete_account(
     """
     if not AccountFeaturesConfig.allow_deletion:
         raise HTTPException(status_code=403, detail="Account Deletion is disabled.")
-    # Check Password
-    if not bcrypt.checkpw(
-        password.password.get_secret_value().encode("utf-8"),
-        user["password"].encode("utf-8"),
-    ):
-        raise HTTPException(detail="Invalid Password", status_code=401)
+    if user["password"]:
+        # Check Password
+        if not bcrypt.checkpw(
+            password.password.get_secret_value().encode("utf-8"),
+            user["password"].encode("utf-8"),
+        ):
+            raise HTTPException(detail="Invalid Password", status_code=401)
     schedule_delete_user(user["_id"])
     response.delete_cookie(
         SessionConfig.auto_cookie_name,

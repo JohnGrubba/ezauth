@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet">
+    <title>Admin Panel</title>
+</head>
+
+<body>
+    <h1>Stats
+    </h1>
+    <table id="stats-table">
+        <thead>
+            <tr>
+                <th>Total Users</th>
+                <th>Pending Users</th>
+                <th>Total Sessions</th>
+                <th>Ø Sessions / User</th>
+                <th>Total Google OAuth</th>
+                <th>Total Github OAuth</th>
+            </tr>
+        </thead>
+        <tbody class="bold">
+        </tbody>
+    </table>
+
+    <h1>Users</h1>
+    <div id="modal-backdrop" class="modal-backdrop">
+        <div id="api-key-modal" class="modal">
+            <h2>Enter API Key</h2>
+            <input type="text" id="api-key-input" placeholder="Enter your API key">
+            <button id="submit-api-key">Submit</button>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="modal-backdrop">
+        <div class="modal">
+            <h2>Confirm Deletion (this can not be undone)</h2>
+            <button class="confirm">Confirm</button>
+            <button class="cancel">Cancel</button>
+        </div>
+    </div>
+
+    <div id="restore-modal" class="modal-backdrop">
+        <div class="modal">
+            <h2>Confirm Reopening of Account?</h2>
+            <button class="confirm">Confirm</button>
+            <button class="cancel">Cancel</button>
+        </div>
+    </div>
+
+    <table id="users-table">
+        <thead>
+            <tr>
+                <th>E-Mail</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>2FA TOTP</th>
+                <th>Google Oauth</th>
+                <th>Github Oauth</th>
+                <th>Created At</th>
+                <th>Deletion Pending</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <div class="pagination-container">
+        <button class="pagination-button" id="paginate-prev" onclick="prevPage()">Previous</button>
+        <div id="pagination-numbers">
+            <div id="page-number" class="page-number">1</div>
+        </div>
+        <button class="pagination-button" id="paginate-next" onclick="nextPage()">Next</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="pagination.js"></script>
+</body>
+
+</html>

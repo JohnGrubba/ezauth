@@ -5,6 +5,12 @@ import re
 import bcrypt
 
 
+class InternalUserQuery(BaseModel):
+    query: dict
+    sort: dict
+    page: int = 0
+
+
 class SessionDetailResponse(BaseModel):
     id: str = Field(alias="_id")
     device_information: dict
@@ -72,7 +78,7 @@ class PasswordHashed(BaseModel):
         elif len(pswd) > 50:
             raise ValueError("Make sure your password is at most 50 characters")
         # Hash Password
-        hashed_pswd = bcrypt.hashpw(pswd.encode("utf-8"), bcrypt.gensalt(5)).decode(
+        hashed_pswd = bcrypt.hashpw(pswd.encode("utf-8"), bcrypt.gensalt(10)).decode(
             "utf-8"
         )
         return hashed_pswd

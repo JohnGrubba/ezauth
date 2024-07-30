@@ -133,3 +133,13 @@ def clear_sessions_for_user(user_id: ObjectId) -> None:
         user_id (str): User ID
     """
     sessions_collection.delete_many({"user_id": user_id})
+
+
+def count_sessions() -> int:
+    """
+    Count the amount of sessions.
+
+    Returns:
+        int: Amount of Sessions
+    """
+    return sessions_collection.count_documents({})
