@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Header, HTTPException, Depends, BackgroundTasks
-from tools import broadcast_emails, InternalConfig, bson_to_json
+from tools import broadcast_emails, InternalConfig, bson_to_json, r
 from api.model import BroadCastEmailRequest, InternalProfileRequest, InternalUserQuery
 from crud.user import (
     get_user,
@@ -165,4 +165,5 @@ async def stats():
         "sessions": sess_count,
         "avg_sess_per_usr": sess_count / usr_count if usr_count else 0,
         **count_oauth(),
+        "pending_users": len(r.scan(match="signup:*")[1]),
     }

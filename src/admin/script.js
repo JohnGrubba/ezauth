@@ -77,6 +77,7 @@ async function updateTable(query, page) {
                     <td data-label="E-Mail">${user.email}</td>
                     <td data-label="Username">${user.username}</td>
                     <td data-label="Password">${user.password ? ye_icon : no_icon}</td>
+                    <td data-label="OTP 2FA">${user["2fa_secret"] ? ye_icon : no_icon}</td>
                     <td data-label="Google Oauth">${user.google_uid ? ye_icon : no_icon}</td>
                     <td data-label="Github Oauth">${user.github_uid ? ye_icon : no_icon}</td>
                     <td data-label="Created At">${new Date(user.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric" })}</td>
@@ -113,6 +114,7 @@ async function update_stats() {
             const html = `
             <tr>
                 <td data-label="Total Users">${data.users}</td>
+                <td data-label="Pending Users">${data.pending_users}</td>
                 <td data-label="Total Sessions">${data.sessions}</td>
                 <td data-label="Ø Sessions / User">${Number(data.avg_sess_per_usr).toFixed(2)}</td>
                 <td data-label="Total Google OAuth">${data.google_oauth_count}</td>
