@@ -74,4 +74,5 @@ mkdir -p src/extensions
 
 If you want to use an extension that someone else has created, you can download it from a repository and place it in the `extensions/` directory. The extension should be structured as described above.
 
-Stay tuned for a repository of extensions that you can use to enhance your EZAuth experience.
+!!! Tip "Extension Repository"
+    If you want to share your extension with others, you can create a repository on GitHub or any other platform and share the link with others. This way, others can easily download your extension and use it in their EZAuth instance. If you want to share your extension with the community, you can also create a Pull Request to add your extension to the [official EZAuth Extension Repository](https://github.com/JohnGrubba/ezauth-extensions).
