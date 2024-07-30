@@ -13,8 +13,6 @@ RUN pip install --no-cache-dir --upgrade -r /src/app/requirements.txt
 
 COPY . /src/app
 
-# Add a startup script
-COPY start.sh /src/app/start.sh
 RUN chmod +x /src/app/start.sh
 
 CMD ["/src/app/start.sh"]
