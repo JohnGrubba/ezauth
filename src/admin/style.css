@@ -74,15 +74,22 @@ tr:nth-child(even) {
     background-color: #219d54;
 }
 
-@media (max-width: 768px) {
+thead {
+    display: table-header-group;
+}
+
+@media (max-width: 1050px) {
 
     table,
-    thead,
     tbody,
     th,
     td,
     tr {
         display: block;
+    }
+
+    thead {
+        display: none;
     }
 
     th,
