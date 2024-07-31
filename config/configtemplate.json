@@ -6,7 +6,8 @@
         "enable_welcome_email": false,
         "oauth": {
             "providers_enabled": [],
-            "base_url": "http://localhost:3250/"
+            "base_url": "http://localhost:3250/",
+            "redirect_url": ""
         },
         "password_complexity": 4,
         "username_complexity": 2

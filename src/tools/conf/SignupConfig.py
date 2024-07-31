@@ -8,6 +8,9 @@ class SignupConfig:
     enable_welcome_email: bool = config["signup"]["enable_welcome_email"]
     oauth_providers: set[str] = config["signup"]["oauth"]["providers_enabled"]
     oauth_base_url: str = str(config["signup"]["oauth"]["base_url"]).removesuffix("/")
+    oauth_redirect_url: str = str(
+        config["signup"]["oauth"]["redirect_url"]
+    ).removesuffix("/")
     password_complexity: int = config["signup"]["password_complexity"]
     username_complexity: int = config["signup"]["username_complexity"]
 
@@ -46,12 +49,6 @@ class SignupConfig:
             )
         if not all(isinstance(i, str) for i in self.oauth_providers):
             raise ValueError("signup.oauth.providers_enabled must be a list of strings")
-        if not isinstance(self.oauth_base_url, str):
-            raise ValueError(
-                "signup.oauth.base_url must be a string (got type {})".format(
-                    type(self.oauth_base_url)
-                )
-            )
         if not isinstance(self.password_complexity, int):
             raise ValueError(
                 "signup.password_complexity must be an integer (got type {})".format(
@@ -82,6 +79,10 @@ class SignupConfig:
         ):
             raise ValueError(
                 f"signup.oauth.base_url cannot be empty or malformed when OAuth is enabled, got {self.oauth_base_url}"
+            )
+        if self.oauth_redirect_url and "http" not in self.oauth_redirect_url:
+            raise ValueError(
+                f"signup.oauth.redirect_url must be a valid URL or empty, got {self.oauth_redirect_url}"
             )
         if self.password_complexity not in range(1, 5):
             raise ValueError(

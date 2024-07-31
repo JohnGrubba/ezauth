@@ -63,6 +63,8 @@ def login_usr(response: Response, usr: dict, request: Request) -> LoginResponse:
             samesite=SessionConfig.cookie_samesite,
             secure=SessionConfig.cookie_secure,
         )
+    if SignupConfig.oauth_redirect_url:
+        return RedirectResponse(SignupConfig.oauth_redirect_url)
     return LoginResponse(
         session_token=session_token, expires=SessionConfig.session_expiry_seconds
     )
@@ -121,6 +123,8 @@ async def oauth_callback(
             samesite=SessionConfig.cookie_samesite,
             secure=SessionConfig.cookie_secure,
         )
+    if SignupConfig.oauth_redirect_url:
+        return RedirectResponse(SignupConfig.oauth_redirect_url)
     return LoginResponse(
         session_token=session_token, expires=SessionConfig.session_expiry_seconds
     )
