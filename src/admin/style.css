@@ -225,3 +225,36 @@ body {
 .page-number:hover {
     background-color: #ddd;
 }
+
+.search-container {
+    flex: 1;
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#search-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+}
+
+#search-input:focus {
+    border-color: #007BFF;
+}
+
+#search-button {
+    padding: 10px 20px;
+    border: 1px solid #007BFF;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+#search-button:hover {
+    background-color: #0056b3;
+}

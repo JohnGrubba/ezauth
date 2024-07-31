@@ -26,7 +26,6 @@
         </tbody>
     </table>
 
-    <h1>Users</h1>
     <div id="modal-backdrop" class="modal-backdrop">
         <div id="api-key-modal" class="modal">
             <h2>Enter API Key</h2>
@@ -51,6 +50,11 @@
         </div>
     </div>
 
+    <h1>Users</h1>
+    <div class="search-container">
+        <input type="search" id="search-input" placeholder="Search...">
+        <button id="search-button" onclick="query()">Query</button>
+    </div>
     <table id="users-table">
         <thead>
             <tr>

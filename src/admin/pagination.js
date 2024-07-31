@@ -1,21 +1,16 @@
 var currentPage = window.location.hash ? parseInt(window.location.hash.substring(1)) : 0
 
-handleActivePageNumber = () => {
+async function handleActivePageNumber() {
     window.location.hash = currentPage
-    updateTable({}, currentPage)
+    query()
     const pageButton = document.querySelector('#page-number')
     pageButton.innerHTML = currentPage + 1
+    document.querySelector('#paginate-prev').disabled = currentPage === 0
 }
 
 const setCurrentPage = (pageNum) => {
     currentPage = pageNum
     handleActivePageNumber()
-    handlePageButtonsStatus()
-}
-
-
-const handlePageButtonsStatus = () => {
-    document.querySelector('#paginate-prev').disabled = currentPage === 0
 }
 
 const prevPage = () => {
@@ -30,5 +25,4 @@ const nextPage = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     setCurrentPage(currentPage)
-    handlePageButtonsStatus()
 })
