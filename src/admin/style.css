@@ -1,8 +1,14 @@
+html {
+    display: flex;
+    justify-content: center;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 20px;
     background-color: #f0f2f5;
     color: #333;
+    flex: 1;
 }
 
 .bold {
@@ -78,7 +84,7 @@ thead {
     display: table-header-group;
 }
 
-@media (max-width: 1050px) {
+@media (max-width: 1450px) {
 
     table,
     tbody,
@@ -103,19 +109,21 @@ thead {
         text-align: left;
     }
 
+    #users-table tr{
+        border-bottom: 1px solid #9c9c9c;
+    }
+
     td {
         border: none;
         border-bottom: 1px solid #ddd;
-        position: relative;
-        padding-left: 50%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     td:before {
         content: attr(data-label);
-        position: absolute;
-        left: 10px;
-        width: calc(50% - 20px);
-        padding-right: 10px;
         white-space: nowrap;
         text-align: left;
         font-weight: bold;

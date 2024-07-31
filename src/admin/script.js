@@ -80,14 +80,16 @@ async function updateTable(query, page) {
                     <td data-label="OTP 2FA">${user["2fa_secret"] ? ye_icon : no_icon}</td>
                     <td data-label="Google Oauth">${user.google_uid ? ye_icon : no_icon}</td>
                     <td data-label="Github Oauth">${user.github_uid ? ye_icon : no_icon}</td>
-                    <td data-label="Created At">${new Date(user.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric" })}</td>
-                    <td data-label="Deletion Pending">${user.expiresAfter ?
-                        new Date(user.expiresAfter).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric" })
+                    <td data-label="Created At">${new Date(user.createdAt).toLocaleDateString(navigator.language, { weekday: "long", year: "numeric", month: "short", day: "numeric" })}</td>
+                    <td data-label="Deletion on">${user.expiresAfter ?
+                        new Date(user.expiresAfter).toLocaleDateString(navigator.language, { year: "numeric", month: "short", day: "numeric" })
                         : no_icon}</td>
                     <td data-label="Actions" class="actions">
-                        <button class="delete" onclick="delete_modal('${user._id}')">Delete</button>
-                        <button class="update" onclick="update_modal('${user._id}')">Update</button>
-                        ${user.expiresAfter ? `<button class="restore" onclick="restore_modal('${user._id}')">Restore</button>` : ''}
+                        <div>
+                            <button class="delete" onclick="delete_modal('${user._id}')">Delete</button>
+                            <button class="update" onclick="update_modal('${user._id}')">Update</button>
+                            ${user.expiresAfter ? `<button class="restore" onclick="restore_modal('${user._id}')">Restore</button>` : ''}
+                        </div>
                     </td>
                 `
                 if (user.expiresAfter) {
