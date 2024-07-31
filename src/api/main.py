@@ -15,11 +15,14 @@ import importlib
 import importlib.util
 from tools import SecurityConfig
 
+__version__ = "0.8.3"
+
 logging.basicConfig(format="%(message)s", level=logging.INFO, force=True)
 logger = logging.getLogger("uvicorn")
 
 app = FastAPI(
     title="EZAuth API",
+    version=__version__,
     description="""
 <img src="https://johngrubba.github.io/ezauth/ezauth_banner.png" />
 <h2> EZAuth is a high performance self-hosted and fully customizable authentication service </h2>
