@@ -3,6 +3,7 @@ from fastapi.responses import RedirectResponse
 from google_auth_oauthlib.flow import Flow
 import os
 import re
+import random
 from crud.user import (
     create_user,
     get_user_by_google_uid,
@@ -105,6 +106,10 @@ async def oauth_callback(
     if usr:
         link_google_account(usr["_id"], jwt_decoded["sub"])
         return login_usr(response, usr, request)
+
+    # Check if user already exists in database
+    if get_user_email_or_username(username):
+        username += str(random.randint(1000, 9999))
 
     # Custom SignUp Form (Password Field missing etc.)
     signup_form = {

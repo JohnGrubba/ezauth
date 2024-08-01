@@ -3,6 +3,7 @@ from fastapi.responses import RedirectResponse
 from tools import SignupConfig, SessionConfig
 import json
 import requests
+import random
 import re
 from crud.user import (
     create_user,
@@ -117,6 +118,10 @@ async def oauth_callback(
     if usr:
         link_github_account(usr["_id"], rsp["id"])
         return login_usr(response, usr, request)
+
+    # Check if user already exists in database
+    if get_user_email_or_username(username):
+        username += str(random.randint(1000, 9999))
 
     # Custom SignUp Form (Password Field missing etc.)
     signup_form = {

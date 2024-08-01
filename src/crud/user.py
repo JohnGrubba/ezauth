@@ -103,6 +103,11 @@ def update_public_user(user_id: str, data: dict) -> None:
         }
     else:
         data = {k: v for k, v in data.items() if k in existing_user}
+
+    # Check if username in use
+    if get_user_email_or_username(data.get("username", "")):
+        raise HTTPException(detail="Username already in use.", status_code=409)
+
     return users_collection.find_one_and_update(
         {"_id": bson.ObjectId(user_id)},
         {"$set": data},
@@ -184,7 +189,12 @@ def get_user_email_or_username(credential: str) -> dict:
         dict: User Data
     """
     return users_collection.find_one(
-        {"$or": [{"email": credential}, {"username": credential}]}
+        {
+            "$or": [
+                {"email": {"$regex": credential, "$options": "i"}},
+                {"username": {"$regex": credential, "$options": "i"}},
+            ]
+        }
     )
 
 
@@ -199,7 +209,14 @@ def check_unique_usr(email: str, username: str) -> bool:
         bool: True if email or username is already in use
     """
     return (
-        users_collection.find_one({"$or": [{"email": email}, {"username": username}]})
+        users_collection.find_one(
+            {
+                "$or": [
+                    {"email": {"$regex": email, "$options": "i"}},
+                    {"username": {"$regex": username, "$options": "i"}},
+                ]
+            }
+        )
         is not None
     )
 

@@ -40,6 +40,9 @@ async def signup(
     ## Description
     This endpoint is used to sign up a user. Depending on the configuration, a confirmation email is sent to the user.
     """
+    # Check if user already exists in database
+    if check_unique_usr(signup_form.email, signup_form.username):
+        raise HTTPException(detail="Email or Username already exists", status_code=409)
     # Handle signup
     if SignupConfig.enable_conf_email:
         # Those checks are only needed when confirmation emails are enabled
@@ -47,11 +50,6 @@ async def signup(
         # Check if email in confirmation email dict
         if r.get("signup:" + signup_form.email):
             raise HTTPException(detail="E-Mail already sent", status_code=409)
-        # Check if user already exists in database
-        if check_unique_usr(signup_form.email, signup_form.username):
-            raise HTTPException(
-                detail="Email or Username already exists", status_code=409
-            )
         if not all_ids:
             # Generate new ids
             regenerate_ids()
