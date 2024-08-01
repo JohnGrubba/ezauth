@@ -93,3 +93,12 @@ def test_update_additional_existent_data(fixturesessiontoken_user):
     response = client.patch("/profile", json={"test": "Ya"})
     assert response.status_code == 200
     assert get_dangerous_user(fixturesessiontoken_user[1]["_id"]).get("test") == "Ya"
+
+
+def test_update_username_taken(fixturesessiontoken_user, fixturesessiontoken_user2):
+    client.cookies.set("session", fixturesessiontoken_user[0])
+    response = client.patch(
+        "/profile", json={"username": fixturesessiontoken_user2[1]["username"]}
+    )
+    assert response.status_code == 409
+    assert response.json().get("detail") == "Username already in use."

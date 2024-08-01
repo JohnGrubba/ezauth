@@ -105,7 +105,9 @@ def update_public_user(user_id: str, data: dict) -> None:
         data = {k: v for k, v in data.items() if k in existing_user}
 
     # Check if username in use
-    if get_user_email_or_username(data.get("username", "")):
+    if data.get("username", "") and get_user_email_or_username(
+        data.get("username", "")
+    ):
         raise HTTPException(detail="Username already in use.", status_code=409)
 
     return users_collection.find_one_and_update(
