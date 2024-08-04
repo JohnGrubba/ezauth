@@ -14,12 +14,15 @@ logger = logging.getLogger("uvicorn.info")
 DATABASE_URL = os.getenv("DATABASE_URL")
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
 REDIS_HOST = os.getenv("REDIS_HOST")
+REDIS_PORT = os.getenv("REDIS_PORT")
 
 logger.info("\u001b[34mConnecting to Redis...\u001b[0m")
 if "pytest" in sys.modules:
     r = fakeredis.FakeRedis()
 else:
-    r = redis.Redis(host=REDIS_HOST, decode_responses=True, password=REDIS_PASSWORD)
+    r = redis.Redis(
+        host=REDIS_HOST, decode_responses=True, password=REDIS_PASSWORD, port=REDIS_PORT
+    )
 logger.info("\u001b[32m+ Connected to Redis\u001b[0m")
 logger.info("\u001b[34mConnecting to MongoDB...\u001b[0m")
 if "pytest" in sys.modules:
