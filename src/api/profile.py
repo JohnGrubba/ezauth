@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 from tools import AccountFeaturesConfig
-from api.model import DeleteAccountRequest
+from api.model import DeleteAccountRequest, ProfileUpdateRequest
 import bcrypt
 from crud.user import update_public_user, schedule_delete_user
 from api.dependencies.authenticated import (
@@ -31,7 +31,9 @@ async def profile(user: dict = Depends(get_pub_user_dep)):
 
 
 @router.patch("", status_code=200)
-async def update_profile(update_data: dict, user: dict = Depends(get_user_dep)):
+async def update_profile(
+    update_data: ProfileUpdateRequest, user: dict = Depends(get_user_dep)
+):
     """
     # Update Profile Information
     Public user can only update existing fields and viewable fields for him.
@@ -40,7 +42,7 @@ async def update_profile(update_data: dict, user: dict = Depends(get_user_dep)):
     ## Description
     This endpoint is used to update the profile information of the user.
     """
-    return update_public_user(user["_id"], update_data)
+    return update_public_user(user["_id"], update_data.model_dump(exclude_none=True))
 
 
 @router.delete("", status_code=204)

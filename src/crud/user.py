@@ -7,6 +7,7 @@ from tools import (
     insecure_cols,
     AccountFeaturesConfig,
     default_signup_fields,
+    case_insensitive_collation,
 )
 from fastapi import HTTPException, BackgroundTasks, Request
 from api.model import UserSignupRequest
@@ -193,10 +194,11 @@ def get_user_email_or_username(credential: str) -> dict:
     return users_collection.find_one(
         {
             "$or": [
-                {"email": {"$regex": credential, "$options": "i"}},
-                {"username": {"$regex": credential, "$options": "i"}},
+                {"email": credential},
+                {"username": credential},
             ]
-        }
+        },
+        collation=case_insensitive_collation,
     )
 
 
@@ -214,10 +216,11 @@ def check_unique_usr(email: str, username: str) -> bool:
         users_collection.find_one(
             {
                 "$or": [
-                    {"email": {"$regex": email, "$options": "i"}},
-                    {"username": {"$regex": username, "$options": "i"}},
+                    {"email": email},
+                    {"username": username},
                 ]
-            }
+            },
+            collation=case_insensitive_collation,
         )
         is not None
     )

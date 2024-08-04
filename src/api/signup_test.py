@@ -209,3 +209,29 @@ def test_create_account_invalid_email_2():
         == "value is not a valid email address: There must be something after the @-sign."
     )
     assert response.status_code == 422
+
+
+def test_create_account_duplicate_username(fixtureuser):
+    # Collations don't work with mongomock, so we only check direct duplicate
+    response = client.post(
+        "/signup",
+        json={
+            "password": "Kennwort1!",
+            "email": "test1@test.com",
+            "username": fixtureuser["username"],
+        },
+    )
+    assert response.status_code == 409
+
+
+def test_create_account_duplicate_username(fixtureuser):
+    # Collations don't work with mongomock, so we only check direct duplicate
+    response = client.post(
+        "/signup",
+        json={
+            "password": "Kennwort1!",
+            "email": fixtureuser["email"],
+            "username": "otherusername",
+        },
+    )
+    assert response.status_code == 409

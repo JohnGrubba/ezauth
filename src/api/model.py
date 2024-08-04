@@ -84,21 +84,8 @@ class PasswordHashed(BaseModel):
         return hashed_pswd
 
 
-class DeleteAccountRequest(BaseModel):
-    password: SecretStr
-
-
-class ResetPasswordRequest(PasswordHashed):
-    identifier: str
-
-
-class UserSignupRequest(PasswordHashed):
-    email: EmailStr
+class Username(BaseModel):
     username: str
-
-    model_config = ConfigDict(
-        extra="allow",
-    )
 
     @field_validator("username")
     @classmethod
@@ -114,3 +101,27 @@ class UserSignupRequest(PasswordHashed):
         elif re.search("[^a-zA-Z0-9]", username) is not None:
             raise ValueError("Username must only contain letters and numbers")
         return username
+
+
+class DeleteAccountRequest(BaseModel):
+    password: SecretStr
+
+
+class ResetPasswordRequest(PasswordHashed):
+    identifier: str
+
+
+class UserSignupRequest(PasswordHashed, Username):
+    email: EmailStr
+
+    model_config = ConfigDict(
+        extra="allow",
+    )
+
+
+class ProfileUpdateRequest(Username):
+    email: Optional[EmailStr] = None
+    username: Optional[str] = None
+    model_config = ConfigDict(
+        extra="allow",
+    )

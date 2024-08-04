@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, collation
 import os
 import bson.json_util
 import json
@@ -31,28 +31,43 @@ db = client.get_database("ezauth")
 users_collection = db.get_collection("users")
 sessions_collection = db.get_collection("sessions")
 
+case_insensitive_collation = collation.Collation(locale="en", strength=1)
+
 # Find Users by email and username fast (id is already indexed)
-users_collection.create_index("email", unique=True)
-users_collection.create_index("username", unique=True)
+users_collection.create_index(
+    "email",
+    unique=True,
+    collation=case_insensitive_collation,
+)
+users_collection.create_index(
+    "username",
+    unique=True,
+    collation=case_insensitive_collation,
+)
 users_collection.create_index("google_uid", unique=True, sparse=True)
 users_collection.create_index("github_uid", unique=True, sparse=True)
 # Find Sessions by session_token fast
 sessions_collection.create_index("session_token", unique=True)
 
 try:
-    sessions_collection.drop_index("createdAt_1")
+    sessions_collection.drop_index("createdAt")
 except Exception:
     pass
 # Set TTL For Sessions
 sessions_collection.create_index(
-    "createdAt", expireAfterSeconds=SessionConfig.session_expiry_seconds, sparse=True
+    "createdAt",
+    expireAfterSeconds=SessionConfig.session_expiry_seconds,
+    sparse=True,
+    name="createdAt",
 )
 try:
-    users_collection.drop_index("expiresAfter_1")
+    users_collection.drop_index("expiresAfter")
 except Exception:
     pass
 # Create TTL For Account Deletions
-users_collection.create_index("expiresAfter", expireAfterSeconds=0, sparse=True)
+users_collection.create_index(
+    "expiresAfter", expireAfterSeconds=0, sparse=True, name="expiresAfter"
+)
 
 logger.info("\u001b[32m+ MongoDB Setup Done\u001b[0m")
 

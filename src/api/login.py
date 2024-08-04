@@ -36,7 +36,6 @@ router = APIRouter(
         409: {
             "description": "Password Reset Email already sent. You have one request pending."
         },
-        401: {"description": "Invalid Old Password"},
         200: {"description": "Password Reset Successfully"},
     },
 )
