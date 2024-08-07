@@ -16,6 +16,8 @@ EZAuth uses a set of default E-mail templates to send out e-mails to users. Thes
 - Can be enabled in the `config.json` file.
 - File Name: `ConfirmEmail.html`
 
+This can also be triggered, when a user changes their email address. So avoid wording like "new account" in the template.
+
 #### Additional Placeholders
 - `{{code}}`: The confirmation code to confirm the email address.
 - `{{time}}`: Time remaining before the confirmation code expires in minutes. (e.g. 5)
