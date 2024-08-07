@@ -6,7 +6,7 @@ from api.model import (
     ConfirmEmailCodeRequest,
 )
 from crud.user import get_user_email_or_username, get_public_user, change_pswd
-from crud.sessions import create_login_session, delete_session
+from crud.sessions import create_login_session, delete_session, clear_sessions_for_user
 import bcrypt
 import pyotp
 import json
@@ -116,6 +116,9 @@ async def confirm_reset(code: ConfirmEmailCodeRequest):
 
     change_pswd(user["_id"], change_req["new_pswd"])
     r.delete("reset_pswd:" + user["email"])
+
+    # Delete all sessions
+    clear_sessions_for_user(user["_id"])
 
 
 @router.post(
