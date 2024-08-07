@@ -224,7 +224,7 @@ def test_create_account_duplicate_username(fixtureuser):
     assert response.status_code == 409
 
 
-def test_create_account_duplicate_username(fixtureuser):
+def test_create_account_duplicate_email(fixtureuser):
     # Collations don't work with mongomock, so we only check direct duplicate
     response = client.post(
         "/signup",

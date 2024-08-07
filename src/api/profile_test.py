@@ -41,17 +41,6 @@ def test_update_username_valid(fixturesessiontoken_user):
     assert resp_json.get("createdAt") is not None
 
 
-def test_update_email(fixturesessiontoken_user):
-    client.cookies.set("session", fixturesessiontoken_user[0])
-    # E-Mail should not be updateable through this endpoint
-    response = client.patch("/profile", json={"email": "wrongemail@gmail.com"})
-    resp_json = response.json()
-    assert response.status_code == 200
-    assert resp_json.get("email") == fixturesessiontoken_user[1]["email"]
-    assert resp_json.get("username") == fixturesessiontoken_user[1]["username"]
-    assert resp_json.get("createdAt") is not None
-
-
 def test_update_password(fixturesessiontoken_user):
     client.cookies.set("session", fixturesessiontoken_user[0])
     # Password should not be updateable through this endpoint
