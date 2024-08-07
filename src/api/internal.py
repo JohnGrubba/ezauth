@@ -13,6 +13,7 @@ from crud.user import (
 )
 from crud.sessions import get_session, count_sessions
 from threading import Lock
+from api.helpers.extension_loader import modules
 
 email_task_running = Lock()
 
@@ -170,4 +171,8 @@ async def stats():
         "avg_sess_per_usr": sess_count / usr_count if usr_count else 0,
         **count_oauth(),
         "pending_users": len(r.scan(match="signup:*")[1]),
+        "loaded_extensions": [
+            {"name": module.__name__, "readme": readme}
+            for spec, module, readme in modules
+        ],
     }

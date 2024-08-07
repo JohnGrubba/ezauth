@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (apiKey) {
             sessionStorage.setItem('apiKey', apiKey)
             modalBackdrop.style.display = 'none'
-            update_stats()
+            location.reload()
         } else {
             alert('Please enter a valid API key.')
         }
