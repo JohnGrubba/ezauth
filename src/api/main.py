@@ -10,9 +10,7 @@ from api.twofactor import router as twofactorRouter
 from api.oauth_providers import router as oauthRouter
 from api.sessions import router as sessionsRouter
 import logging
-import os
-import importlib
-import importlib.util
+from api.helpers.extension_loader import load_extensions
 from tools import SecurityConfig
 
 __version__ = "0.8.3"
@@ -63,36 +61,5 @@ app.include_router(oauthRouter)
 app.include_router(internalRouter)
 
 
-def load_extensions():
-    # Extension Loading
-    extensions_dir = "/src/app/extensions/"
-    if not os.path.exists(extensions_dir):
-        return
-    modules = []
-    for item in os.listdir(extensions_dir):
-        item_path = os.path.join(extensions_dir, item)
-        init_file = os.path.join(item_path, "__init__.py")
-        if os.path.isdir(item_path) and os.path.isfile(init_file):
-            spec = importlib.util.spec_from_file_location(item, init_file)
-            module = importlib.util.module_from_spec(spec)
-            try:
-                spec.loader.exec_module(module)
-            except Exception as e:
-                logger.error(f"Failed to load extension {item}: {e}")
-                if logger.level == logging.INFO:
-                    raise e
-                continue
-            modules.append([spec, module])
-
-    for spec, module in modules:
-        app.include_router(module.router, prefix=f"/ext/{module.__name__}")
-
-    logger.info(
-        "\u001b[32m-> Loaded Extensions: "
-        + ", ".join([module.__name__ for spec, module in modules])
-        + "\u001b[0m"
-    )
-
-
-load_extensions()
+load_extensions(app)
 logger.info("\u001b[32m--- API Startup Done ---\u001b[0m")
