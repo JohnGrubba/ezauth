@@ -79,7 +79,11 @@ async def profile(internal_req: InternalProfileRequest):
 
 
 @router.patch("/profile")
-async def update_profile(internal_req: InternalProfileRequest, update_data: dict):
+async def update_profile(
+    internal_req: InternalProfileRequest,
+    background_tasks: BackgroundTasks,
+    update_data: dict,
+):
     """
     # Update Profile Information
 
@@ -90,7 +94,7 @@ async def update_profile(internal_req: InternalProfileRequest, update_data: dict
         get_session(internal_req.session_token) if internal_req.session_token else None
     )
     usr = get_user(sess["user_id"] if sess else internal_req.user_id)
-    return update_public_user(usr["_id"], update_data)
+    return update_public_user(usr["_id"], update_data, background_tasks)
 
 
 @router.get("/batch-users")

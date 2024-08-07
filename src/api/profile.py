@@ -1,22 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, BackgroundTasks
 from tools import AccountFeaturesConfig
-from api.model import DeleteAccountRequest, ProfileUpdateRequest
+from api.model import (
+    DeleteAccountRequest,
+    ProfileUpdateRequest,
+    ConfirmEmailCodeRequest,
+)
 import bcrypt
-from crud.user import update_public_user, schedule_delete_user
+from crud.user import update_public_user, schedule_delete_user, change_email
 from api.dependencies.authenticated import (
     get_pub_user_dep,
     get_dangerous_user_dep,
     get_user_dep,
 )
-from tools import SessionConfig
-from crud.user import get_public_user
+from tools import SessionConfig, r
+from crud.user import get_public_user, get_user_email_or_username
 import bson
+import json
 
-router = APIRouter(
-    prefix="/profile",
-    tags=["Profile"],
-    dependencies=[Depends(get_pub_user_dep)],
-)
+router = APIRouter(prefix="/profile", tags=["Profile"])
 
 
 @router.get("")
@@ -32,7 +33,9 @@ async def profile(user: dict = Depends(get_pub_user_dep)):
 
 @router.patch("", status_code=200)
 async def update_profile(
-    update_data: ProfileUpdateRequest, user: dict = Depends(get_user_dep)
+    update_data: ProfileUpdateRequest,
+    background_tasks: BackgroundTasks,
+    user: dict = Depends(get_user_dep),
 ):
     """
     # Update Profile Information
@@ -42,7 +45,33 @@ async def update_profile(
     ## Description
     This endpoint is used to update the profile information of the user.
     """
-    return update_public_user(user["_id"], update_data.model_dump(exclude_none=True))
+    return update_public_user(
+        user["_id"], update_data.model_dump(exclude_none=True), background_tasks
+    )
+
+
+@router.post("/confirm-email-change", status_code=204)
+async def confirm_new_email(
+    payload: ConfirmEmailCodeRequest,
+    user: dict = Depends(get_user_dep),
+):
+    """
+    # Confirm New Email
+
+    ## Description
+    This endpoint is used to confirm the new email of the user.
+    """
+    acc = r.get("emailchange:" + str(user["_id"]))
+    if not acc:
+        raise HTTPException(detail="No Account Found with this code.", status_code=404)
+    acc = json.loads(acc)
+    if str(acc["code"]) != str(payload.code):
+        raise HTTPException(detail="Invalid Code", status_code=404)
+
+    # Update Email
+    change_email(user["_id"], acc["new-email"])
+
+    r.delete("emailchange:" + str(user["_id"]))
 
 
 @router.delete("", status_code=204)
@@ -75,8 +104,8 @@ async def delete_account(
     )
 
 
-@router.get("/profile/{user_id}")
-async def get_profile(user_id: str):
+@router.get("/profile/{identifier}")
+async def get_profile(identifier: str):
     """
     # Get Profile Information
 
@@ -84,11 +113,12 @@ async def get_profile(user_id: str):
     This endpoint is used to get the public profile information of the user.
     """
     try:
-        usr = get_public_user(user_id)
+        usr = get_user_email_or_username(identifier)
         if not usr:
             raise HTTPException(status_code=404, detail="User not found.")
     except bson.errors.InvalidId:
         raise HTTPException(status_code=404, detail="User not found.")
     # Hide email
+    usr = get_public_user(usr["_id"])
     usr.pop("email")
     return usr

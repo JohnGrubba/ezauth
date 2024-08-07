@@ -8,12 +8,16 @@ from tools import (
     AccountFeaturesConfig,
     default_signup_fields,
     case_insensitive_collation,
+    all_ids,
+    regenerate_ids,
+    r,
 )
 from fastapi import HTTPException, BackgroundTasks, Request
 from api.model import UserSignupRequest
 import pymongo
 import bson
 import datetime
+import json
 from crud.sessions import clear_sessions_for_user
 
 
@@ -81,7 +85,22 @@ def get_batch_users(user_ids: list) -> list:
     return list(users_collection.find({"_id": {"$in": bson_ids}}, insecure_cols))
 
 
-def update_public_user(user_id: str, data: dict) -> None:
+def change_email(user_id: str, new_email: str) -> None:
+    """Change the email of a user
+
+    Args:
+        user_id (str): User ID
+        new_email (str): New Email
+    """
+    # Retrieve the existing user data
+    users_collection.update_one(
+        {"_id": bson.ObjectId(user_id)}, {"$set": {"email": new_email}}
+    )
+
+
+def update_public_user(
+    user_id: str, data: dict, background_tasks: BackgroundTasks
+) -> None:
     """Updates Public User Data
 
     Args:
@@ -105,11 +124,50 @@ def update_public_user(user_id: str, data: dict) -> None:
     else:
         data = {k: v for k, v in data.items() if k in existing_user}
 
-    # Check if username in use
-    if data.get("username", "") and get_user_email_or_username(
+    # Check if username field is set and if user sends different one and if it is already in use
+    if (
         data.get("username", "")
+        and existing_user["username"] != data.get("username", "")
+        and get_user_email_or_username(data.get("username", ""))
     ):
         raise HTTPException(detail="Username already in use.", status_code=409)
+    # Check if email field is set and if user sends different one and if it is already in use
+    if data.get("email", "") and existing_user["email"] != data.get("email", ""):
+        # Check if someone else has this email already
+        if get_user_email_or_username(data["email"]):
+            raise HTTPException(detail="Email already in use.", status_code=409)
+        data["email"] = data["email"].lower()
+
+        if r.getex("emailchange:" + str(existing_user["_id"])):
+            raise HTTPException(
+                detail="Email Change already requested. Please confirm the email change.",
+                status_code=409,
+            )
+
+        existing_user.pop("password")
+        # Send Confirmation E-Mail for new email address
+        if not all_ids:
+            # Generate new ids
+            regenerate_ids()
+        # Get a unique ID for confirmation email
+        unique_id = all_ids.pop()
+        # Generate and send confirmation email
+        background_tasks.add_task(
+            send_email,
+            "ConfirmEmail",
+            data["email"],
+            **existing_user,
+            code=unique_id,
+            time=SignupConfig.conf_code_expiry,
+        )
+
+        r.setex(
+            "emailchange:" + str(existing_user["_id"]),
+            SignupConfig.conf_code_expiry * 60,
+            json.dumps({"new-email": data["email"], "code": unique_id}),
+        )
+
+        data.pop("email")
 
     return users_collection.find_one_and_update(
         {"_id": bson.ObjectId(user_id)},
