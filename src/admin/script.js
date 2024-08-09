@@ -122,6 +122,7 @@ async function update_stats() {
             <td data-label="Ø Sessions / User">${Number(data.avg_sess_per_usr).toFixed(2)}</td>
             <td data-label="Total Google OAuth">${data.google_oauth_count}</td>
             <td data-label="Total Github OAuth">${data.github_oauth_count}</td>
+            <td data-label='Extensions Loaded'><a href="/admin/extensions">${data.loaded_extensions.length}</a></td>
         </tr>
             `
     tbody_stats.innerHTML = html
@@ -142,30 +143,9 @@ async function query() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const modalBackdrop = document.getElementById('modal-backdrop')
-    const apiKeyInput = document.getElementById('api-key-input')
-    const submitButton = document.getElementById('submit-api-key')
-
     const searchCancelButton = document.querySelector('#search-input')
-
-    if (!sessionStorage.getItem('apiKey')) {
-        modalBackdrop.style.display = 'flex'
-    } else {
-        update_stats()
-    }
-
-    submitButton.addEventListener('click', () => {
-        const apiKey = apiKeyInput.value
-        if (apiKey) {
-            sessionStorage.setItem('apiKey', apiKey)
-            modalBackdrop.style.display = 'none'
-            location.reload()
-        } else {
-            alert('Please enter a valid API key.')
-        }
-    })
-
     searchCancelButton.addEventListener('search', () => {
         query()
     })
+    update_stats()
 })
