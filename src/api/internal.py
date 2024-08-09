@@ -172,7 +172,7 @@ async def stats():
         **count_oauth(),
         "pending_users": len(r.scan(match="signup:*")[1]),
         "loaded_extensions": [
-            {"name": module.__name__, "readme": readme}
-            for spec, module, readme in modules
+            {"name": module.__name__, "readme": readme, "status": loaded}
+            for spec, module, readme, loaded in modules
         ],
     }
