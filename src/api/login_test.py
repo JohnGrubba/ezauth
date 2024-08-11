@@ -80,3 +80,15 @@ def test_login_missing_identifier():
     assert response.status_code == 422
     assert resp_js["detail"][0]["msg"] == "Field required"
     assert resp_js["detail"][0]["loc"] == ["body", "identifier"]
+
+
+def test_login_maximum_attempts(fixtureuser):
+    for _ in range(5):
+        response = client.post(
+            "/login",
+            json={
+                "identifier": fixtureuser["email"],
+                "password": "DefinitelyWrongPassword",
+            },
+        )
+    assert response.status_code == 429
