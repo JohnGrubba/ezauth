@@ -128,13 +128,13 @@ def update_public_user(
     if (
         data.get("username", "")
         and existing_user["username"] != data.get("username", "")
-        and get_user_email_or_username(data.get("username", ""))
+        and get_user_identifier(data.get("username", ""))
     ):
         raise HTTPException(detail="Username already in use.", status_code=409)
     # Check if email field is set and if user sends different one and if it is already in use
     if data.get("email", "") and existing_user["email"] != data.get("email", ""):
         # Check if someone else has this email already
-        if get_user_email_or_username(data["email"]):
+        if get_user_identifier(data["email"]):
             raise HTTPException(detail="Email already in use.", status_code=409)
         data["email"] = data["email"].lower()
 
@@ -240,7 +240,7 @@ def get_public_user(user_id: str) -> dict:
     )
 
 
-def get_user_email_or_username(credential: str) -> dict:
+def get_user_identifier(credential: str) -> dict:
     """Get a user by email or username
 
     Args:
@@ -249,11 +249,16 @@ def get_user_email_or_username(credential: str) -> dict:
     Returns:
         dict: User Data
     """
+    try:
+        credential = bson.ObjectId(credential)
+    except bson.errors.InvalidId:
+        pass
     return users_collection.find_one(
         {
             "$or": [
                 {"email": credential},
                 {"username": credential},
+                {"_id": credential},
             ]
         },
         collation=case_insensitive_collation,

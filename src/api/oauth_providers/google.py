@@ -7,7 +7,7 @@ import random
 from crud.user import (
     create_user,
     get_user_by_google_uid,
-    get_user_email_or_username,
+    get_user_identifier,
     link_google_account,
 )
 from api.model import LoginResponse
@@ -102,13 +102,13 @@ async def oauth_callback(
         return login_usr(response, usr, request)
 
     # If users email already exists, link the google account
-    usr = get_user_email_or_username(jwt_decoded["email"])
+    usr = get_user_identifier(jwt_decoded["email"])
     if usr:
         link_google_account(usr["_id"], jwt_decoded["sub"])
         return login_usr(response, usr, request)
 
     # Check if user already exists in database
-    if get_user_email_or_username(username):
+    if get_user_identifier(username):
         username += str(random.randint(1000, 9999))
 
     # Custom SignUp Form (Password Field missing etc.)

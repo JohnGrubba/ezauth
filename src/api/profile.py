@@ -13,7 +13,7 @@ from api.dependencies.authenticated import (
     get_user_dep,
 )
 from tools import SessionConfig, r
-from crud.user import get_public_user, get_user_email_or_username
+from crud.user import get_public_user, get_user_identifier
 import bson
 import json
 
@@ -104,16 +104,16 @@ async def delete_account(
     )
 
 
-@router.get("/profile/{identifier}")
+@router.get("/{identifier}")
 async def get_profile(identifier: str):
     """
     # Get Profile Information
 
     ## Description
-    This endpoint is used to get the public profile information of the user.
+    This endpoint is used to get the public profile information of a specified user.
     """
     try:
-        usr = get_user_email_or_username(identifier)
+        usr = get_user_identifier(identifier)
         if not usr:
             raise HTTPException(status_code=404, detail="User not found.")
     except bson.errors.InvalidId:

@@ -5,7 +5,7 @@ from api.model import (
     ResetPasswordRequest,
     ConfirmEmailCodeRequest,
 )
-from crud.user import get_user_email_or_username, get_public_user, change_pswd
+from crud.user import get_user_identifier, get_public_user, change_pswd
 from crud.sessions import create_login_session, delete_session, clear_sessions_for_user
 import bcrypt
 import pyotp
@@ -48,7 +48,7 @@ async def forgot_password(
     ## Description
     This endpoint is used to reset the password of the user.
     """
-    user = get_user_email_or_username(password_reset_form.identifier)
+    user = get_user_identifier(password_reset_form.identifier)
     public_user = get_public_user(user["_id"])
     if not AccountFeaturesConfig.enable_reset_pswd:
         raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
@@ -103,7 +103,7 @@ async def confirm_reset(code: ConfirmEmailCodeRequest):
     ## Description
     This endpoint is used to confirm a password reset.
     """
-    user = get_user_email_or_username(code.identifier)
+    user = get_user_identifier(code.identifier)
     if not AccountFeaturesConfig.enable_reset_pswd:
         raise HTTPException(status_code=403, detail="Resetting Password is disabled.")
     change_req = r.get("reset_pswd:" + user["email"])
@@ -140,7 +140,7 @@ async def login(login_form: LoginRequest, response: Response, request: Request):
     Returns a session token if the credentials are correct.
     Can also return a `Set-Cookie` header with the session token. (See Config)
     """
-    user = get_user_email_or_username(login_form.identifier)
+    user = get_user_identifier(login_form.identifier)
     # Check if User can be found
     if user is None:
         raise HTTPException(detail="User not found", status_code=404)

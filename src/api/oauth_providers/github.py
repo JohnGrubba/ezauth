@@ -8,7 +8,7 @@ import re
 from crud.user import (
     create_user,
     get_user_by_github_uid,
-    get_user_email_or_username,
+    get_user_identifier,
     link_github_account,
 )
 from crud.sessions import create_login_session
@@ -114,13 +114,13 @@ async def oauth_callback(
         username = primary_email.split("@")[0]
 
     # If users email already exists, link the google account
-    usr = get_user_email_or_username(primary_email)
+    usr = get_user_identifier(primary_email)
     if usr:
         link_github_account(usr["_id"], rsp["id"])
         return login_usr(response, usr, request)
 
     # Check if user already exists in database
-    if get_user_email_or_username(username):
+    if get_user_identifier(username):
         username += str(random.randint(1000, 9999))
 
     # Custom SignUp Form (Password Field missing etc.)
