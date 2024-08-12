@@ -1,8 +1,12 @@
 from fastapi import HTTPException, Cookie
 from tools import SessionConfig
-from tools import sessions_collection
 from crud.user import get_public_user, get_user, get_dangerous_user
+from crud.sessions import extend_session, get_session
 import logging
+
+
+def session_token_used(session: str):
+    extend_session(session)
 
 
 async def get_pub_user_dep(
@@ -24,7 +28,7 @@ async def get_pub_user_dep(
     if not session_token:
         logging.debug("No session token")
         raise HTTPException(status_code=401)
-    session = sessions_collection.find_one({"session_token": session_token})
+    session = get_session(session_token)
     if not session:
         logging.debug("No session found")
         raise HTTPException(status_code=401)
@@ -32,6 +36,7 @@ async def get_pub_user_dep(
     if not user:
         logging.debug("No user for session found")
         raise HTTPException(status_code=401)
+    session_token_used(session)
     return user
 
 
@@ -54,7 +59,7 @@ async def get_user_dep(
     if not session_token:
         logging.debug("No session token")
         raise HTTPException(status_code=401)
-    session = sessions_collection.find_one({"session_token": session_token})
+    session = get_session(session_token)
     if not session:
         logging.debug("No session found")
         raise HTTPException(status_code=401)
@@ -62,6 +67,7 @@ async def get_user_dep(
     if not user:
         logging.debug("No user for session found")
         raise HTTPException(status_code=401)
+    session_token_used(session)
     return user
 
 
@@ -84,7 +90,7 @@ async def get_dangerous_user_dep(
     if not session_token:
         logging.debug("No session token")
         raise HTTPException(status_code=401)
-    session = sessions_collection.find_one({"session_token": session_token})
+    session = get_session(session_token)
     if not session:
         logging.debug("No session found")
         raise HTTPException(status_code=401)
@@ -92,4 +98,5 @@ async def get_dangerous_user_dep(
     if not user:
         logging.debug("No user for session found")
         raise HTTPException(status_code=401)
+    session_token_used(session)
     return user

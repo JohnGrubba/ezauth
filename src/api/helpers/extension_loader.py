@@ -21,7 +21,7 @@ def load_extensions(app: FastAPI):
             readme_file = None
             try:
                 readme_file = open(os.path.join(item_path, "README.md"), "r").read()
-            except:
+            except FileNotFoundError:
                 logger.error(f"Extension {item} is missing README.md")
             spec = importlib.util.spec_from_file_location(item, init_file)
             module = importlib.util.module_from_spec(spec)

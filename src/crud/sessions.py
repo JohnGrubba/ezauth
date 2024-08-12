@@ -143,3 +143,25 @@ def count_sessions() -> int:
         int: Amount of Sessions
     """
     return sessions_collection.count_documents({})
+
+
+def extend_session(session: dict) -> None:
+    """
+    Extend the session expiration time, depending on configuration.
+
+    Args:
+        session_token (str): Session Token
+    """
+    expiry = session["createdAt"] + datetime.timedelta(
+        seconds=SessionConfig.session_expiry_seconds
+    )
+
+    start_extending_period = expiry - datetime.timedelta(
+        seconds=SessionConfig.session_refresh_seconds
+    )
+
+    if datetime.datetime.now() >= start_extending_period:
+        sessions_collection.update_one(
+            {"session_token": session["session_token"]},
+            {"$set": {"createdAt": datetime.datetime.now()}},
+        )

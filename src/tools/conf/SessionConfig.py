@@ -3,6 +3,7 @@ from .conf import config
 
 class SessionConfig:
     session_expiry_seconds: int = config["session"]["session_expiry_seconds"]
+    session_refresh_seconds: int = config["session"]["session_refresh_seconds"]
     max_session_count: int = config["session"]["max_session_count"]
     auto_cookie: bool = config["session"]["auto_cookie"]
     auto_cookie_name: str = config["session"]["auto_cookie_name"]
@@ -15,6 +16,12 @@ class SessionConfig:
             raise ValueError(
                 "session.session_expiry_seconds must be an integer (got type {})".format(
                     type(self.session_expiry_seconds)
+                )
+            )
+        if not isinstance(self.session_refresh_seconds, int):
+            raise ValueError(
+                "session.session_refresh_seconds must be an integer (got type {})".format(
+                    type(self.session_refresh_seconds)
                 )
             )
         if not isinstance(self.max_session_count, int):
@@ -55,6 +62,16 @@ class SessionConfig:
                 "session.session_expiry_seconds must be a positive integer (got {})".format(
                     self.session_expiry_seconds
                 )
+            )
+        if not self.session_refresh_seconds > 0:
+            raise ValueError(
+                "session.session_refresh_seconds must be a positive integer (got {})".format(
+                    self.session_refresh_seconds
+                )
+            )
+        if self.session_refresh_seconds > self.session_expiry_seconds:
+            raise ValueError(
+                "session.session_refresh_seconds must be less or equal than session.session_expiry_seconds"
             )
         if not self.max_session_count > 0:
             raise ValueError(
