@@ -8,7 +8,7 @@ The Following Environment Variables can be set in the `docker-compose.yml` file 
 |  Parameter | Description |
 |------------|-------------|
 | `ports` | **Datatype:** String <br> **Default:** `"3250:80"` <br> Only change the left (host) side of the ports. The API will always run on Port 80 internally, and can be forwarded to any port on the host system. In this example `3250`. |
-| `volumes` | **Datatype:** String <br> **Default:** `"./config:/app/config"` <br> The volume mount for the configuration file. Only change the left (host) side of the configuration folder directory. In this example `./config`. |
+| `volumes` | **Datatype:** String <br> **Default:** `"./config:/app/config"` <br> The volume mount for the configuration file. Only change the left (host) side of the configuration folder directory. In this example `./config`. You can also change the `./uploads` directory, for user file uploads like profile pictures etc. |
 
 #### Database Configuration
 The Prefix for all Parameters here is `services.db.environment`.

@@ -72,6 +72,13 @@ Make sure that all parameters are set correctly before starting the service.
 | `account_features.allow_add_fields_patch_user` | **Datatype:** List <br> **Default:** `[]` <br> Allow those additional fields to be set when modifying user. Leave empty if not sure. The entries here extend already set `account_features.allow_add_fields_on_signup` fields. |
 | `account_features.allow_deletion` | **Datatype:** Boolean <br> **Default:** `true` <br> Allow the user to request an account deletion. |
 | `account_features.deletion_pending_minutes` | **Datatype:** Integer <br> **Default:** `10080` <br> Minutes before the account gets deleted. Directly after requesting deletion, the User can't log in anymore, but the data will be persisted until this value passes by. Example Value is a Week.  |
+| `account_features.profile_picture.allow` | **Datatype:** Boolean <br> **Default:** `true` <br> Enable or disable profile picture uploads. |
+| `account_features.profile_picture.resize.width` | **Datatype:** Integer <br> **Default:** `200` <br> Resizing Width for the Profile Picture. |
+| `account_features.profile_picture.resize.height` | **Datatype:** Integer <br> **Default:** `200` <br> Resizing Height for the Profile Picture. |
+| `account_features.profile_picture.resize.quality` | **Datatype:** Integer <br> **Default:** `80` <br> Optimizing Quality for the Profile Picture. |
+
+!!! Info "Profile Pictures"
+    All Profile Pictures get served under `/cdn/<user_id>.webp`. This is a public endpoint and can be used in your frontend to display the profile picture of a user. The User ID can be found in many endpoints like `/profile`.
 
 !!! Note "Additional Fields"
     The `allow_add_fields_on_signup` makes it possible to add custom fields to the signup process. If you don't set the fields that are allowed here on signup, you can't update them later, except you also have them in `allow_add_fields_patch_user`.

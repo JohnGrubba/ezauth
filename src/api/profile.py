@@ -1,4 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, BackgroundTasks
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Response,
+    BackgroundTasks,
+    UploadFile,
+)
 from tools import AccountFeaturesConfig
 from api.model import (
     DeleteAccountRequest,
@@ -16,6 +23,8 @@ from tools import SessionConfig, r
 from crud.user import get_public_user, get_user_identifier
 import bson
 import json
+import io
+from PIL import Image
 
 router = APIRouter(prefix="/profile", tags=["Profile"])
 
@@ -122,3 +131,51 @@ async def get_profile(identifier: str):
     usr = get_public_user(usr["_id"])
     usr.pop("email")
     return usr
+
+
+@router.post("/picture", status_code=200)
+async def upload_profile_picture(
+    pic: UploadFile,
+    user: dict = Depends(get_user_dep),
+):
+    """
+    # Upload Profile Picture
+
+    ## Description
+    This endpoint is used to upload a profile picture for the user.
+
+    Uploaded Images are resized and optimized to WebP format.
+    Images can be accessed via `/cdn/<user_id>.webp`.
+    """
+    if not AccountFeaturesConfig.allow_profile_picture:
+        raise HTTPException(
+            status_code=403, detail="Profile Picture is disabled for this instance."
+        )
+    # Check if the uploaded file is an image
+    if not pic.content_type.startswith("image/"):
+        raise HTTPException(
+            status_code=400, detail="Invalid file type. Only images are allowed."
+        )
+    try:
+        image = Image.open(io.BytesIO(await pic.read()))
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid Image File.")
+
+    # Crop the image to a square from the center
+    width, height = image.size
+    min_dim = min(width, height)
+    left = (width - min_dim) / 2
+    top = (height - min_dim) / 2
+    right = (width + min_dim) / 2
+    bottom = (height + min_dim) / 2
+    image = image.crop((left, top, right, bottom))
+
+    # Resize the image to 128x128
+    image = image.resize(
+        (AccountFeaturesConfig.profile_picture_resize_width, AccountFeaturesConfig.profile_picture_resize_height),
+        Image.Resampling.NEAREST
+    )
+
+    # Save the image
+    save_path = f"/uploads/{user["_id"]}.webp"
+    image.save(save_path, "webp", optimize=True, quality=AccountFeaturesConfig.profile_picture_quality)

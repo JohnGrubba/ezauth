@@ -30,9 +30,7 @@
     },
     "internal": {
         "internal_api_key": "CHANGE_ME_NOW",
-        "internal_columns": [
-            "_id"
-        ],
+        "internal_columns": [],
         "not_updateable_columns": []
     },
     "account_features": {
@@ -46,7 +44,15 @@
         "allow_add_fields_on_signup": [],
         "allow_add_fields_patch_user": [],
         "allow_deletion": true,
-        "deletion_pending_minutes": 10080
+        "deletion_pending_minutes": 10080,
+        "profile_picture": {
+            "allow": true,
+            "resize": {
+                "width": 200,
+                "height": 200
+            },
+            "quality": 80
+        }
     },
     "security": {
         "allow_origins": [

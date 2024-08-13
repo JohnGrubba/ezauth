@@ -39,6 +39,7 @@ router = APIRouter(include_in_schema=False)
 
 
 app.mount("/admin", StaticFiles(directory="admin", html=True, check_dir=False))
+app.mount("/cdn", StaticFiles(directory="/uploads", check_dir=False))
 
 
 @router.get("/")

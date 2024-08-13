@@ -12,6 +12,7 @@ services:
     restart: always
     volumes:
       - ./config:/src/app/config
+      - ./uploads:/uploads
     depends_on:
       - db
       - redis

@@ -50,7 +50,15 @@
             "test2"
         ],
         "allow_deletion": true,
-        "deletion_pending_minutes": 10080
+        "deletion_pending_minutes": 10080,
+        "profile_picture": {
+            "allow": true,
+            "resize": {
+                "width": 200,
+                "height": 200
+            },
+            "quality": 100
+        }
     },
     "security": {
         "allow_origins": [

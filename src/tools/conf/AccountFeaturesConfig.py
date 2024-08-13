@@ -33,6 +33,16 @@ class AccountFeaturesConfig:
     deletion_pending_minutes: int = config["account_features"][
         "deletion_pending_minutes"
     ]
+    allow_profile_picture: bool = config["account_features"]["profile_picture"]["allow"]
+    profile_picture_resize_width: int = config["account_features"]["profile_picture"][
+        "resize"
+    ]["width"]
+    profile_picture_resize_height: int = config["account_features"]["profile_picture"][
+        "resize"
+    ]["height"]
+    profile_picture_quality: int = config["account_features"]["profile_picture"][
+        "quality"
+    ]
 
     def validate_types(self) -> bool:
         """This is to Type Check the Configuration"""
@@ -79,6 +89,34 @@ class AccountFeaturesConfig:
                 )
             )
 
+        if not isinstance(self.allow_profile_picture, bool):
+            raise ValueError(
+                "account_features.allow_profile_picture must be a boolean (got type {})".format(
+                    type(self.allow_profile_picture)
+                )
+            )
+
+        if not isinstance(self.profile_picture_resize_width, int):
+            raise ValueError(
+                "account_features.profile_picture_resize.width must be an integer (got type {})".format(
+                    type(self.profile_picture_resize_width)
+                )
+            )
+
+        if not isinstance(self.profile_picture_resize_height, int):
+            raise ValueError(
+                "account_features.profile_picture_resize.height must be an integer (got type {})".format(
+                    type(self.profile_picture_resize_height)
+                )
+            )
+
+        if not isinstance(self.profile_picture_quality, int):
+            raise ValueError(
+                "account_features.profile_picture.quality must be an integer (got type {})".format(
+                    type(self.profile_picture_quality)
+                )
+            )
+
     def validate_values(self) -> bool:
         """This is to Value Check the Configuration"""
         if not self.issuer_name_2fa:
@@ -87,6 +125,27 @@ class AccountFeaturesConfig:
             raise ValueError(
                 "account_features.deletion_pending_minutes must be a positive integer (got {})".format(
                     self.deletion_pending_minutes
+                )
+            )
+
+        if not self.profile_picture_resize_width > 0:
+            raise ValueError(
+                "account_features.profile_picture_resize.width must be a positive integer (got {})".format(
+                    self.profile_picture_resize_width
+                )
+            )
+
+        if not self.profile_picture_resize_height > 0:
+            raise ValueError(
+                "account_features.profile_picture_resize.height must be a positive integer (got {})".format(
+                    self.profile_picture_resize_height
+                )
+            )
+
+        if not 0 < self.profile_picture_quality <= 100:
+            raise ValueError(
+                "account_features.profile_picture.quality must be an integer between 1 and 100 (got {})".format(
+                    self.profile_picture_quality
                 )
             )
 

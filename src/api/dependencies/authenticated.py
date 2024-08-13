@@ -1,5 +1,5 @@
 from fastapi import HTTPException, Cookie
-from tools import SessionConfig
+from tools import SessionConfig, bson_to_json
 from crud.user import get_public_user, get_user, get_dangerous_user
 from crud.sessions import extend_session, get_session
 import logging
@@ -33,6 +33,7 @@ async def get_pub_user_dep(
         logging.debug("No session found")
         raise HTTPException(status_code=401)
     user = get_public_user(session["user_id"])
+    user = bson_to_json(user)
     if not user:
         logging.debug("No user for session found")
         raise HTTPException(status_code=401)
