@@ -12,7 +12,13 @@
 </head>
 
 <body>
-    <h1>Stats
+    <h1 style="display: flex; margin-top: 0;">
+        <span style="line-height: 64px;">Admin Panel</span>
+        <svg width="64" height="64" viewBox="0 0 100 100" style=" display: block; margin-left: auto;">
+            <circle cx="50" cy="50" r="10" fill="green"></circle>
+            <circle class="pulsing-dot" cx="50" cy="50" r="10" fill="green"></circle>
+            <circle class="pulsing-dot" cx="50" cy="50" r="10" fill="green"></circle>
+        </svg>
     </h1>
     <table id="stats-table">
         <thead>
@@ -23,7 +29,7 @@
                 <th>Ø Sessions / User</th>
                 <th>Total Google OAuth</th>
                 <th>Total Github OAuth</th>
-                <th>Extensions Loaded <a href="/admin/extensions"><img src="assets/info.svg" height="20"
+                <th>Extensions Loaded <a href="/admin/exts"><img src="assets/info.svg" height="20"
                             style="float:right;"></a>
                 </th>
             </tr>

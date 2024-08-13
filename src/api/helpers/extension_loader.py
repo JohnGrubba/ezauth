@@ -29,14 +29,15 @@ def load_extensions(app: FastAPI):
                 spec.loader.exec_module(module)
             except Exception as e:
                 logger.error(f"Failed to load extension {item}: {e}")
-                if logger.level == logging.INFO:
+                if logger.level == logging.DEBUG:
                     raise e
                 modules.append([spec, module, readme_file, False])
                 continue
             modules.append([spec, module, readme_file, True])
 
-    for spec, module, _, _ in modules:
-        app.include_router(module.router, prefix=f"/ext/{module.__name__}")
+    for spec, module, _, valid in modules:
+        if valid:
+            app.include_router(module.router, prefix=f"/ext/{module.__name__}")
 
     logger.info(
         "\u001b[32m-> Loaded Extensions: "

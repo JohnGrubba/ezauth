@@ -164,3 +164,23 @@ thead {
 .modal button:hover {
     background: #0056b3;
 }
+
+.pulsing-dot {
+    animation: pulse 2s infinite;
+    animation-delay: 0s;
+}
+
+.pulsing-dot:nth-child(2) {
+    animation-delay: 1s;
+}
+
+@keyframes pulse {
+    0% {
+        r: 10;
+        opacity: 1;
+    }
+    100% {
+        r: 20;
+        opacity: 0;
+    }
+}
