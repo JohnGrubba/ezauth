@@ -30,9 +30,7 @@
     },
     "internal": {
         "internal_api_key": "TEST_INTERNAL",
-        "internal_columns": [
-            "_id"
-        ],
+        "internal_columns": [],
         "not_updateable_columns": []
     },
     "account_features": {

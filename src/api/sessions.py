@@ -3,6 +3,7 @@ from api.dependencies.authenticated import get_user_dep
 from tools import bson_to_json
 from crud.sessions import get_user_sessions, delete_session, get_session_by_id
 from api.model import SessionListResponseModel
+from bson import ObjectId
 
 router = APIRouter(
     prefix="/sessions",
@@ -35,7 +36,7 @@ async def delete_other_session(session_id: str, user: dict = Depends(get_user_de
     sess_to_delete = get_session_by_id(session_id)
     if not sess_to_delete:
         raise HTTPException(status_code=404, detail="Session not found.")
-    if sess_to_delete["user_id"] != user["_id"]:
+    if ObjectId(sess_to_delete["user_id"]) != ObjectId(user["_id"]):
         raise HTTPException(status_code=404, detail="Session not found.")
     delete_session(sess_to_delete["session_token"])
     return Response(status_code=204)

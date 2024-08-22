@@ -19,7 +19,7 @@ from api.dependencies.authenticated import (
     get_dangerous_user_dep,
     get_user_dep,
 )
-from tools import SessionConfig, r
+from tools import SessionConfig, r, bson_to_json
 from crud.user import get_public_user, get_user_identifier
 import bson
 import json
@@ -54,9 +54,9 @@ async def update_profile(
     ## Description
     This endpoint is used to update the profile information of the user.
     """
-    return update_public_user(
+    return bson_to_json(update_public_user(
         user["_id"], update_data.model_dump(exclude_none=True), background_tasks
-    )
+    ))
 
 
 @router.post("/confirm-email-change", status_code=204)

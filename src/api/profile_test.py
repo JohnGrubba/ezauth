@@ -28,7 +28,7 @@ def test_get_profile(fixturesessiontoken_user):
     assert resp_json.get("username") == fixturesessiontoken_user[1]["username"]
     assert resp_json.get("createdAt") is not None
     assert resp_json.get("password") is None
-    assert resp_json.get("_id") is None
+    assert resp_json.get("_id") is not None
 
 
 def test_update_username_valid(fixturesessiontoken_user):

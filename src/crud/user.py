@@ -100,7 +100,7 @@ def change_email(user_id: str, new_email: str) -> None:
 
 def update_public_user(
     user_id: str, data: dict, background_tasks: BackgroundTasks
-) -> None:
+) -> dict:
     """Updates Public User Data
 
     Args:

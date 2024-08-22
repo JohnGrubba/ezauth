@@ -33,10 +33,10 @@ async def get_pub_user_dep(
         logging.debug("No session found")
         raise HTTPException(status_code=401)
     user = get_public_user(session["user_id"])
-    user = bson_to_json(user)
     if not user:
         logging.debug("No user for session found")
         raise HTTPException(status_code=401)
+    user = bson_to_json(user)
     session_token_used(session)
     return user
 
@@ -68,6 +68,7 @@ async def get_user_dep(
     if not user:
         logging.debug("No user for session found")
         raise HTTPException(status_code=401)
+    user = bson_to_json(user)
     session_token_used(session)
     return user
 
@@ -99,5 +100,6 @@ async def get_dangerous_user_dep(
     if not user:
         logging.debug("No user for session found")
         raise HTTPException(status_code=401)
+    user = bson_to_json(user)
     session_token_used(session)
     return user
