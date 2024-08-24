@@ -91,3 +91,20 @@ def test_update_username_taken(fixturesessiontoken_user, fixturesessiontoken_use
     )
     assert response.status_code == 409
     assert response.json().get("detail") == "Username already in use."
+
+
+def test_get_profile_by_username(fixturesessiontoken_user, fixturesessiontoken_user2):
+    client.cookies.set("session", fixturesessiontoken_user[0])
+    response = client.get(
+        f"/profile/{fixturesessiontoken_user2[1]["username"]}"
+    )
+    assert response.status_code == 200
+    resp_json = response.json()
+    assert resp_json.get("username") == fixturesessiontoken_user2[1]["username"]
+
+def test_get_profile_by_username_not_found(fixturesessiontoken_user, fixturesessiontoken_user2):
+    client.cookies.set("session", fixturesessiontoken_user[0])
+    response = client.get(
+        f"/profile/notexistent"
+    )
+    assert response.status_code == 404

@@ -130,7 +130,7 @@ async def get_profile(identifier: str):
     # Hide email
     usr = get_public_user(usr["_id"])
     usr.pop("email")
-    return usr
+    return bson_to_json(usr)
 
 
 @router.post("/picture", status_code=200)
