@@ -1,6 +1,7 @@
 html {
     display: flex;
     justify-content: center;
+    width: 100vw;
 }
 
 body {
@@ -183,4 +184,43 @@ thead {
         r: 20;
         opacity: 0;
     }
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions .delete {
+    background-color: #e74c3c;
+}
+
+.actions .delete:hover {
+    background-color: #c0392b;
+}
+
+.actions .update {
+    background-color: #3498db;
+}
+
+.actions .update:hover {
+    background-color: #2980b9;
+}
+
+.actions .restore {
+    background-color: #27ae60;
+}
+
+.actions .restore:hover {
+    background-color: #219d54;
+}
+
+.actions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 800;
 }

@@ -1,0 +1,9 @@
+.actions {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+body {
+    width: 90%;
+}
