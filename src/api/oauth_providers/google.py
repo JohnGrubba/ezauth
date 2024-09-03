@@ -93,6 +93,8 @@ async def oauth_callback(
 
     username = jwt_decoded["name"].replace(" ", "")
     # Validate Username
+    if len(username) > 20:
+        username = username[:20]
     if len(username) < 4 or re.search("[^a-zA-Z0-9]", username) is not None:
         username = jwt_decoded["email"].split("@")[0]
 

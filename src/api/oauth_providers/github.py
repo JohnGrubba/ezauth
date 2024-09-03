@@ -110,6 +110,8 @@ async def oauth_callback(
             break
     username = rsp["login"]
     # Validate Username
+    if len(username) > 20:
+        username = username[:20]
     if len(username) < 4 or re.search("[^a-zA-Z0-9]", username) is not None:
         username = primary_email.split("@")[0]
 
