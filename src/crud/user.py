@@ -127,7 +127,7 @@ def update_public_user(
     # Check if username field is set and if user sends different one and if it is already in use
     if (
         data.get("username", "")
-        and existing_user["username"] != data.get("username", "")
+        and existing_user["username"].lower() != data.get("username", "").lower()
         and get_user_identifier(data.get("username", ""))
     ):
         raise HTTPException(detail="Username already in use.", status_code=409)

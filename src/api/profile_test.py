@@ -102,9 +102,18 @@ def test_get_profile_by_username(fixturesessiontoken_user, fixturesessiontoken_u
     resp_json = response.json()
     assert resp_json.get("username") == fixturesessiontoken_user2[1]["username"]
 
-def test_get_profile_by_username_not_found(fixturesessiontoken_user, fixturesessiontoken_user2):
+def test_get_profile_by_username_not_found(fixturesessiontoken_user):
     client.cookies.set("session", fixturesessiontoken_user[0])
     response = client.get(
         f"/profile/notexistent"
     )
     assert response.status_code == 404
+
+def test_update_username_other_casing_same(fixturesessiontoken_user):
+    client.cookies.set("session", fixturesessiontoken_user[0])
+    response = client.patch("/profile", json={"username": "fixtureuser"})
+    resp_json = response.json()
+    assert response.status_code == 200
+    assert resp_json.get("email") == fixturesessiontoken_user[1]["email"]
+    assert resp_json.get("username") == "fixtureuser"
+    assert resp_json.get("createdAt") is not None
