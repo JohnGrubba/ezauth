@@ -2,10 +2,10 @@ Since the Goal of EZAuth is to be as extensive as possible, it is possible to cr
 
 ## Preparation
 
-To allow Extensions, you need to create a new folder called `extensions/` in the `src/` directory, if it doesn't already exist. This folder is not tracked by git, so you can safely add your own extensions without the risk of losing them when updating the repository.
+To allow Extensions, you need to create a new folder called `extensions/` in the directory specified in the docker-compose file (default `./` root of Repository), if it doesn't already exist. This folder is not tracked by git, so you can safely add your own extensions without the risk of losing them when updating the repository.
 
 ```sh
-mkdir -p src/extensions
+mkdir -p extensions
 ```
 
 !!! Tip "EZAuth Developer Mode"
@@ -24,7 +24,7 @@ mkdir -p src/extensions
     Inside the `extensions/` directory, create a new folder for your extension. The name of the folder should be the name of your extension. We force a folder, to make it easier for you to structure your extension and keep an overview of all the installed extensions. We use the name `my_extension` for this example.
 
     ```sh
-    mkdir src/extensions/my_extension
+    mkdir extensions/my_extension
     ```
 
 2. Make the Extension Loadable
@@ -36,7 +36,7 @@ mkdir -p src/extensions
     !!! Tip "Imports in Extension Files"
         Be careful when doing imports in extensions, as by just importing other files using `.myextension` won't work (importlib can't find the module). You have to use the full import path to the file starting with `extensions.my_extension.` -> E.g. `extensions.my_extension.myextension`
 
-    ```python title="src/extensions/my_extension/myextension.py"
+    ```python title="extensions/my_extension/myextension.py"
     from fastapi import APIRouter
 
     router = APIRouter(
@@ -53,7 +53,7 @@ mkdir -p src/extensions
 
     ```
 
-    ```python title="src/extensions/my_extension/__init__.py"
+    ```python title="extensions/my_extension/__init__.py"
     from extensions.my_extension.myextension import router
     ```
 
@@ -61,7 +61,7 @@ mkdir -p src/extensions
 
     To make it easier for users to understand what your extension does, you can provide a `README.md` file in your extension folder. This file can contain information about the extension, how to use it, and what it does.
 
-    ```md title="src/extensions/my_extension/README.md"
+    ```md title="extensions/my_extension/README.md"
     # My Extension
 
     This is a test extension for EZAuth.

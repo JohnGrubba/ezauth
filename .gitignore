@@ -1,10 +1,9 @@
-**.venv
-**.env
 **config.json
 **.pyc
 
 **.env**
-**extensions/
+**.venv**
+extensions/
 
 config/email/
 uploads/
