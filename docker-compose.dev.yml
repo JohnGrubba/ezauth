@@ -14,6 +14,7 @@ services:
       - ./config:/src/app/config
       - ./src:/src/app
       - ./uploads:/uploads
+      - ./extensions:/extensions
     command: |
       bash -c 'uvicorn api.main:app --reload --log-level debug --host 0.0.0.0 --port 80'
     depends_on:

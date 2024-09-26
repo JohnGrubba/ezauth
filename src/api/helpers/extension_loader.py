@@ -7,15 +7,16 @@ logger = logging.getLogger("uvicorn")
 
 modules = []
 
+EXTENSIONS_DIR = "/extensions"
+
 
 def load_extensions(app: FastAPI):
     global modules
     # Extension Loading
-    extensions_dir = "/src/app/extensions/"
-    if not os.path.exists(extensions_dir):
+    if not os.path.exists(EXTENSIONS_DIR):
         return
-    for item in os.listdir(extensions_dir):
-        item_path = os.path.join(extensions_dir, item)
+    for item in os.listdir(EXTENSIONS_DIR):
+        item_path = os.path.join(EXTENSIONS_DIR, item)
         init_file = os.path.join(item_path, "__init__.py")
         if os.path.isdir(item_path) and os.path.isfile(init_file):
             readme_file = None
@@ -39,8 +40,9 @@ def load_extensions(app: FastAPI):
         if valid:
             app.include_router(module.router, prefix=f"/ext/{module.__name__}")
 
-    logger.info(
-        "\u001b[32m-> Loaded Extensions: "
-        + ", ".join([module.__name__ for spec, module, _, _ in modules])
-        + "\u001b[0m"
-    )
+    if len(modules) > 0:
+        logger.info(
+            "\u001b[32m-> Loaded Extensions: "
+            + ", ".join([module.__name__ for spec, module, _, _ in modules])
+            + "\u001b[0m"
+        )
