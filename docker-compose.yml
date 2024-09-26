@@ -13,7 +13,7 @@ services:
     volumes:
       - ./config:/src/app/config
       - ./uploads:/uploads
-      - ./extensions:/extensions
+      - ./extensions:/src/app/extensions
     depends_on:
       - db
       - redis

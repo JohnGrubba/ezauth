@@ -7,7 +7,7 @@ logger = logging.getLogger("uvicorn")
 
 modules = []
 
-EXTENSIONS_DIR = "/extensions"
+EXTENSIONS_DIR = "/src/app/extensions/"
 
 
 def load_extensions(app: FastAPI):
@@ -40,9 +40,9 @@ def load_extensions(app: FastAPI):
         if valid:
             app.include_router(module.router, prefix=f"/ext/{module.__name__}")
 
-    if len(modules) > 0:
+    if len([module.__name__ for spec, module, _, lded in modules if lded]) > 0:
         logger.info(
             "\u001b[32m-> Loaded Extensions: "
-            + ", ".join([module.__name__ for spec, module, _, _ in modules])
+            + ", ".join([module.__name__ for spec, module, _, lded in modules if lded])
             + "\u001b[0m"
         )
