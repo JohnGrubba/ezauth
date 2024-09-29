@@ -146,6 +146,7 @@ async def upload_profile_picture(
 
     Uploaded Images are resized and optimized to WebP format.
     Images can be accessed via `/cdn/<user_id>.webp`.
+    If the user has no profile picture, the default profile picture will be used. (default.webp in /uploads)
     """
     if not AccountFeaturesConfig.allow_profile_picture:
         raise HTTPException(

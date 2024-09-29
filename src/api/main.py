@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, Response
+from fastapi import FastAPI, APIRouter, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -40,6 +40,19 @@ router = APIRouter(include_in_schema=False)
 
 app.mount("/admin", StaticFiles(directory="admin", html=True, check_dir=False))
 app.mount("/cdn", StaticFiles(directory="/uploads", check_dir=False))
+
+
+@app.middleware("https")
+async def mdlware(request: Request, call_next):
+    response: Response = await call_next(request)
+    if (
+        response.status_code == 404
+        and "cdn" in request.url.path
+        and not "default.webp" in request.url.path
+    ):
+        # Default Profile Pictrue
+        return RedirectResponse("/cdn/default.webp", status_code=302)
+    return response
 
 
 @router.get("/")
