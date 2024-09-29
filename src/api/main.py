@@ -42,6 +42,7 @@ app.mount("/admin", StaticFiles(directory="admin", html=True, check_dir=False))
 app.mount("/cdn", StaticFiles(directory="/uploads", check_dir=False))
 
 
+# Profile Picture 404 Default Redirect Middleware
 @app.middleware("https")
 async def mdlware(request: Request, call_next):
     response: Response = await call_next(request)

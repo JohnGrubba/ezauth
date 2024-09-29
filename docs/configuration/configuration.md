@@ -78,7 +78,7 @@ Make sure that all parameters are set correctly before starting the service.
 | `account_features.profile_picture.resize.quality` | **Datatype:** Integer <br> **Default:** `80` <br> Optimizing Quality for the Profile Picture. |
 
 !!! Info "Profile Pictures"
-    All Profile Pictures get served under `/cdn/<user_id>.webp`. This is a public endpoint and can be used in your frontend to display the profile picture of a user. The User ID can be found in many endpoints like `/profile`.
+    All Profile Pictures get served under `/cdn/<user_id>.webp`. This is a public endpoint and can be used in your frontend to display the profile picture of a user. The User ID can be found in many endpoints like `/profile`. If a user doesn't have a profile picture, a default image will be served. (default.webp in the `uploads` directory specified in the docker-compose). You have to create the `default.webp` file yourself.
 
 !!! Note "Additional Fields"
     The `allow_add_fields_on_signup` makes it possible to add custom fields to the signup process. If you don't set the fields that are allowed here on signup, you can't update them later, except you also have them in `allow_add_fields_patch_user`.
