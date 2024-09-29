@@ -47,7 +47,7 @@ async def mdlware(request: Request, call_next):
     response: Response = await call_next(request)
     if (
         response.status_code == 404
-        and "cdn" in request.url.path
+        and "cdn" == request.url.path.split("/")[1]
         and not "default.webp" in request.url.path
     ):
         # Default Profile Pictrue
