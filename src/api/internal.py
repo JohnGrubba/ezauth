@@ -18,7 +18,9 @@ from api.helpers.extension_loader import modules
 email_task_running = Lock()
 
 
-async def check_internal_key(internal_api_key: str = Header(default=None)):
+async def check_internal_key(
+    internal_api_key: str = Header(default=None, alias="internal-api-key")
+):
     if not internal_api_key:
         raise HTTPException(status_code=401)
     if internal_api_key != InternalConfig.internal_api_key:
