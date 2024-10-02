@@ -24,7 +24,7 @@ from crud.user import get_public_user, get_user_identifier
 import bson
 import json
 import io
-from PIL import Image
+from PIL import Image, ImageSequence
 
 router = APIRouter(prefix="/profile", tags=["Profile"])
 
@@ -54,9 +54,11 @@ async def update_profile(
     ## Description
     This endpoint is used to update the profile information of the user.
     """
-    return bson_to_json(update_public_user(
-        user["_id"], update_data.model_dump(exclude_none=True), background_tasks
-    ))
+    return bson_to_json(
+        update_public_user(
+            user["_id"], update_data.model_dump(exclude_none=True), background_tasks
+        )
+    )
 
 
 @router.post("/confirm-email-change", status_code=204)
@@ -155,13 +157,60 @@ async def upload_profile_picture(
     # Check if the uploaded file is an image
     if not pic.content_type.startswith("image/"):
         raise HTTPException(
-            status_code=400, detail="Invalid file type. Only images are allowed."
+            status_code=400, detail="Invalid file type. Only images / gifs are allowed."
         )
+
+    # Check file size (limit to 10 MB)
+    if pic.size > AccountFeaturesConfig.max_size_mb * 1024 * 1024:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File size exceeds the {AccountFeaturesConfig.max_size_mb} MB limit.",
+        )
+
     try:
         image = Image.open(io.BytesIO(await pic.read()))
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid Image File.")
 
+    if image.format == "GIF" and not AccountFeaturesConfig.allow_gif:
+        raise HTTPException(
+            status_code=400, detail="GIFs are not allowed for profile pictures."
+        )
+
+    # Handle GIFs
+    if image.format == "GIF" and AccountFeaturesConfig.allow_gif:
+        frames = [frame.copy() for frame in ImageSequence.Iterator(image)]
+        if len(frames) > AccountFeaturesConfig.max_gif_frames:
+            raise HTTPException(
+                status_code=400,
+                detail="GIFs with more than 200 frames are not allowed.",
+            )
+        resized_frames = []
+        for frame in frames:
+            frame = frame.convert("RGBA")
+            frame = resize_and_crop_image(frame)
+            resized_frames.append(frame)
+        image = resized_frames[0]
+        image.save(
+            f"/uploads/{user['_id']}.webp",
+            save_all=True,
+            append_images=resized_frames[1:],
+            format="webp",
+            optimize=True,
+            quality=AccountFeaturesConfig.profile_picture_quality,
+        )
+    else:
+        image = resize_and_crop_image(image)
+        save_path = f"/uploads/{user['_id']}.webp"
+        image.save(
+            save_path,
+            "webp",
+            optimize=True,
+            quality=AccountFeaturesConfig.profile_picture_quality,
+        )
+
+
+def resize_and_crop_image(image):
     # Crop the image to a square from the center
     width, height = image.size
     min_dim = min(width, height)
@@ -173,10 +222,10 @@ async def upload_profile_picture(
 
     # Resize the image to 128x128
     image = image.resize(
-        (AccountFeaturesConfig.profile_picture_resize_width, AccountFeaturesConfig.profile_picture_resize_height),
-        Image.Resampling.NEAREST
+        (
+            AccountFeaturesConfig.profile_picture_resize_width,
+            AccountFeaturesConfig.profile_picture_resize_height,
+        ),
+        Image.Resampling.NEAREST,
     )
-
-    # Save the image
-    save_path = f"/uploads/{user["_id"]}.webp"
-    image.save(save_path, "webp", optimize=True, quality=AccountFeaturesConfig.profile_picture_quality)
+    return image

@@ -55,7 +55,10 @@
                 "width": 200,
                 "height": 200
             },
-            "quality": 100
+            "quality": 100,
+            "allow_gif": true,
+            "max_gif_frames": 200,
+            "max_size_mb": 15
         }
     },
     "security": {

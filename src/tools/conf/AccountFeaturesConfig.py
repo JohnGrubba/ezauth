@@ -43,6 +43,11 @@ class AccountFeaturesConfig:
     profile_picture_quality: int = config["account_features"]["profile_picture"][
         "quality"
     ]
+    allow_gif: bool = config["account_features"]["profile_picture"]["allow_gif"]
+    max_size_mb: float = config["account_features"]["profile_picture"]["max_size_mb"]
+    max_gif_frames: int = config["account_features"]["profile_picture"][
+        "max_gif_frames"
+    ]
 
     def validate_types(self) -> bool:
         """This is to Type Check the Configuration"""
@@ -117,6 +122,27 @@ class AccountFeaturesConfig:
                 )
             )
 
+        if not isinstance(self.allow_gif, bool):
+            raise ValueError(
+                "account_features.profile_picture.allow_gif must be a boolean (got type {})".format(
+                    type(self.allow_gif)
+                )
+            )
+
+        if not isinstance(self.max_size_mb, (float, int)):
+            raise ValueError(
+                "account_features.profile_picture.max_size_mb must be a float (got type {})".format(
+                    type(self.max_size_mb)
+                )
+            )
+
+        if not isinstance(self.max_gif_frames, int):
+            raise ValueError(
+                "account_features.profile_picture.max_gif_frames must be an integer (got type {})".format(
+                    type(self.max_gif_frames)
+                )
+            )
+
     def validate_values(self) -> bool:
         """This is to Value Check the Configuration"""
         if not self.issuer_name_2fa:
@@ -146,6 +172,20 @@ class AccountFeaturesConfig:
             raise ValueError(
                 "account_features.profile_picture.quality must be an integer between 1 and 100 (got {})".format(
                     self.profile_picture_quality
+                )
+            )
+
+        if not self.max_size_mb > 0:
+            raise ValueError(
+                "account_features.profile_picture.max_size_mb must be a positive float (got {})".format(
+                    self.max_size_mb
+                )
+            )
+
+        if not self.max_gif_frames > 0:
+            raise ValueError(
+                "account_features.profile_picture.max_gif_frames must be a positive integer (got {})".format(
+                    self.max_gif_frames
                 )
             )
 
