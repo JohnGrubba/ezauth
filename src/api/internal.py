@@ -1,6 +1,12 @@
 from fastapi import APIRouter, Header, HTTPException, Depends, BackgroundTasks
 from tools import broadcast_emails, InternalConfig, bson_to_json, r
-from api.model import BroadCastEmailRequest, InternalProfileRequest, InternalUserQuery
+from api.model import (
+    BroadCastEmailRequest,
+    InternalProfileRequest,
+    InternalUserQuery,
+    InternalUserCreateRequest,
+)
+from typing import List
 from crud.user import (
     get_user,
     get_batch_users,
@@ -10,6 +16,7 @@ from crud.user import (
     restore_usr,
     count_users,
     count_oauth,
+    bulk_crt_users,
 )
 from crud.sessions import get_session, count_sessions
 from threading import Lock
@@ -46,7 +53,7 @@ async def health():
     return {"status": "ok"}
 
 
-@router.post("/broadcast-email", responses={200: {"description": "E-Mails Queued"}})
+@router.post("/broadcast-email", status_code=204)
 async def broadcast_email(
     broadcast_request: BroadCastEmailRequest, background_tasks: BackgroundTasks
 ):
@@ -64,7 +71,6 @@ async def broadcast_email(
         email_task_running,
         broadcast_request.mongodb_search_condition,
     )
-    return {"status": "E-Mail Task Started"}
 
 
 @router.post("/profile")
@@ -133,7 +139,7 @@ async def query_users_paginated(query: InternalUserQuery):
     return [bson_to_json(_) for _ in query_users(query.query, query.sort, query.page)]
 
 
-@router.delete("/removeuser")
+@router.delete("/removeuser", status_code=204)
 async def remove_user_instant(user_id: str):
     """
     # Remove User
@@ -142,10 +148,9 @@ async def remove_user_instant(user_id: str):
     This endpoint is used to remove a user from the database instantly.
     """
     remove_user(user_id)
-    return {"status": "ok"}
 
 
-@router.put("/restoreuser")
+@router.put("/restoreuser", status_code=204)
 async def restore_user(user_id: str):
     """
     # Restore User
@@ -154,7 +159,6 @@ async def restore_user(user_id: str):
     This endpoint is used to restore a user from the database.
     """
     restore_usr(user_id)
-    return {"status": "ok"}
 
 
 @router.get("/stats")
@@ -178,3 +182,16 @@ async def stats():
             for spec, module, readme, loaded in modules
         ],
     }
+
+
+@router.post("/create-user", status_code=204)
+async def bulk_create_users(req: List[InternalUserCreateRequest]):
+    """
+    # Create User
+
+    ## Description
+    This endpoint is used to bulk create users.
+    The users have no password when created, and have to click forgot password to set one.
+    So a correct E-Mail for the Users is mandatory.
+    """
+    bulk_crt_users(req)

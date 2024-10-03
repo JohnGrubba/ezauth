@@ -125,3 +125,7 @@ class ProfileUpdateRequest(Username):
     model_config = ConfigDict(
         extra="allow",
     )
+
+
+class InternalUserCreateRequest(Username):
+    email: EmailStr

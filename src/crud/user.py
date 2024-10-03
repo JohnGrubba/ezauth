@@ -13,8 +13,9 @@ from tools import (
     r,
 )
 from fastapi import HTTPException, BackgroundTasks, Request
-from api.model import UserSignupRequest
+from api.model import UserSignupRequest, InternalUserCreateRequest
 import pymongo
+from typing import List
 import bson
 import datetime
 import json
@@ -417,3 +418,18 @@ def count_oauth() -> dict:
             {"github_uid": {"$exists": True}}
         ),
     }
+
+
+def bulk_crt_users(usrs: List[InternalUserCreateRequest]) -> None:
+    """Bulk Create Users
+
+    Args:
+        usrs (List[InternalUserCreateRequest]): List of Users
+    """
+    usrs = [usr.dict() for usr in usrs]
+    try:
+        users_collection.insert_many(usrs)
+    except pymongo.errors.BulkWriteError:
+        raise HTTPException(
+            detail="Invalid User Data - or Duplicate Entries", status_code=400
+        )

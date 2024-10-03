@@ -2,6 +2,7 @@ from .conf import config
 
 
 class SignupConfig:
+    allow_signup: bool = config["signup"]["allow_signup"]
     enable_conf_email: bool = config["signup"]["enable_conf_email"]
     conf_code_expiry: int = config["signup"]["conf_code_expiry"]
     conf_code_complexity: int = config["signup"]["conf_code_complexity"]
@@ -16,6 +17,12 @@ class SignupConfig:
 
     def validate_types(self) -> bool:
         """This is to Type Check the Configuration"""
+        if not isinstance(self.allow_signup, bool):
+            raise ValueError(
+                "signup.allow_signup must be a boolean (got type {})".format(
+                    type(self.allow_signup)
+                )
+            )
         if not isinstance(self.enable_conf_email, bool):
             raise ValueError(
                 "signup.enable_conf_email must be a boolean (got type {})".format(
