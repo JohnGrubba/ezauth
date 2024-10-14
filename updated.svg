@@ -1,19 +1,19 @@
-<svg width="154.4" height="20" viewBox="0 0 1544 200" xmlns="http://www.w3.org/2000/svg">
+<svg width="161.4" height="20" viewBox="0 0 1614 200" xmlns="http://www.w3.org/2000/svg">
   <linearGradient id="a" x2="0" y2="100%">
     <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
     <stop offset="1" stop-opacity=".1"/>
   </linearGradient>
-  <mask id="m"><rect width="1544" height="200" rx="30" fill="#FFF"/></mask>
+  <mask id="m"><rect width="1614" height="200" rx="30" fill="#FFF"/></mask>
   <g mask="url(#m)">
     <rect width="829" height="200" fill="#555"/>
-    <rect width="715" height="200" fill="#08C" x="829"/>
-    <rect width="1544" height="200" fill="url(#a)"/>
+    <rect width="785" height="200" fill="#08C" x="829"/>
+    <rect width="1614" height="200" fill="url(#a)"/>
   </g>
   <g fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
     <text x="60" y="148" textLength="729" fill="#000" opacity="0.25">Last Updated</text>
     <text x="50" y="138" textLength="729">Last Updated</text>
-    <text x="884" y="148" textLength="615" fill="#000" opacity="0.25">Oct 3 2024</text>
-    <text x="874" y="138" textLength="615">Oct 3 2024</text>
+    <text x="884" y="148" textLength="685" fill="#000" opacity="0.25">Oct 14 2024</text>
+    <text x="874" y="138" textLength="685">Oct 14 2024</text>
   </g>
   
 </svg>
