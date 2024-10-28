@@ -100,7 +100,7 @@ def change_email(user_id: str, new_email: str) -> None:
 
 
 def update_public_user(
-    user_id: str, data: dict, background_tasks: BackgroundTasks
+    user_id: str, data: dict, background_tasks: BackgroundTasks, internal: bool = False
 ) -> dict:
     """Updates Public User Data
 
@@ -112,7 +112,9 @@ def update_public_user(
     existing_user = users_collection.find_one({"_id": bson.ObjectId(user_id)})
     # Allow update of all columns except InternalConfig.internal_columns
     data = {
-        k: v for k, v in data.items() if k not in InternalConfig.not_updateable_columns
+        k: v
+        for k, v in data.items()
+        if internal or (k not in InternalConfig.not_updateable_columns)
     }
 
     if AccountFeaturesConfig.allow_add_fields_patch_user:
@@ -173,7 +175,7 @@ def update_public_user(
     return users_collection.find_one_and_update(
         {"_id": bson.ObjectId(user_id)},
         {"$set": data},
-        InternalConfig.internal_columns,
+        insecure_cols if internal else InternalConfig.internal_columns,
         return_document=pymongo.ReturnDocument.AFTER,
     )
 

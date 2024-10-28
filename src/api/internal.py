@@ -103,7 +103,9 @@ async def update_profile(
         get_session(internal_req.session_token) if internal_req.session_token else None
     )
     usr = get_user(sess["user_id"] if sess else internal_req.user_id)
-    return update_public_user(usr["_id"], update_data, background_tasks)
+    return bson_to_json(
+        update_public_user(usr["_id"], update_data, background_tasks, True)
+    )
 
 
 @router.get("/batch-users")
