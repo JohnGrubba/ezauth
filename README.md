@@ -17,7 +17,13 @@
 
 ## Quickstart
 
-To test a Demo Setup of EZAuth quickly, go into the <a href="demo/">`demo`</a> folder and run the following command:
+1) Clone EZAuth Repository (`git clone https://github.com/JohnGrubba/ezauth`)
+2) `cd ezauth`
+3) `cp config/configtemplate.json config/config.json`
+4) Edit Configuration under (`config/config.json`) [Config Documentation](https://johngrubba.github.io/ezauth/configuration/configuration/)
+5) `mkdir config/email && cp config/emailtemplate/* config/email/`
+6) Edit E-Mails under (`config/email/*`)
+7) Start EZAuth
 
 ```sh
 docker-compose up -d
