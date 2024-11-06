@@ -1,9 +1,8 @@
 import os
 from fastapi import FastAPI
 import importlib.util
+from api.helpers.log import logger
 import logging
-
-logger = logging.getLogger("uvicorn")
 
 modules = []
 

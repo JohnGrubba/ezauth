@@ -9,14 +9,11 @@ from api.profile import router as profileRouter
 from api.twofactor import router as twofactorRouter
 from api.oauth_providers import router as oauthRouter
 from api.sessions import router as sessionsRouter
-import logging
+from api.helpers.log import logger
 from api.helpers.extension_loader import load_extensions
 from tools import SecurityConfig
 
 __version__ = "0.8.3"
-
-logging.basicConfig(format="%(message)s", level=logging.INFO, force=True)
-logger = logging.getLogger("uvicorn")
 
 app = FastAPI(
     title="EZAuth API",

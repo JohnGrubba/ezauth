@@ -2,7 +2,7 @@ from fastapi import HTTPException, Cookie
 from tools import SessionConfig, bson_to_json
 from crud.user import get_public_user, get_user, get_dangerous_user
 from crud.sessions import extend_session, get_session
-import logging
+from api.helpers.log import logger
 
 
 def session_token_used(session: str):
@@ -26,15 +26,15 @@ async def get_pub_user_dep(
         User: User Dictionary
     """
     if not session_token:
-        logging.debug("No session token")
+        logger.debug("No session token")
         raise HTTPException(status_code=401)
     session = get_session(session_token)
     if not session:
-        logging.debug("No session found")
+        logger.debug("No session found")
         raise HTTPException(status_code=401)
     user = get_public_user(session["user_id"])
     if not user:
-        logging.debug("No user for session found")
+        logger.debug("No user for session found")
         raise HTTPException(status_code=401)
     user = bson_to_json(user)
     session_token_used(session)
@@ -58,15 +58,15 @@ async def get_user_dep(
         User: User Dictionary
     """
     if not session_token:
-        logging.debug("No session token")
+        logger.debug("No session token")
         raise HTTPException(status_code=401)
     session = get_session(session_token)
     if not session:
-        logging.debug("No session found")
+        logger.debug("No session found")
         raise HTTPException(status_code=401)
     user = get_user(session["user_id"])
     if not user:
-        logging.debug("No user for session found")
+        logger.debug("No user for session found")
         raise HTTPException(status_code=401)
     user = bson_to_json(user)
     session_token_used(session)
@@ -90,15 +90,15 @@ async def get_dangerous_user_dep(
         User: User Dictionary
     """
     if not session_token:
-        logging.debug("No session token")
+        logger.debug("No session token")
         raise HTTPException(status_code=401)
     session = get_session(session_token)
     if not session:
-        logging.debug("No session found")
+        logger.debug("No session found")
         raise HTTPException(status_code=401)
     user = get_dangerous_user(session["user_id"])
     if not user:
-        logging.debug("No user for session found")
+        logger.debug("No user for session found")
         raise HTTPException(status_code=401)
     user = bson_to_json(user)
     session_token_used(session)

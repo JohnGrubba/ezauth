@@ -2,10 +2,12 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from .conf import EmailConfig
-import logging
+from api.helpers.log import logger
 from threading import Lock
 from tools import users_collection, InternalConfig
 import importlib
+
+smtp = smtplib.SMTP_SSL(EmailConfig.smtp_host, EmailConfig.smtp_port)
 
 
 def load_template(template_name: str, **kwargs) -> str:
@@ -18,13 +20,13 @@ def load_template(template_name: str, **kwargs) -> str:
     except ModuleNotFoundError:
         pass
     else:
-        logging.info(f"Found preprocess function in {template_name}.py")
+        logger.debug(f"Found preprocess function in {template_name}.py")
         if hasattr(module, "preprocess"):
-            logging.info(f"Executing preprocess function in {template_name}.py")
+            logger.debug(f"Executing preprocess function in {template_name}.py")
             try:
                 kwargs = module.preprocess(kwargs)
             except Exception as e:
-                logging.error(
+                logger.error(
                     f"Failed to execute preprocess function in {template_name}.py: {e}"
                 )
     formatted_template = template.format(**kwargs)
@@ -42,12 +44,13 @@ def send_email(template_name: str, to: str, **kwargs):
     # Attach HTML content
     msg.attach(MIMEText(html_content, "html"))
 
+    logger.debug(f"Sending email to {to} with subject: {subject}")
     # Send email
-    with smtplib.SMTP_SSL(EmailConfig.smtp_host, EmailConfig.smtp_port) as server:
-        server.login(EmailConfig.login_usr, EmailConfig.login_pwd)
-        server.send_message(msg)
+    smtp.login(EmailConfig.login_usr, EmailConfig.login_pwd)
+    smtp.send_message(msg)
+    smtp.quit()
 
-    logging.info(f"Email sent to {to} with subject: {subject}")
+    logger.info(f"Email sent to {to} with subject: {subject}")
 
 
 def broadcast_emails(
@@ -62,7 +65,7 @@ def broadcast_emails(
             try:
                 send_email(template_name, user["email"], **user)
             except Exception as e:
-                logging.error(
+                logger.error(
                     f"Failed to send email to {user['email']} with Template {template_name}: {e}"
                 )
     except Exception as e:

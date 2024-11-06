@@ -4,12 +4,10 @@ import bson.json_util
 import json
 from .conf import SessionConfig
 import redis
-import logging
+from api.helpers.log import logger
 import sys
 from mongomock import MongoClient as MongoTestClient
 import fakeredis
-
-logger = logging.getLogger("uvicorn.info")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
