@@ -138,15 +138,15 @@ def test_create_account_invalid_username_too_short():
         "/signup",
         json={
             "password": "Kennwort1!",
-            "email": "user1@example.com",
+            "email": "user13@example.com",
             "username": "SAS",
         },
     )
+    assert response.status_code == 422
     assert (
         response.json()["detail"][0]["msg"]
         == "Value error, Username must be at least 4 characters long"
     )
-    assert response.status_code == 422
 
 
 def test_create_account_invalid_username_special_cases():
@@ -154,15 +154,15 @@ def test_create_account_invalid_username_special_cases():
         "/signup",
         json={
             "password": "Kennwort1!",
-            "email": "user1@example.com",
+            "email": "user14@example.com",
             "username": "<div></div>",
         },
     )
+    assert response.status_code == 422
     assert (
         response.json()["detail"][0]["msg"]
         == "Value error, Username must only contain letters and numbers"
     )
-    assert response.status_code == 422
 
 
 def test_create_account_invalid_username_too_long():
@@ -170,10 +170,11 @@ def test_create_account_invalid_username_too_long():
         "/signup",
         json={
             "password": "Kennwort1!",
-            "email": "user1@example.com",
-            "username": "adsjfölksajdflkasjdlkfjasdlkfjlksajdflöksajdfölkjsadfkjasölkfj",
+            "email": "user12@example.com",
+            "username": "adsjfölksajdflkasjdlkfjasdlaakfjlksajdflöksajdfölkjsadfkjasölkfj",
         },
     )
+    assert response.status_code == 422
     assert (
         response.json()["detail"][0]["msg"]
         == "Value error, Username must be at most 20 characters long"

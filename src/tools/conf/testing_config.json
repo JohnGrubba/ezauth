@@ -11,7 +11,9 @@
             "redirect_url": ""
         },
         "password_complexity": 4,
-        "username_complexity": 2
+        "password_regex": "\\s",
+        "username_complexity": 2,
+        "username_regex": "[^a-zA-Z0-9]"
     },
     "email": {
         "login_usr": "",

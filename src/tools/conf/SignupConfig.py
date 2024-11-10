@@ -1,4 +1,5 @@
 from .conf import config
+import re
 
 
 class SignupConfig:
@@ -13,7 +14,9 @@ class SignupConfig:
         config["signup"]["oauth"]["redirect_url"]
     ).removesuffix("/")
     password_complexity: int = config["signup"]["password_complexity"]
+    password_regex: str = config["signup"]["password_regex"]
     username_complexity: int = config["signup"]["username_complexity"]
+    username_regex: str = config["signup"]["username_regex"]
 
     def validate_types(self) -> bool:
         """This is to Type Check the Configuration"""
@@ -56,16 +59,32 @@ class SignupConfig:
             )
         if not all(isinstance(i, str) for i in self.oauth_providers):
             raise ValueError("signup.oauth.providers_enabled must be a list of strings")
+
         if not isinstance(self.password_complexity, int):
             raise ValueError(
                 "signup.password_complexity must be an integer (got type {})".format(
                     type(self.password_complexity)
                 )
             )
+
+        if not isinstance(self.password_regex, str):
+            raise ValueError(
+                "signup.password_regex must be a string (got type {})".format(
+                    type(self.password_regex)
+                )
+            )
+
         if not isinstance(self.username_complexity, int):
             raise ValueError(
                 "signup.username_complexity must be an integer (got type {})".format(
                     type(self.username_complexity)
+                )
+            )
+
+        if not isinstance(self.username_regex, str):
+            raise ValueError(
+                "signup.username_regex must be a string (got type {})".format(
+                    type(self.username_regex)
                 )
             )
 
@@ -95,9 +114,21 @@ class SignupConfig:
             raise ValueError(
                 f"signup.password_complexity must be between 1 and 4 (Check Docs), got {self.password_complexity}"
             )
+        try:
+            re.compile(self.password_regex)
+        except re.error:
+            raise ValueError(
+                f"signup.password_regex is invalid, got {self.password_regex}"
+            )
         if self.username_complexity not in range(1, 3):
             raise ValueError(
                 f"signup.username_complexity must be 1 or 2 (Check Docs), got {self.username_complexity}"
+            )
+        try:
+            re.compile(self.username_regex)
+        except re.error:
+            raise ValueError(
+                f"signup.username_regex is invalid, got {self.username_regex}"
             )
 
 
