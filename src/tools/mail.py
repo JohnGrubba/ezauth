@@ -10,7 +10,7 @@ import re
 import threading
 import queue
 
-smtp = smtplib.SMTP_SSL(EmailConfig.smtp_host, EmailConfig.smtp_port, timeout=1)
+smtp = smtplib.SMTP_SSL(EmailConfig.smtp_host, EmailConfig.smtp_port)
 email_queue = queue.Queue()
 
 
