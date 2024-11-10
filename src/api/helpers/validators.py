@@ -1,6 +1,5 @@
 from tools import SignupConfig
 import re
-import re
 import bcrypt
 from pydantic import SecretStr
 
@@ -16,7 +15,7 @@ def username_check(cls, username: str) -> str:
             raise ValueError("Username must be at most 20 characters long")
 
     # Additional Regex Checks
-    if re.search(SignupConfig.username_regex, username) != None:
+    if re.search(SignupConfig.username_regex, username) is not None:
         raise ValueError("Username must only contain letters and numbers")
 
     return username
@@ -42,7 +41,7 @@ def password_check_hash(cls, password: SecretStr) -> str:
         raise ValueError("Make sure your password is at most 50 characters")
 
     # Additional Regex Checks
-    if re.search(SignupConfig.password_regex, pswd) != None:
+    if re.search(SignupConfig.password_regex, pswd) is not None:
         raise ValueError("Password does not meet complexity requirements")
 
     # Hash Password

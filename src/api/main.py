@@ -46,7 +46,7 @@ async def mdlware(request: Request, call_next):
     if (
         response.status_code == 404
         and "cdn" == request.url.path.split("/")[1]
-        and not "default.webp" in request.url.path
+        and "default.webp" not in request.url.path
     ):
         # Default Profile Pictrue
         return RedirectResponse("/cdn/default.webp", status_code=302)

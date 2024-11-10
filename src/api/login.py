@@ -146,7 +146,8 @@ async def login(login_form: LoginRequest, response: Response, request: Request):
     # Check if Password Exists (or if OAuth SignIn)
     if not user.get("password", None):
         raise HTTPException(
-            detail="You don't have a password set for this E-Mail. Please Reset your Password once logged in or using forgot-password.",
+            detail="You don't have a password set for this E-Mail. Please Reset your \
+                    Password once logged in or using forgot-password.",
             status_code=406,
         )
 

@@ -102,4 +102,4 @@ def email_worker():
         email_queue.task_done()
 
 
-threading.Thread(target=email_worker).start()
+threading.Thread(target=email_worker, daemon=True).start()
