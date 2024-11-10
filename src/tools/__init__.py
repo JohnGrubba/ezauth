@@ -15,7 +15,7 @@ from .conf import (
     EmailConfig,
     SignupConfig,
 )
-from .mail import send_email, broadcast_emails
+from .mail import broadcast_emails, queue_email
 from .confirmation_codes import all_ids, regenerate_ids
 
 __all__ = [
@@ -30,7 +30,7 @@ __all__ = [
     "AccountFeaturesConfig",
     "insecure_cols",
     "SecurityConfig",
-    "send_email",
+    "queue_email",
     "broadcast_emails",
     "all_ids",
     "regenerate_ids",

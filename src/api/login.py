@@ -14,7 +14,7 @@ from tools import (
     SessionConfig,
     r,
     SecurityConfig,
-    send_email,
+    queue_email,
     all_ids,
     regenerate_ids,
     SignupConfig,
@@ -75,8 +75,7 @@ async def forgot_password(
             }
         ),
     )
-    background_tasks.add_task(
-        send_email,
+    queue_email(
         "ChangePassword",
         user["email"],
         code=unique_id,

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Response, BackgroundTasks, HTTPException, Request
 from api.model import UserSignupRequest, LoginResponse, ConfirmEmailCodeRequest
-from tools import send_email
+from tools import queue_email
 import json
 from tools import SignupConfig, SessionConfig
 from tools import all_ids, regenerate_ids, r
@@ -66,8 +66,7 @@ async def signup(
         )
 
         # Generate and send confirmation email
-        background_tasks.add_task(
-            send_email,
+        queue_email(
             "ConfirmEmail",
             signup_form.email,
             code=unique_id,

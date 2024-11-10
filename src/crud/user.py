@@ -2,7 +2,7 @@ from crud import sessions
 from tools import (
     users_collection,
     SignupConfig,
-    send_email,
+    queue_email,
     InternalConfig,
     insecure_cols,
     AccountFeaturesConfig,
@@ -155,15 +155,13 @@ def update_public_user(
         # Get a unique ID for confirmation email
         unique_id = all_ids.pop()
         # Generate and send confirmation email
-        background_tasks.add_task(
-            send_email,
+        queue_email(
             "ConfirmEmail",
             data["email"],
             **existing_user,
             code=unique_id,
             time=SignupConfig.conf_code_expiry,
         )
-
         r.setex(
             "emailchange:" + str(existing_user["_id"]),
             SignupConfig.conf_code_expiry * 60,
@@ -335,7 +333,7 @@ def create_user(
     # User Created (Create Session Token and send Welcome Email)
     session_token = sessions.create_login_session(user_db.inserted_id, request)
     if SignupConfig.enable_welcome_email:
-        background_tasks.add_task(send_email, "WelcomeEmail", data["email"], **data)
+        queue_email("WelcomeEmail", data["email"], **data)
     return session_token
 
 

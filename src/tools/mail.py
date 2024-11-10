@@ -6,13 +6,31 @@ from api.helpers.log import logger
 from threading import Lock
 from tools import users_collection, InternalConfig
 import importlib
+import re
+import threading
+import queue
 
-smtp = smtplib.SMTP_SSL(EmailConfig.smtp_host, EmailConfig.smtp_port)
+smtp = smtplib.SMTP_SSL(EmailConfig.smtp_host, EmailConfig.smtp_port, timeout=1)
+email_queue = queue.Queue()
+
+
+def queue_email(template_name: str, to: str, **kwargs):
+    email_queue.put_nowait(lambda: send_email(template_name, to, **kwargs))
+
+
+def fill_placeholders(template: str, data: dict) -> str:
+    pattern = re.compile(r"\{\{\s*(\w+)\s*\}\}")
+    result = pattern.sub(
+        lambda match: str(data.get(match.group(1), match.group(0))), template
+    )
+    return result
 
 
 def load_template(template_name: str, **kwargs) -> str:
     with open(f"/src/app/config/email/{template_name}.html", "r") as file:
         template = file.read()
+    if template.find("<title>") == -1:
+        raise ValueError("Template does not contain a title tag")
     subject = template[template.find("<title>") + 7 : template.find("</title>")]
     # Try to find template_name + ".py" and execute the function "preprocess"
     try:
@@ -29,7 +47,7 @@ def load_template(template_name: str, **kwargs) -> str:
                 logger.error(
                     f"Failed to execute preprocess function in {template_name}.py: {e}"
                 )
-    formatted_template = template.format(**kwargs)
+    formatted_template = fill_placeholders(template, kwargs)
     return formatted_template, subject
 
 
@@ -48,7 +66,6 @@ def send_email(template_name: str, to: str, **kwargs):
     # Send email
     smtp.login(EmailConfig.login_usr, EmailConfig.login_pwd)
     smtp.send_message(msg)
-    smtp.quit()
 
     logger.info(f"Email sent to {to} with subject: {subject}")
 
@@ -72,3 +89,17 @@ def broadcast_emails(
         raise e
     finally:
         email_task_lock.release_lock()
+
+
+def email_worker():
+    logger.info("\u001b[32m- E-Mail Worker started\u001b[0m")
+    while True:
+        email_task = email_queue.get()
+        try:
+            email_task()
+        except Exception as e:
+            logger.error(f"Failed to send email: {e}")
+        email_queue.task_done()
+
+
+threading.Thread(target=email_worker).start()
