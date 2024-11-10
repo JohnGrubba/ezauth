@@ -23,7 +23,7 @@ services:
   db:
       image: mongo
       ports:
-        - '27017:27017'
+        - '3252:27017'
       restart: always
       environment:
         - MONGO_INITDB_ROOT_USERNAME=admin
@@ -35,7 +35,7 @@ services:
     image: redis:alpine
     restart: always
     ports:
-      - '6379:6379'
+      - '3251:6379'
     command: redis-server --requirepass admin
 
 volumes:
