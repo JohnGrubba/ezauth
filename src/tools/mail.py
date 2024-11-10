@@ -48,6 +48,7 @@ def load_template(template_name: str, **kwargs) -> str:
                     f"Failed to execute preprocess function in {template_name}.py: {e}"
                 )
     formatted_template = fill_placeholders(template, kwargs)
+    subject = fill_placeholders(subject, kwargs)
     return formatted_template, subject
 
 
