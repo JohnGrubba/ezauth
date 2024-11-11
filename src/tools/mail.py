@@ -10,7 +10,6 @@ import re
 import threading
 import queue
 
-smtp = smtplib.SMTP_SSL(EmailConfig.smtp_host, EmailConfig.smtp_port)
 email_queue = queue.Queue()
 
 
@@ -65,8 +64,10 @@ def send_email(template_name: str, to: str, **kwargs):
 
     logger.debug(f"Sending email to {to} with subject: {subject}")
     # Send email
+    smtp = smtplib.SMTP_SSL(EmailConfig.smtp_host, EmailConfig.smtp_port)
     smtp.login(EmailConfig.login_usr, EmailConfig.login_pwd)
     smtp.send_message(msg)
+    smtp.quit()
 
     logger.info(f"Email sent to {to} with subject: {subject}")
 
