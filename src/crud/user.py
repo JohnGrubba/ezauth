@@ -426,7 +426,7 @@ def bulk_crt_users(usrs: List[InternalUserCreateRequest]) -> None:
     Args:
         usrs (List[InternalUserCreateRequest]): List of Users
     """
-    usrs = [usr.dict() for usr in usrs]
+    usrs = [{**usr.dict(), "createdAt": datetime.datetime.now()} for usr in usrs]
     try:
         users_collection.insert_many(usrs)
     except pymongo.errors.BulkWriteError:
