@@ -13,6 +13,7 @@ class SessionDetailResponse(BaseModel):
     id: str = Field(alias="_id")
     device_information: dict
     createdAt: str
+    is_current: bool = False
 
 
 class SessionListResponseModel(BaseModel):
