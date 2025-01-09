@@ -18,6 +18,10 @@ def username_check(cls, username: str) -> str:
     if re.search(SignupConfig.username_regex, username) is not None:
         raise ValueError("Username must only contain letters and numbers")
 
+    # Blocklist Check
+    if username in SignupConfig.username_blocklist:
+        raise ValueError("Username is not allowed")
+
     return username
 
 

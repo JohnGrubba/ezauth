@@ -122,6 +122,7 @@ async def get_profile(identifier: str):
 
     ## Description
     This endpoint is used to get the public profile information of a specified user.
+    You can use either email, username or user_id for this endpoint.
     """
     try:
         usr = get_user_identifier(identifier)

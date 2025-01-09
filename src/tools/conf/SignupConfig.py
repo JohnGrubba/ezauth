@@ -17,6 +17,7 @@ class SignupConfig:
     password_regex: str = config["signup"]["password_regex"]
     username_complexity: int = config["signup"]["username_complexity"]
     username_regex: str = config["signup"]["username_regex"]
+    username_blocklist: list[str] = config["signup"]["username_blocklist"]
 
     def validate_types(self) -> bool:
         """This is to Type Check the Configuration"""
@@ -88,6 +89,13 @@ class SignupConfig:
                 )
             )
 
+        if not isinstance(self.username_blocklist, list):
+            raise ValueError(
+                "signup.username_blocklist must be a list (got type {})".format(
+                    type(self.username_blocklist)
+                )
+            )
+
     def validate_values(self) -> bool:
         """This is to Value Check the Configuration"""
         if not self.conf_code_expiry > 0:
@@ -129,6 +137,10 @@ class SignupConfig:
         except re.error:
             raise ValueError(
                 f"signup.username_regex is invalid, got {self.username_regex}"
+            )
+        if not all(isinstance(i, str) for i in self.username_blocklist):
+            raise ValueError(
+                f"signup.username_blocklist must be a list of strings, got {self.username_blocklist}"
             )
 
 

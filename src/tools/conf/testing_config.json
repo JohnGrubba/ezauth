@@ -13,7 +13,13 @@
         "password_complexity": 4,
         "password_regex": "\\s",
         "username_complexity": 2,
-        "username_regex": "[^a-zA-Z0-9]"
+        "username_regex": "[^a-zA-Z0-9]",
+        "username_blocklist": [
+            "you",
+            "admin",
+            "server",
+            "ai"
+        ]
     },
     "email": {
         "login_usr": "",
