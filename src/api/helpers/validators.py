@@ -19,7 +19,7 @@ def username_check(cls, username: str) -> str:
         raise ValueError("Username must only contain letters and numbers")
 
     # Blocklist Check
-    if username in SignupConfig.username_blocklist:
+    if username.lower() in SignupConfig.username_blocklist:
         raise ValueError("Username is not allowed")
 
     return username
