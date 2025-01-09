@@ -24,6 +24,7 @@ Make sure that all parameters are set correctly before starting the service.
 | `signup.password_regex` | **Datatype:** String <br> **Default:** `\\s` <br> Additional Regex for Password validation. Default doesn't allow whitespaces in password. Should be used when `signup.password_complexity` is set to 0.  |
 | `signup.username_complexity` | **Datatype:** Integer <br> **Default:** `2` <br> Username Complexity Requirement. Every higher value, includes all the previous ones too.<br> <ul><li>**0**: No Restrictions</li><li>**1**: Minimum 4 Characters</li><li>**2**: Max. 20 Characters</li></ul>  |
 | `signup.username_regex` | **Datatype:** String <br> **Default:** `[^a-zA-Z0-9]` <br> Additional Regex for Username validation. Default value restricts special characters. Should be used when `signup.username_complexity` is set to 0.  |
+| `signup.username_blocklist` | **Datatype:** List of Strings <br> **Default:** `["you", "admin", "server", "ai"]` <br> List of usernames, that can not be used by anyone.  |
 
 ### E-Mail Configuration
 
