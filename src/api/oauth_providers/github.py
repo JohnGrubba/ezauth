@@ -5,6 +5,7 @@ import json
 import requests
 import random
 import re
+from helpers.validators import username_check
 from crud.user import (
     create_user,
     get_user_by_github_uid,
@@ -110,9 +111,10 @@ async def oauth_callback(
             break
     username = rsp["login"]
     # Validate Username
-    if len(username) > 20:
-        username = username[:20]
-    if len(username) < 4 or re.search("[^a-zA-Z0-9]", username) is not None:
+    try:
+        # Returns the username or raises an error
+        username_check(None, username)
+    except ValueError:
         username = primary_email.split("@")[0]
 
     # If users email already exists, link the google account

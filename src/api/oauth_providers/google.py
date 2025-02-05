@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, BackgroundTasks, Response, HTTPException
 from fastapi.responses import RedirectResponse
 from google_auth_oauthlib.flow import Flow
 import os
-import re
+from helpers.validators import username_check
 import random
 from crud.user import (
     create_user,
@@ -93,9 +93,10 @@ async def oauth_callback(
 
     username = jwt_decoded["name"].replace(" ", "")
     # Validate Username
-    if len(username) > 20:
-        username = username[:20]
-    if len(username) < 4 or re.search("[^a-zA-Z0-9]", username) is not None:
+    try:
+        # Returns the username or raises an error
+        username_check(None, username)
+    except ValueError:
         username = jwt_decoded["email"].split("@")[0]
 
     # Check if SignIn Possible
