@@ -4,8 +4,7 @@ from tools import SignupConfig, SessionConfig
 import json
 import requests
 import random
-import re
-from helpers.validators import username_check
+from api.helpers.validators import username_check
 from crud.user import (
     create_user,
     get_user_by_github_uid,

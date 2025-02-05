@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, BackgroundTasks, Response, HTTPException
 from fastapi.responses import RedirectResponse
 from google_auth_oauthlib.flow import Flow
 import os
-from helpers.validators import username_check
+from api.helpers.validators import username_check
 import random
 from crud.user import (
     create_user,
