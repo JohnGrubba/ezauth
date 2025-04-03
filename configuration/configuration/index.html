@@ -1,0 +1,1248 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="EZAuth is a high performance self-hosted and fully customizable authentication service">
+      
+      
+      
+      
+        <link rel="prev" href="../../getting-started/setup/">
+      
+      
+        <link rel="next" href="../email_templates/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>Configuration File - EZAuth</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="EZAuth" class="md-header__button md-logo" aria-label="EZAuth" data-md-component="logo">
+      
+  <img src="../../ezauth_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EZAuth
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuration File
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JohnGrubba/ezauth" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="EZAuth" class="md-nav__button md-logo" aria-label="EZAuth" data-md-component="logo">
+      
+  <img src="../../ezauth_logo.png" alt="logo">
+
+    </a>
+    EZAuth
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JohnGrubba/ezauth" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../information/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Information
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation / Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Configuration File
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration File
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#parameters-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parameters table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#signup-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Signup Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-mail-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      E-Mail Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Session Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-api-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal API Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#account-features-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Account Features Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../email_templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    E-Mail Templates
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Internal API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/email_templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced E-Mail Templating
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/further_custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Further Customization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/oauth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OAuth
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/ssl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SSL / HTTPS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extensions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#parameters-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parameters table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#signup-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Signup Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-mail-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      E-Mail Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Session Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-api-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal API Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#account-features-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Account Features Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
+<p>To configure EZAuth you can take a look at the <code>configtemplate.json</code> file in the <code>config</code> directory. This file contains all the configuration options for EZAuth.</p>
+<h2 id="parameters-table">Parameters table<a class="headerlink" href="#parameters-table" title="Permanent link">&para;</a></h2>
+<p>All configuration parameters are listed in the tables below.
+Make sure that all parameters are set correctly before starting the service.</p>
+<div class="admonition warning">
+<p class="admonition-title">Apply Configuration</p>
+<p>If you change the configuration file, make sure to restart the service to apply the changes.</p>
+</div>
+<h3 id="signup-configuration">Signup Configuration<a class="headerlink" href="#signup-configuration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>signup.enable_conf_email</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>false</code> <br> Enable or disable the confirmation E-Mail for new users.</td>
+</tr>
+<tr>
+<td><code>signup.conf_code_expiry</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>5</code> <br> The time in minutes until the confirmation code expires.</td>
+</tr>
+<tr>
+<td><code>signup.conf_code_complexity</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>1</code> <br> The complexity of the confirmation code. <br> <strong>Possible Values</strong> <br> <ul><li><strong>1</strong>: <code>4 Digit Numeric</code></li><li><strong>2</strong>: <code>6 Digit Numeric</code></li><li><strong>3</strong>: <code>4 Characters</code></li><li><strong>4</strong>: <code>6 Characters</code></li></ul></td>
+</tr>
+<tr>
+<td><code>signup.enable_welcome_email</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>false</code> <br> Enable or disable the welcome E-Mail for new users.</td>
+</tr>
+<tr>
+<td><code>signup.oauth.providers_enabled</code></td>
+<td><strong>Datatype:</strong> List <br> <strong>Default:</strong> <code>[]</code> <br> Enabled OAuth Providers.  <br> <strong>Possible Providers</strong><ul><li><a href="../../advanced/oauth/#google-oauth"><strong>Google</strong></a></li><li><a href="../../advanced/oauth/#github-oauth"><strong>GitHub</strong></a></li></ul></td>
+</tr>
+<tr>
+<td><code>signup.oauth.base_url</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>"http://localhost:3250/"</code> <br> The Base URL for the callback URL from OAuth Providers. When you host the service somewhere, you may want to change this to the official Domain instead of an IP. This is also the value you set when setting up your OAuth Providers. Make sure those values match. (Mostly the URL of this instance unless you are overriding the callback function)</td>
+</tr>
+<tr>
+<td><code>signup.oauth.redirect_url</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>""</code> <br> Redirect URL after the callback has been called and account was created or logged in. Only makes sense when using EZAuth Client Side or on the same domain. (Cookie may be set only for the EZAuth Domain if different than your frontend)</td>
+</tr>
+<tr>
+<td><code>signup.password_complexity</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>4</code> <br> Password Complexity Requirement. Every higher value, includes all the previous ones too.<br> <ul><li><strong>0</strong>: No Restrictions</li><li><strong>1</strong>: Minimum 8 Characters</li><li><strong>2</strong>: Min. One Digit</li><li><strong>3</strong>: Min. One Capital Letter</li><li><strong>4</strong>: Min. One Special Character</li></ul></td>
+</tr>
+<tr>
+<td><code>signup.password_regex</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>\\s</code> <br> Additional Regex for Password validation. Default doesn't allow whitespaces in password. Should be used when <code>signup.password_complexity</code> is set to 0.</td>
+</tr>
+<tr>
+<td><code>signup.username_complexity</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>2</code> <br> Username Complexity Requirement. Every higher value, includes all the previous ones too.<br> <ul><li><strong>0</strong>: No Restrictions</li><li><strong>1</strong>: Minimum 4 Characters</li><li><strong>2</strong>: Max. 20 Characters</li></ul></td>
+</tr>
+<tr>
+<td><code>signup.username_regex</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>[^a-zA-Z0-9]</code> <br> Additional Regex for Username validation. Default value restricts special characters. Should be used when <code>signup.username_complexity</code> is set to 0.</td>
+</tr>
+<tr>
+<td><code>signup.username_blocklist</code></td>
+<td><strong>Datatype:</strong> List of Strings <br> <strong>Default:</strong> <code>["you", "admin", "server", "ai"]</code> <br> List of usernames, that can not be used by anyone. Checks are performed by using lower case to compare with this list, so make sure you only input lower case usernames here.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="e-mail-configuration">E-Mail Configuration<a class="headerlink" href="#e-mail-configuration" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">SMTP SSL required</p>
+<p>EZAuth uses SMTP_SSL to send E-Mails. Make sure that your SMTP server supports SSL.
+Currently EZAuth does not support STARTTLS.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>email.login_usr</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>""</code> <br> E-Mail Login Identifier (mostly the E-Mail itself). <br> <strong>Example:</strong> test@test.com</td>
+</tr>
+<tr>
+<td><code>email.login_pwd</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>""</code> <br> E-Mail Login Password.</td>
+</tr>
+<tr>
+<td><code>email.sender_email</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>""</code> <br> E-Mail address from which the E-Mails are sent. Can be changed to something like <code>EZAuth &lt;ezauth.noreply@gmail.com</code> to achieve a nicer looking E-Mail.</td>
+</tr>
+<tr>
+<td><code>email.smtp_host</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>""</code> <br> SMTP Host for the E-Mail server. <br> <strong>Example:</strong> <code>smtp.gmail.com</code></td>
+</tr>
+<tr>
+<td><code>email.smtp_port</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>465</code> <br> SMTP Port for the E-Mail server.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="session-configuration">Session Configuration<a class="headerlink" href="#session-configuration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session.session_expiry_seconds</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>86400</code> <br> The time in seconds until a login session expires. Expires on Client (Browser) and on the Server (Database).</td>
+</tr>
+<tr>
+<td><code>session.session_refresh_seconds</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>43200</code> <br> The session get's automatically extended if user performs <strong>any authentication requiring action</strong> within session_refresh_seconds (43200) before expiry. Be careful with this parameter, because setting it too close to session_expiry_seconds, may cause unwanted server and database load due to more frequent session expiry update actions.</td>
+</tr>
+<tr>
+<td><code>session.max_session_count</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>5</code> <br> Maximum amount of sessions for one User.</td>
+</tr>
+<tr>
+<td><code>session.auto_cookie</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>true</code> <br> Specifies if the API should automatically return a <code>Set-Cookie</code> header to potentially automatically set the Session Token for the client. May simplify upcoming requests to this API.</td>
+</tr>
+<tr>
+<td><code>session.auto_cookie_name</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>"session"</code> <br> The name of the cookie which will be set by the API.</td>
+</tr>
+<tr>
+<td><code>session.cookie_samesite</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>none</code> <br> Same Site Cookie Mode. <br> <ul><li><strong>none</strong></li><li><strong>strict</strong></li><li><strong>lax</strong></li></ul></td>
+</tr>
+<tr>
+<td><code>session.cookie_secure</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>true</code> <br> Secure Cookie Mode.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="internal-api-configuration">Internal API Configuration<a class="headerlink" href="#internal-api-configuration" title="Permanent link">&para;</a></h3>
+<div class="admonition danger">
+<p class="admonition-title">Internal API Key</p>
+<p>Change this <strong>immediately</strong> after cloning the repository. Keeping the default value is a <strong>severe security risk</strong>.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>internal.internal_api_key</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>"CHANGE_ME_NOW"</code> <br> This is <strong>sensitive</strong> information and must <strong>never</strong> be exposed anywhere.</td>
+</tr>
+<tr>
+<td><code>internal.internal_columns</code></td>
+<td><strong>Datatype:</strong> List <br> <strong>Default:</strong> <code>["_id"]</code> <br> Columns that should only be revealed via the internal API. This example will never reveal <code>_id</code> to public endpoints, but just to the <code>/internal</code> endpoints as well as E-Mails.</td>
+</tr>
+<tr>
+<td><code>internal.not_updateable_columns</code></td>
+<td><strong>Datatype:</strong> List <br> <strong>Default:</strong> <code>["email"]</code> <br> Columns that should not be able to get updated via the public API.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="account-features-configuration">Account Features Configuration<a class="headerlink" href="#account-features-configuration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>account_features.enable_reset_pswd</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>true</code> <br> Enable or disable the password reset feature.</td>
+</tr>
+<tr>
+<td><code>account_features.reset_pswd_conf_mail</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>true</code> <br> Enable or disable the password change confirmation E-Mail.</td>
+</tr>
+<tr>
+<td><code>account_features.2fa.enable</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>false</code> <br> Enable or disable two factor for Login. 2FA was tested with <a href="https://support.google.com/accounts/answer/1066447">Google Authenticator</a> and <a href="https://2fas.com/">2FAS Auth</a></td>
+</tr>
+<tr>
+<td><code>account_features.2fa.issuer_name</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>"EZAuth"</code> <br> How the two factor code will be titled in the users 2FA App. (Mostly the App Name)</td>
+</tr>
+<tr>
+<td><code>account_features.2fa.issuer_image_url</code></td>
+<td><strong>Datatype:</strong> String <br> <strong>Default:</strong> <code>""</code> <br> URL for an optional Image which will be displayed in the 2FA App.</td>
+</tr>
+<tr>
+<td><code>account_features.2fa.qr_endpoint</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>true</code> <br> Enable or disable QR Code Generation Endpoint for 2FA Login. This can be useful if you don't want to use any libraries on the client Side.</td>
+</tr>
+<tr>
+<td><code>account_features.allow_add_fields_on_signup</code></td>
+<td><strong>Datatype:</strong> List <br> <strong>Default:</strong> <code>[]</code> <br> Allow those additional fields on signup. Leave empty if not sure.</td>
+</tr>
+<tr>
+<td><code>account_features.allow_add_fields_patch_user</code></td>
+<td><strong>Datatype:</strong> List <br> <strong>Default:</strong> <code>[]</code> <br> Allow those additional fields to be set when modifying user. Leave empty if not sure. The entries here extend already set <code>account_features.allow_add_fields_on_signup</code> fields.</td>
+</tr>
+<tr>
+<td><code>account_features.allow_deletion</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>true</code> <br> Allow the user to request an account deletion.</td>
+</tr>
+<tr>
+<td><code>account_features.deletion_pending_minutes</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>10080</code> <br> Minutes before the account gets deleted. Directly after requesting deletion, the User can't log in anymore, but the data will be persisted until this value passes by. Example Value is a Week.</td>
+</tr>
+<tr>
+<td><code>account_features.profile_picture.allow</code></td>
+<td><strong>Datatype:</strong> Boolean <br> <strong>Default:</strong> <code>true</code> <br> Enable or disable profile picture uploads.</td>
+</tr>
+<tr>
+<td><code>account_features.profile_picture.resize.width</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>200</code> <br> Resizing Width for the Profile Picture.</td>
+</tr>
+<tr>
+<td><code>account_features.profile_picture.resize.height</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>200</code> <br> Resizing Height for the Profile Picture.</td>
+</tr>
+<tr>
+<td><code>account_features.profile_picture.resize.quality</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>80</code> <br> Optimizing Quality for the Profile Picture.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Profile Pictures</p>
+<p>All Profile Pictures get served under <code>/cdn/&lt;user_id&gt;.webp</code>. This is a public endpoint and can be used in your frontend to display the profile picture of a user. The User ID can be found in many endpoints like <code>/profile</code>. If a user doesn't have a profile picture, a default image will be served. (default.webp in the <code>uploads</code> directory specified in the docker-compose). You have to create the <code>default.webp</code> file yourself.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Additional Fields</p>
+<p>The <code>allow_add_fields_on_signup</code> makes it possible to add custom fields to the signup process. If you don't set the fields that are allowed here on signup, you can't update them later, except you also have them in <code>allow_add_fields_patch_user</code>.</p>
+</div>
+<h3 id="security-configuration">Security Configuration<a class="headerlink" href="#security-configuration" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">CORS Configuration</p>
+<p>Be careful when configuring CORS. Leaving the <code>security.allow_origins</code> at <code>*</code> can lead to security vulnerabilities. Make sure to also check if your <code>session.cookie*</code> settings work with your CORS settings. When setting <code>allow_origins</code> to <code>*</code>, the auto cookie functionality may not work Cross Site. Google Chrome will remove Cross Domain Cookies Support in the future so be careful when configuring this setting and always test it before deploying.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>security.allow_origins</code></td>
+<td><strong>Datatype:</strong> List <br> <strong>Default:</strong> <code>["*"]</code> <br> CORS (Cross Origin Ressource Sharing) Policy. Enables access from different domains. Don't leave at <code>*</code></td>
+</tr>
+<tr>
+<td><code>security.allow_headers</code></td>
+<td><strong>Datatype:</strong> List <br> <strong>Default:</strong> <code>["*"]</code> <br> Allowed HTTP Headers. Can be used to restrict certain users from accessing EZAuth.</td>
+</tr>
+<tr>
+<td><code>security.max_login_attempts</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>5</code> <br> Maximum amount of login attempts before the account gets locked. Set to <code>0</code> to disable. If a User performs a successfull login the counter gets deleted. If this doesn't happen (counter doesn't reach maximum but still has a value), the failed attempts will be expired after <code>security.expire_unfinished_timeout</code>.</td>
+</tr>
+<tr>
+<td><code>security.login_timeout</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>5</code> <br> Time in minutes until the account gets unlocked after the maximum login attempts.</td>
+</tr>
+<tr>
+<td><code>security.expire_unfinished_timeout</code></td>
+<td><strong>Datatype:</strong> Integer <br> <strong>Default:</strong> <code>60</code> <br> Time in minutes until the failed login attempts get expired. (Without reaching the max_login_attempts)</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../getting-started/setup/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation / Setup">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Installation / Setup
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../email_templates/" class="md-footer__link md-footer__link--next" aria-label="Next: E-Mail Templates">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                E-Mail Templates
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.annotate", "search.share", "content.code.copy", "navigation.top", "navigation.footer"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
