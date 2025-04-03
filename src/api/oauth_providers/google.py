@@ -97,7 +97,13 @@ async def oauth_callback(
         # Returns the username or raises an error
         username_check(None, username)
     except ValueError:
-        username = jwt_decoded["email"].split("@")[0]
+        username = jwt_decoded["email"].split("@")[0][:20]
+
+    # Check if username already exists in database
+    if get_user_identifier(username):
+        # If username already exists, append a random number to it and shorten it
+        username = username[:16]
+        username += str(random.randint(1000, 9999))
 
     # Check if SignIn Possible
     usr = get_user_by_google_uid(jwt_decoded["sub"])
@@ -109,10 +115,6 @@ async def oauth_callback(
     if usr:
         link_google_account(usr["_id"], jwt_decoded["sub"])
         return login_usr(response, usr, request)
-
-    # Check if user already exists in database
-    if get_user_identifier(username):
-        username += str(random.randint(1000, 9999))
 
     # Custom SignUp Form (Password Field missing etc.)
     signup_form = {

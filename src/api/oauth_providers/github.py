@@ -114,17 +114,19 @@ async def oauth_callback(
         # Returns the username or raises an error
         username_check(None, username)
     except ValueError:
-        username = primary_email.split("@")[0]
+        username = primary_email.split("@")[0][:20]
+
+    # Check if username already exists in database
+    if get_user_identifier(username):
+        # If username already exists, append a random number to it and shorten it
+        username = username[:16]
+        username += str(random.randint(1000, 9999))
 
     # If users email already exists, link the google account
     usr = get_user_identifier(primary_email)
     if usr:
         link_github_account(usr["_id"], rsp["id"])
         return login_usr(response, usr, request)
-
-    # Check if user already exists in database
-    if get_user_identifier(username):
-        username += str(random.randint(1000, 9999))
 
     # Custom SignUp Form (Password Field missing etc.)
     signup_form = {
