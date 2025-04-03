@@ -51,3 +51,10 @@ body {
 .page-number:hover {
     background-color: #ddd;
 }
+.picture-preview{
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}

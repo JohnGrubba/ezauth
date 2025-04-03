@@ -61,6 +61,7 @@ function setTableHTML(data) {
     data.forEach(user => {
         const tr = document.createElement('tr')
         tr.innerHTML = `
+            <td data-label="Profile Picture" style="padding-top: 0; padding-bottom: 0;"><img src="../cdn/${user._id}.webp" alt="Profile Picture" class="picture-preview"></td>
             <td data-label="E-Mail">${user.email}</td>
             <td data-label="Username">${user.username}</td>
             <td data-label="Password">${user.password ? ye_icon : no_icon}</td>
@@ -74,7 +75,7 @@ function setTableHTML(data) {
             <td data-label="Actions" class="actions">
                 <div>
                     <button class="delete" onclick="delete_modal('${user._id}')">Delete</button>
-                    <button class="update" onclick="update_modal('${user._id}')">Update</button>
+                    <a class="update" href="/admin/user?user_id=${user._id}">Details</a>
                     ${user.expiresAfter ? `<button class="restore" onclick="restore_modal('${user._id}')">Restore</button>` : ''}
                 </div>
             </td>

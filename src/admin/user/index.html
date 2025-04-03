@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../apikey.js"></script>
+    <script src="script.js"></script>
+    <link rel="icon" type="image/x-icon" href="../assets/ezauth_logo.png">
+    <link href="../index.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <title>EZAuth - Admin Panel / User Details</title>
+</head>
+
+<body>
+    <h1>
+        <span>User Detail View</span>
+        <a style="float: right;" href="/admin">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+            </svg>
+        </a>
+    </h1>
+
+    <div id="loading-container">
+        <div class="loader"></div>
+        <p>Loading user details...</p>
+    </div>
+
+    <div id="error-container" style="display: none;">
+        <p class="error-message">Error loading user details.</p>
+        <button id="retry-button">Retry</button>
+    </div>
+
+    <div id="user-details-container" style="display: none;">
+        <div class="profile-picture-container">
+            <img id="user-profile-picture" alt="User Profile Picture">
+        </div>
+
+        <form id="user-form">
+            <div class="form-group">
+                <label for="user-id">User ID:</label>
+                <input type="text" id="user-id" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email">
+            </div>
+
+            <div class="form-group">
+                <label for="created-at">Created At:</label>
+                <input type="text" id="created-at" readonly>
+            </div>
+
+            <div id="additional-fields">
+                <!-- Additional fields will be added dynamically -->
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" id="save-button">Save Changes</button>
+                <button type="button" id="delete-button">Delete User</button>
+            </div>
+        </form>
+
+        <div id="status-message" class="hidden"></div>
+    </div>
+</body>
+
+</html>
