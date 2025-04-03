@@ -123,7 +123,7 @@ async function update_stats() {
             <td data-label="Ø Sessions / User">${Number(data.avg_sess_per_usr).toFixed(2)}</td>
             <td data-label="Total Google OAuth">${data.google_oauth_count}</td>
             <td data-label="Total Github OAuth">${data.github_oauth_count}</td>
-            <td data-label='Extensions Loaded'><a href="/admin/exts">${data.loaded_extensions.length}</a></td>
+            <td data-label='Extensions Loaded'><a style="color: blue;" href="/admin/exts">${data.loaded_extensions.length}</a></td>
         </tr>
             `
     tbody_stats.innerHTML = html
